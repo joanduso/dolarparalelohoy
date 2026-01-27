@@ -32,12 +32,12 @@ export async function computeDailyAggregates(
   });
 
   for (const [key, rows] of grouped.entries()) {
-    const buys = rows.map((row) => row.buy);
-    const sells = rows.map((row) => row.sell);
+    const buys: number[] = rows.map((row) => row.buy);
+    const sells: number[] = rows.map((row) => row.sell);
     const sources = new Set(rows.map((row) => row.source));
 
-    const buy_avg = buys.reduce((a, b) => a + b, 0) / buys.length;
-    const sell_avg = sells.reduce((a, b) => a + b, 0) / sells.length;
+    const buy_avg = buys.reduce((a: number, b: number) => a + b, 0) / buys.length;
+    const sell_avg = sells.reduce((a: number, b: number) => a + b, 0) / sells.length;
 
     await prisma.dailyAggregate.upsert({
       where: {
