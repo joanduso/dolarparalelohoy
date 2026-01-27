@@ -8,6 +8,11 @@ import { getDailyHistory, getLatestRate, getMiniTable } from '@/lib/queries';
 import { formatCurrency, formatDateTime } from '@/lib/format';
 import type { Metadata } from 'next';
 
+type DailyHistoryRow = {
+  date: Date;
+  sell_avg: number;
+};
+
 export const revalidate = 120;
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -32,7 +37,7 @@ export default async function OficialPage() {
 
   const chartData = {
     paralelo: [],
-    oficial: history.map((row) => ({
+    oficial: history.map((row: DailyHistoryRow) => ({
       date: row.date.toISOString(),
       value: row.sell_avg
     })),

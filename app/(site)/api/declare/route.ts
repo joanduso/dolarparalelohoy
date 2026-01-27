@@ -5,6 +5,7 @@ import { getLatestRate } from '@/lib/queries';
 import { rateLimit } from '@/lib/apiRateLimit';
 import { hashValue } from '@/lib/hash';
 import { deviationPct } from '@/lib/declared';
+import type { DeclaredSourceType } from '@prisma/client';
 
 const MAX_DEVIATION = 15;
 
@@ -89,8 +90,12 @@ export async function POST(request: Request) {
     }
   }
 
-  const allowedSourceTypes = ['P2P', 'CasaCambio', 'Calle', 'Otro'];
-  const source_type = allowedSourceTypes.includes(sourceType) ? sourceType : 'Otro';
+  const allowedSourceTypes: DeclaredSourceType[] = ['P2P', 'CasaCambio', 'Calle', 'Otro'];
+  const source_type: DeclaredSourceType = allowedSourceTypes.includes(
+    sourceType as DeclaredSourceType
+  )
+    ? (sourceType as DeclaredSourceType)
+    : 'Otro';
 
   await prisma.declaredRate.create({
     data: {

@@ -10,6 +10,16 @@ import { getBrechaHistory, getDailyHistory, getLatestSnapshot, getMiniTable } fr
 import { formatDateTime } from '@/lib/format';
 import type { Metadata } from 'next';
 
+type DailyHistoryRow = {
+  date: Date;
+  sell_avg: number;
+};
+
+type BrechaHistoryRow = {
+  date: Date;
+  gap_pct: number;
+};
+
 export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -50,15 +60,15 @@ export default async function HomePage() {
   const oficialDelta = getDelta([...oficialHistory].reverse());
 
   const chartData = {
-    paralelo: paraleloHistory.map((row) => ({
+    paralelo: paraleloHistory.map((row: DailyHistoryRow) => ({
       date: row.date.toISOString(),
       value: row.sell_avg
     })),
-    oficial: oficialHistory.map((row) => ({
+    oficial: oficialHistory.map((row: DailyHistoryRow) => ({
       date: row.date.toISOString(),
       value: row.sell_avg
     })),
-    brecha: brechaHistory.map((row) => ({
+    brecha: brechaHistory.map((row: BrechaHistoryRow) => ({
       date: row.date.toISOString(),
       value: row.gap_pct
     }))

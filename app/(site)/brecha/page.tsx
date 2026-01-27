@@ -7,6 +7,11 @@ import { getBrechaHistory, getLatestBrecha } from '@/lib/queries';
 import { formatCurrency, formatNumber } from '@/lib/format';
 import type { Metadata } from 'next';
 
+type BrechaRow = {
+  date: Date;
+  gap_pct: number;
+};
+
 export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -31,7 +36,7 @@ export default async function BrechaPage() {
   const chartData = {
     paralelo: [],
     oficial: [],
-    brecha: history.map((row) => ({
+    brecha: history.map((row: BrechaRow) => ({
       date: row.date.toISOString(),
       value: row.gap_pct
     }))
