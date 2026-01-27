@@ -1,4 +1,5 @@
-﻿import type { PrismaClient, RateKind } from '@prisma/client';
+﻿import type { PrismaClient } from '@prisma/client';
+import type { RateKind, RatePoint, DailyAggregate } from '@/lib/types';
 
 const BASE_SOURCE = 'base-median';
 
@@ -23,8 +24,8 @@ export async function computeDailyAggregates(
     orderBy: { timestamp: 'asc' }
   });
 
-  const grouped = new Map<string, typeof points>();
-  points.forEach((point) => {
+  const grouped = new Map<string, RatePoint[]>();
+  points.forEach((point: RatePoint) => {
     const key = dateKey(point.timestamp);
     const existing = grouped.get(key) ?? [];
     existing.push(point);
@@ -32,9 +33,9 @@ export async function computeDailyAggregates(
   });
 
   for (const [key, rows] of grouped.entries()) {
-    const buys: number[] = rows.map((row) => row.buy);
-    const sells: number[] = rows.map((row) => row.sell);
-    const sources = new Set(rows.map((row) => row.source));
+    const buys: number[] = rows.map((row: RatePoint) => row.buy);
+    const sells: number[] = rows.map((row: RatePoint) => row.sell);
+    const sources = new Set(rows.map((row: RatePoint) => row.source));
 
     const buy_avg = buys.reduce((a: number, b: number) => a + b, 0) / buys.length;
     const sell_avg = sells.reduce((a: number, b: number) => a + b, 0) / sells.length;
@@ -74,14 +75,14 @@ export async function computeBrecha(prisma: PrismaClient, days = 120) {
   const from = new Date();
   from.setDate(from.getDate() - days);
 
-  const paralelo = await prisma.dailyAggregate.findMany({
+  const paralelo: DailyAggregate[] = await prisma.dailyAggregate.findMany({
     where: { kind: 'PARALELO', date: { gte: from } }
   });
-  const oficial = await prisma.dailyAggregate.findMany({
+  const oficial: DailyAggregate[] = await prisma.dailyAggregate.findMany({
     where: { kind: 'OFICIAL', date: { gte: from } }
   });
 
-  const officialMap = new Map(oficial.map((row) => [dateKey(row.date), row]));
+  const officialMap = new Map(oficial.map((row: DailyAggregate) => [dateKey(row.date), row]));
 
   for (const row of paralelo) {
     const match = officialMap.get(dateKey(row.date));

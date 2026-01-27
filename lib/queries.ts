@@ -1,6 +1,6 @@
 ﻿import { unstable_cache } from 'next/cache';
 import { prisma } from './db';
-import type { RateKind, DeclaredSide } from '@prisma/client';
+import type { RateKind, DeclaredSide, DeclaredRate } from '@/lib/types';
 import { confidenceLevel, median } from './declared';
 
 const BASE_SOURCE = 'base-median';
@@ -163,7 +163,7 @@ export async function getDeclaredLatest(side: DeclaredSide = 'SELL'): Promise<De
     async () => {
       return safeQuery(async () => {
         const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
-        const rows = await prisma.declaredRate.findMany({
+        const rows: DeclaredRate[] = await prisma.declaredRate.findMany({
           where: {
             kind: 'PARALELO',
             side,
@@ -173,7 +173,7 @@ export async function getDeclaredLatest(side: DeclaredSide = 'SELL'): Promise<De
           orderBy: { created_at: 'asc' }
         });
 
-        const values = rows.map((row) => row.value);
+        const values = rows.map((row: DeclaredRate) => row.value);
         const medianValue = median(values);
         const updatedAt = rows.length ? rows[rows.length - 1].created_at : null;
 

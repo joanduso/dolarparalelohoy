@@ -5,7 +5,7 @@ import { getLatestRate } from '@/lib/queries';
 import { rateLimit } from '@/lib/apiRateLimit';
 import { hashValue } from '@/lib/hash';
 import { deviationPct } from '@/lib/declared';
-import type { DeclaredSourceType } from '@prisma/client';
+import type { DeclaredSourceType } from '@/lib/types';
 
 const MAX_DEVIATION = 15;
 
