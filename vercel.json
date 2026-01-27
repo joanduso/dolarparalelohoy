@@ -1,7 +1,7 @@
 ﻿{
   "crons": [
     {
-      "path": "/api/internal/ingest?secret=CHANGE_ME",
+      "path": "/api/internal/ingest",
       "schedule": "*/10 * * * *"
     }
   ]

@@ -5,8 +5,13 @@ import { runIngest } from '@/lib/ingest/run';
 export async function POST(request: Request) {
   const url = new URL(request.url);
   const secret = request.headers.get('x-cron-secret') ?? url.searchParams.get('secret');
+  const vercelCron = request.headers.get('x-vercel-cron');
 
-  if (!process.env.CRON_SECRET || secret !== process.env.CRON_SECRET) {
+  if (process.env.CRON_SECRET) {
+    if (secret !== process.env.CRON_SECRET && vercelCron !== '1') {
+      return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+    }
+  } else if (vercelCron !== '1') {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   }
 

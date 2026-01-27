@@ -89,20 +89,20 @@ BINANCE_TERMS_URL=https://www.binance.com/es/terms
 ## Vercel Cron
 El endpoint interno esta en `/api/internal/ingest` y requiere `CRON_SECRET`.
 
-1. Actualiza `vercel.json` con tu secreto en query string:
+1. Mantén `vercel.json` con el path limpio (sin query string):
 
 ```json
 {
   "crons": [
     {
-      "path": "/api/internal/ingest?secret=TU_SECRETO",
+      "path": "/api/internal/ingest",
       "schedule": "*/10 * * * *"
     }
   ]
 }
 ```
 
-2. Configura `CRON_SECRET` en Vercel Environment Variables.
+2. Vercel Cron envía el header `x-vercel-cron: 1` automáticamente. Si además quieres protección extra, configura `CRON_SECRET` y usa el header `x-cron-secret` para invocaciones manuales.
 
 ## Tests
 
