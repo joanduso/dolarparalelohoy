@@ -1,0 +1,32 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-sand text-ink font-sans antialiased;
+}
+
+main {
+  @apply min-h-screen;
+}
+
+.section-shell {
+  @apply mx-auto w-full max-w-5xl px-4 sm:px-6;
+}
+
+.card {
+  @apply rounded-2xl bg-white shadow-soft border border-black/5;
+}
+
+.kicker {
+  @apply uppercase tracking-[0.2em] text-xs text-ink/60 font-semibold;
+}
+
+.gradient-panel {
+  background: radial-gradient(1200px circle at top left, rgba(246, 196, 83, 0.18), transparent 45%),
+    radial-gradient(900px circle at 80% 20%, rgba(47, 93, 80, 0.16), transparent 50%);
+}

@@ -1,0 +1,106 @@
+﻿generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RateKind {
+  PARALELO
+  OFICIAL
+}
+
+enum AuditStatus {
+  SUCCESS
+  PARTIAL
+  FAILED
+}
+
+enum DeclaredSide {
+  BUY
+  SELL
+}
+
+enum DeclaredSourceType {
+  P2P
+  CasaCambio
+  Calle
+  Otro
+}
+
+enum DeclaredStatus {
+  ACCEPTED
+  REJECTED
+  FLAGGED
+}
+
+model RatePoint {
+  id            String   @id @default(cuid())
+  kind          RateKind
+  timestamp     DateTime
+  buy           Float
+  sell          Float
+  source        String
+  currency_pair String
+  country       String
+  raw           Json?
+  createdAt     DateTime @default(now())
+
+  @@index([kind, timestamp])
+  @@index([source, timestamp])
+}
+
+model DailyAggregate {
+  id            String   @id @default(cuid())
+  kind          RateKind
+  date          DateTime
+  buy_avg       Float
+  sell_avg      Float
+  buy_min       Float
+  buy_max       Float
+  sell_min      Float
+  sell_max      Float
+  sources_count Int
+
+  @@unique([kind, date])
+}
+
+model BreachDaily {
+  id             String   @id @default(cuid())
+  date           DateTime @unique
+  official_sell  Float
+  paralelo_sell  Float
+  gap_abs        Float
+  gap_pct        Float
+}
+
+model DeclaredRate {
+  id                   String            @id @default(cuid())
+  kind                 RateKind
+  side                 DeclaredSide
+  value                Float
+  city                 String?
+  source_type          DeclaredSourceType
+  base_value_at_submit Float
+  deviation_pct        Float
+  status               DeclaredStatus
+  trust_score          Float
+  ip_hash              String
+  user_agent_hash      String
+  created_at           DateTime          @default(now())
+
+  @@index([kind, created_at])
+  @@index([status, created_at])
+  @@index([ip_hash, user_agent_hash, created_at])
+}
+
+model AuditLog {
+  run_id         String   @id
+  started_at     DateTime
+  ended_at       DateTime
+  status         AuditStatus
+  errors_json    Json?
+  inserted_count Int
+}

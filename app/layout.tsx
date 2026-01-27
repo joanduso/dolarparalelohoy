@@ -1,0 +1,88 @@
+﻿import type { Metadata } from 'next';
+import Link from 'next/link';
+import { Alegreya, Commissioner } from 'next/font/google';
+import './globals.css';
+import { siteConfig } from '@/lib/seo';
+import { StickyAd } from '@/app/(site)/_components/StickyAd';
+
+const serif = Alegreya({
+  subsets: ['latin'],
+  variable: '--font-serif',
+  display: 'swap'
+});
+
+const sans = Commissioner({
+  subsets: ['latin'],
+  variable: '--font-sans',
+  display: 'swap'
+});
+
+export const metadata: Metadata = {
+  metadataBase: new URL(siteConfig.url),
+  title: {
+    default: siteConfig.name,
+    template: `%s | ${siteConfig.name}`
+  },
+  description: siteConfig.description,
+  alternates: {
+    canonical: '/'
+  },
+  openGraph: {
+    type: 'website',
+    url: siteConfig.url,
+    title: siteConfig.name,
+    description: siteConfig.description,
+    siteName: siteConfig.name,
+    locale: siteConfig.locale
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: siteConfig.name,
+    description: siteConfig.description
+  }
+};
+
+export default function RootLayout({
+  children
+}: Readonly<{ children: React.ReactNode }>) {
+  return (
+    <html lang="es" className={`${serif.variable} ${sans.variable}`}>
+      <body className="font-sans">
+        <div className="gradient-panel min-h-screen">
+          <header className="section-shell py-6">
+            <div className="flex flex-col gap-2">
+              <Link href="/" className="font-serif text-2xl sm:text-3xl">
+                {siteConfig.name}
+              </Link>
+              <p className="text-sm text-ink/70 max-w-2xl">
+                Seguimiento diario del dólar paralelo y oficial en Bolivia con metodología
+                transparente y datos agregados de múltiples fuentes.
+              </p>
+            </div>
+          </header>
+          {children}
+          <StickyAd />
+          <footer className="section-shell py-10 text-sm text-ink/70">
+            <div className="flex flex-col gap-2">
+              <p>
+                © {new Date().getFullYear()} {siteConfig.name}. Información con fines
+                informativos.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <Link href="/faq" className="underline underline-offset-4">
+                  Metodología y FAQ
+                </Link>
+                <Link href="/historico/paralelo" className="underline underline-offset-4">
+                  Histórico dólar paralelo
+                </Link>
+                <Link href="/historico/oficial" className="underline underline-offset-4">
+                  Histórico dólar oficial
+                </Link>
+              </div>
+            </div>
+          </footer>
+        </div>
+      </body>
+    </html>
+  );
+}
