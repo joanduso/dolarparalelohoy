@@ -2,7 +2,11 @@
   name: 'Dólar Paralelo Hoy Bolivia',
   description:
     'Cotización del dólar paralelo y oficial en Bolivia hoy. Brecha cambiaria, histórico y metodología transparente.',
-  url: process.env.SITE_URL ?? 'https://dolarparalelohoy.com',
+  url: (() => {
+    const rawUrl =
+      process.env.NEXT_PUBLIC_SITE_URL ?? process.env.SITE_URL ?? 'http://localhost:3000';
+    return rawUrl.startsWith('http') ? rawUrl : `https://${rawUrl}`;
+  })(),
   locale: 'es-BO',
   language: 'es'
 };

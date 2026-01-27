@@ -17,19 +17,26 @@ const sans = Commissioner({
   display: 'swap'
 });
 
+const metadataBaseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+const metadataBase = new URL(
+  metadataBaseUrl.startsWith('http') ? metadataBaseUrl : `https://${metadataBaseUrl}`
+);
+
+const absoluteUrl = (path: string) => new URL(path, metadataBase);
+
 export const metadata: Metadata = {
-  metadataBase: new URL(siteConfig.url),
+  metadataBase,
   title: {
     default: siteConfig.name,
     template: `%s | ${siteConfig.name}`
   },
   description: siteConfig.description,
   alternates: {
-    canonical: '/'
+    canonical: absoluteUrl('/')
   },
   openGraph: {
     type: 'website',
-    url: siteConfig.url,
+    url: absoluteUrl('/'),
     title: siteConfig.name,
     description: siteConfig.description,
     siteName: siteConfig.name,
