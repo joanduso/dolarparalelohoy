@@ -10,6 +10,18 @@ import { median } from '../declared';
 
 const adapters = [bcbAdapter, binanceP2PAdapter];
 const BASE_SOURCE = 'base-median';
+const SOURCE_MAP: Record<string, string> = {
+  'bcb-api': 'BCB',
+  'binance-p2p': 'BINANCE_P2P'
+};
+
+type BaseSnapshot = {
+  buy: number | null;
+  sell: number | null;
+  sourcesUsed: string[];
+  fallback: boolean;
+  sourceMeta?: unknown;
+};
 
 function toNormalizedFromDb(row: {
   kind: 'PARALELO' | 'OFICIAL';
@@ -62,6 +74,10 @@ export async function runIngest(prisma: PrismaClient) {
   const startedAt = new Date();
   const errors: Array<{ adapter: string; reason: string }> = [];
   let inserted = 0;
+  const baseSnapshots: Record<'PARALELO' | 'OFICIAL', BaseSnapshot> = {
+    PARALELO: { buy: null, sell: null, sourcesUsed: [], fallback: true },
+    OFICIAL: { buy: null, sell: null, sourcesUsed: [], fallback: true }
+  };
 
   try {
     const results: NormalizedRatePoint[] = [];
@@ -101,6 +117,12 @@ export async function runIngest(prisma: PrismaClient) {
       if (rows.length === 0) {
         errors.push({ adapter: `base:${kind}`, reason: 'no_sources_fallback' });
         await fallbackBase(prisma, kind, lastNormalized, 'no_sources');
+        baseSnapshots[kind] = {
+          buy: lastNormalized?.buy ?? null,
+          sell: lastNormalized?.sell ?? null,
+          sourcesUsed: [],
+          fallback: true
+        };
         continue;
       }
 
@@ -134,6 +156,12 @@ export async function runIngest(prisma: PrismaClient) {
       if (validRows.length === 0) {
         errors.push({ adapter: `base:${kind}`, reason: 'no_valid_sources_fallback' });
         await fallbackBase(prisma, kind, lastNormalized, 'no_valid_sources');
+        baseSnapshots[kind] = {
+          buy: lastNormalized?.buy ?? null,
+          sell: lastNormalized?.sell ?? null,
+          sourcesUsed: [],
+          fallback: true
+        };
         continue;
       }
 
@@ -143,6 +171,12 @@ export async function runIngest(prisma: PrismaClient) {
       if (buyMedian === null || sellMedian === null) {
         errors.push({ adapter: `base:${kind}`, reason: 'median_failed' });
         await fallbackBase(prisma, kind, lastNormalized, 'median_failed');
+        baseSnapshots[kind] = {
+          buy: lastNormalized?.buy ?? null,
+          sell: lastNormalized?.sell ?? null,
+          sourcesUsed: [],
+          fallback: true
+        };
         continue;
       }
 
@@ -163,11 +197,98 @@ export async function runIngest(prisma: PrismaClient) {
         }
       });
       inserted += 1;
+
+      const sourceMeta = kind === 'PARALELO'
+        ? validRows.find((row) => row.source === 'binance-p2p')?.raw
+        : validRows.find((row) => row.source === 'bcb-api')?.raw;
+
+      baseSnapshots[kind] = {
+        buy: buyMedian,
+        sell: sellMedian,
+        sourcesUsed: validRows.map((row) => row.source),
+        fallback: false,
+        sourceMeta
+      };
     }
 
     await computeDailyAggregates(prisma, 'PARALELO');
     await computeDailyAggregates(prisma, 'OFICIAL');
     await computeBrecha(prisma);
+
+    const paraleloSnapshot = baseSnapshots.PARALELO;
+    const oficialSnapshot = baseSnapshots.OFICIAL;
+    const sourcesUsed = new Set<string>();
+    paraleloSnapshot.sourcesUsed.forEach((source) => {
+      const mapped = SOURCE_MAP[source];
+      if (mapped) sourcesUsed.add(mapped);
+    });
+    oficialSnapshot.sourcesUsed.forEach((source) => {
+      const mapped = SOURCE_MAP[source];
+      if (mapped) sourcesUsed.add(mapped);
+    });
+
+    const sampleMeta = paraleloSnapshot.sourceMeta as {
+      sampleSize?: { buy?: number; sell?: number };
+      min?: { buy?: number | null; sell?: number | null };
+      max?: { buy?: number | null; sell?: number | null };
+    } | null;
+
+    const sampleSizeBuy = sampleMeta?.sampleSize?.buy ?? 0;
+    const sampleSizeSell = sampleMeta?.sampleSize?.sell ?? 0;
+    const minBuy = sampleMeta?.min?.buy ?? null;
+    const maxBuy = sampleMeta?.max?.buy ?? null;
+    const minSell = sampleMeta?.min?.sell ?? null;
+    const maxSell = sampleMeta?.max?.sell ?? null;
+
+    const hasParallel = paraleloSnapshot.buy !== null && paraleloSnapshot.sell !== null;
+    const hasOfficial = oficialSnapshot.buy !== null || oficialSnapshot.sell !== null;
+
+    let status: 'OK' | 'DEGRADED' | 'ERROR' = 'OK';
+    if (!hasParallel && !hasOfficial) {
+      status = 'ERROR';
+    } else if (paraleloSnapshot.fallback || oficialSnapshot.fallback || !hasParallel || !hasOfficial) {
+      status = 'DEGRADED';
+    }
+
+    let confidence: 'HIGH' | 'MEDIUM' | 'LOW' = 'LOW';
+    if (status === 'OK' && sampleSizeBuy >= 20 && sampleSizeSell >= 20) {
+      confidence = 'HIGH';
+    } else if (status !== 'ERROR' && sampleSizeBuy >= 8 && sampleSizeSell >= 8) {
+      confidence = 'MEDIUM';
+    }
+
+    const officialBcb = oficialSnapshot.sell ?? oficialSnapshot.buy ?? null;
+    const parallelBuy = paraleloSnapshot.buy;
+    const parallelSell = paraleloSnapshot.sell;
+    const parallelMid = parallelBuy !== null && parallelSell !== null
+      ? (parallelBuy + parallelSell) / 2
+      : null;
+
+    const notes = status === 'DEGRADED'
+      ? 'Fallback al ultimo valor persistido.'
+      : status === 'ERROR'
+        ? 'No fue posible obtener datos validos de las fuentes.'
+        : null;
+
+    await prisma.ratesHistory.create({
+      data: {
+        timestampUtc: new Date(),
+        officialBcb,
+        parallelBuy,
+        parallelSell,
+        parallelMid,
+        minBuy,
+        maxBuy,
+        minSell,
+        maxSell,
+        sampleSizeBuy,
+        sampleSizeSell,
+        sourcesUsed: Array.from(sourcesUsed.values()),
+        confidence,
+        status,
+        notes
+      }
+    });
 
     await prisma.auditLog.create({
       data: {

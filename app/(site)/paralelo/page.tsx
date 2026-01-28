@@ -18,16 +18,15 @@ type DailyHistoryRow = {
   sell_avg: number;
 };
 
-type LatestRateResponse = {
-  quality?: {
-    status: 'OK' | 'DEGRADED' | 'ERROR';
-    notes?: string | null;
-  };
+type CurrentRatesResponse = {
+  updatedAt: string | null;
+  status: 'OK' | 'DEGRADED' | 'ERROR';
+  notes?: string | null;
   paralelo: {
-    buy: number;
-    sell: number;
-    timestamp: string;
-    sourcesCount: number;
+    buy: number | null;
+    sell: number | null;
+    sources_count: number;
+    sampleSize: number;
   } | null;
 };
 
@@ -50,12 +49,14 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function ParaleloPage() {
   const [latestResult, historyResult] = await Promise.all([
-    fetchJson<LatestRateResponse>('/api/rates/latest', {}, 600),
+    fetchJson<CurrentRatesResponse>('/api/rates/current', {}, 600),
     fetchJson<HistoryResponse<DailyHistoryRow>>('/api/rates/history?kind=PARALELO&days=365', {}, 600)
   ]);
 
   const latest = latestResult.data?.paralelo ?? null;
-  const quality = latestResult.data?.quality ?? null;
+  const status = latestResult.data?.status ?? null;
+  const notes = latestResult.data?.notes ?? null;
+  const updatedAt = latestResult.data?.updatedAt ? new Date(latestResult.data.updatedAt) : null;
   const history = historyResult.data?.data ?? [];
   const miniRows = history.slice(-14).reverse().map((row) => ({
     ...row,
@@ -64,7 +65,7 @@ export default async function ParaleloPage() {
 
   const hasAnyData = Boolean(latest || history.length);
 
-  const sourceNote = latest?.sourcesCount ? 'Fuente base: Binance P2P (mediana de avisos).' : 'Paralelo sin fuentes activas. Intentaremos actualizar pronto.';
+  const sourceNote = (latest?.sampleSize ?? 0) > 0 ? 'Fuente base: Binance P2P (mediana de avisos).' : 'Paralelo sin fuentes activas. Intentaremos actualizar pronto.';
 
   const chartData = {
     paralelo: history.map((row) => ({
@@ -84,12 +85,12 @@ export default async function ParaleloPage() {
     inLanguage: siteConfig.language
   };
 
-  const status = quality?.status ?? (hasAnyData ? 'DEGRADED' : 'ERROR');
-  const statusLabel = status === 'OK' ? 'OK' : status === 'DEGRADED' ? 'Degradado' : 'Error';
+  const statusLabelValue = status ?? (hasAnyData ? 'DEGRADED' : 'ERROR');
+  const statusLabel = statusLabelValue === 'OK' ? 'OK' : statusLabelValue === 'DEGRADED' ? 'Degradado' : 'Error';
   const statusClass =
-    status === 'OK'
+    statusLabelValue === 'OK'
       ? 'border-emerald-200 text-emerald-700 bg-emerald-50'
-      : status === 'DEGRADED'
+      : statusLabelValue === 'DEGRADED'
         ? 'border-amber-200 text-amber-800 bg-amber-50'
         : 'border-rose-200 text-rose-700 bg-rose-50';
 
@@ -141,7 +142,7 @@ export default async function ParaleloPage() {
             <h2 className="font-serif text-2xl">Cotización actual</h2>
             <div className="flex items-center gap-3 text-sm text-ink/60">
               <span>
-                {latest?.timestamp ? formatDateTime(new Date(latest.timestamp)) : <Skeleton className="h-4 w-28" />}
+                {updatedAt ? formatDateTime(updatedAt) : <Skeleton className="h-4 w-28" />}
               </span>
               <span className={`px-2 py-1 rounded-full border text-xs ${statusClass}`}>
                 Estado: {statusLabel}
@@ -164,18 +165,18 @@ export default async function ParaleloPage() {
             <div>
               <p className="text-xs uppercase text-ink/50">Fuentes</p>
               <p className="text-3xl font-semibold">
-                {typeof latest?.sourcesCount === 'number' ? latest.sourcesCount : <Skeleton className="h-8 w-10" />}
+                {typeof latest?.sampleSize === 'number' ? latest.sampleSize : <Skeleton className="h-8 w-10" />}
               </p>
             </div>
             <p className="text-sm text-ink/60">
-              {latest?.sourcesCount && latest.sourcesCount >= 2
-                ? `Confirmado por ${latest.sourcesCount} fuentes`
+              {latest?.sampleSize && latest.sampleSize >= 2
+                ? `Confirmado por ${latest.sampleSize} muestras`
                 : 'Estimación pendiente'}
             </p>
           </div>
           <p className="text-sm text-ink/60">{sourceNote}</p>
-          {status !== 'OK' && quality?.notes ? (
-            <p className="text-xs text-ink/60">Nota técnica: {quality.notes}</p>
+          {statusLabelValue !== 'OK' && notes ? (
+            <p className="text-xs text-ink/60">Nota técnica: {notes}</p>
           ) : null}
         </div>
 

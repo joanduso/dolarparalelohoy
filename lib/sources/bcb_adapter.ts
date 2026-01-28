@@ -1,77 +1,82 @@
 import type { RawRatePoint, SourceAdapter } from './base';
 
-const SOURCE_URL = 'https://www.bcb.gob.bo/';
+const SOURCE_URL = 'https://api.dolarbluebolivia.click/v1/bcb';
 
-const normalizeNumber = (valueText: string) => {
-  const normalized = valueText.replace(/\./g, '').replace(',', '.');
-  const value = Number(normalized);
-  return Number.isFinite(value) ? value : null;
-};
+function toNumber(value: unknown) {
+  if (value == null) return null;
+  if (typeof value == 'number') return Number.isFinite(value) ? value : null;
+  if (typeof value == 'string') {
+    const normalized = value.replace(/\./g, '').replace(',', '.');
+    const parsed = Number(normalized);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+  return null;
+}
 
-const extractBlock = (html: string) => {
-  const marker = /VALOR\s+REFERENCIAL\s+DEL\s+D[ÓO]LAR\s+ESTADOUNIDENSE/i;
-  const match = html.match(marker);
-  if (!match || match.index === undefined) return null;
-  const start = Math.max(match.index - 500, 0);
-  const end = Math.min(match.index + 2500, html.length);
-  return html.slice(start, end);
-};
+function pickValue(payload: Record<string, unknown>, keys: string[]) {
+  for (const key of keys) {
+    if (key in payload) return payload[key];
+  }
+  return null;
+}
 
-const extractDate = (block: string) => {
-  const dateRegex =
-    /(lunes|martes|mi[ée]rcoles|jueves|viernes|s[áa]bado|domingo)\s+\d{1,2}\s+de\s+[a-záéíóúñ]+\s*(?:,?\s*de)?\s*\d{4}/i;
-  const match = block.match(dateRegex);
-  return match ? match[0].trim() : null;
-};
-
-const extractValue = (block: string, label: 'compra' | 'venta') => {
-  const regex = label === 'compra'
-    ? /compra[^0-9]*([0-9]+,[0-9]+)/i
-    : /venta[^0-9]*([0-9]+,[0-9]+)/i;
-  const match = block.match(regex);
-  return match ? match[1] : null;
-};
+function parseTimestamp(payload: Record<string, unknown>) {
+  const raw = pickValue(payload, ['timestamp', 'updatedAt', 'fecha', 'date', 'fetchedAt']);
+  if (typeof raw == 'number') {
+    const date = new Date(raw);
+    return Number.isNaN(date.getTime()) ? new Date() : date;
+  }
+  if (typeof raw == 'string') {
+    const date = new Date(raw);
+    return Number.isNaN(date.getTime()) ? new Date() : date;
+  }
+  return new Date();
+}
 
 async function fetchBCB(): Promise<RawRatePoint | null> {
-  const response = await fetch(SOURCE_URL, {
-    headers: {
-      'User-Agent': 'Mozilla/5.0',
-      'Accept-Language': 'es'
-    }
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
 
-  if (!response.ok) return null;
+  try {
+    const response = await fetch(SOURCE_URL, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0',
+        'Accept-Language': 'es'
+      },
+      signal: controller.signal
+    });
 
-  const html = await response.text();
-  const block = extractBlock(html);
-  if (!block) return null;
+    if (!response.ok) return null;
 
-  const dateText = extractDate(block);
-  const compraText = extractValue(block, 'compra');
-  const ventaText = extractValue(block, 'venta');
+    const payload = (await response.json()) as Record<string, unknown>;
+    const buy = toNumber(
+      pickValue(payload, ['buy', 'compra', 'compra_oficial', 'official_buy', 'bcb_buy'])
+    );
+    const sell = toNumber(
+      pickValue(payload, ['sell', 'venta', 'venta_oficial', 'official_sell', 'bcb_sell'])
+    );
 
-  if (!compraText || !ventaText) return null;
+    const resolvedBuy = buy ?? sell;
+    const resolvedSell = sell ?? buy;
+    if (resolvedBuy == null || resolvedSell == null) return null;
 
-  const compra = normalizeNumber(compraText);
-  const venta = normalizeNumber(ventaText);
-
-  if (compra === null || venta === null) return null;
-
-  return {
-    kind: 'OFICIAL',
-    timestamp: new Date().toISOString(),
-    buy: compra,
-    sell: venta,
-    source: 'bcb',
-    currencyPair: 'USD/BOB',
-    country: 'BO',
-    raw: {
-      dateText,
-      compraText,
-      ventaText,
-      sourceUrl: SOURCE_URL
-    }
-  };
+    return {
+      kind: 'OFICIAL',
+      timestamp: parseTimestamp(payload).toISOString(),
+      buy: resolvedBuy,
+      sell: resolvedSell,
+      source: 'bcb-api',
+      currencyPair: 'USD/BOB',
+      country: 'BO',
+      raw: {
+        sourceUrl: SOURCE_URL,
+        buy,
+        sell
+      }
+    };
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 export const bcbAdapter: SourceAdapter = {

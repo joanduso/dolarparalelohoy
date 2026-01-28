@@ -34,10 +34,38 @@ type BinanceResponse = {
   data?: BinanceListing[];
 };
 
+async function fetchSide(tradeType: 'BUY' | 'SELL', controller: AbortController): Promise<number[]> {
+  const response = await fetch(BINANCE_P2P_URL, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify({
+      asset: 'USDT',
+      fiat: 'BOB',
+      tradeType,
+      transAmount: MIN_USD,
+      minAmount: MIN_USD,
+      maxAmount: MAX_USD,
+      page: 1,
+      rows: TOP_N
+    }),
+    signal: controller.signal
+  });
+
+  if (!response.ok) return [];
+
+  const payload = (await response.json()) as BinanceResponse;
+  return (payload.data ?? [])
+    .map((item) => Number(item.adv?.price))
+    .filter((value) => Number.isFinite(value) && value > 0)
+    .slice(0, TOP_N);
+}
+
 async function fetchBinanceP2P(): Promise<RawRatePoint | null> {
   if (!BINANCE_ENABLED || !BINANCE_P2P_URL) return null;
 
-  const cacheKey = `binance:p2p:usd-bob:${MIN_USD}:${MAX_USD}:${TOP_N}`;
+  const cacheKey = `binance:p2p:usdt-bob:${MIN_USD}:${MAX_USD}:${TOP_N}`;
   const cached = getCache(cacheKey);
   if (cached) return cached as RawRatePoint;
 
@@ -47,52 +75,33 @@ async function fetchBinanceP2P(): Promise<RawRatePoint | null> {
   const timeout = setTimeout(() => controller.abort(), 8000);
 
   try {
-    const response = await fetch(BINANCE_P2P_URL, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify({
-        asset: 'USD',
-        fiat: 'BOB',
-        tradeType: 'SELL',
-        transAmount: MIN_USD,
-        // Provide range as metadata for transparency; API may ignore.
-        minAmount: MIN_USD,
-        maxAmount: MAX_USD,
-        page: 1,
-        rows: TOP_N
-      }),
-      signal: controller.signal
-    });
+    const [buyPrices, sellPrices] = await Promise.all([
+      fetchSide('BUY', controller),
+      fetchSide('SELL', controller)
+    ]);
 
-    if (!response.ok) {
-      return null;
-    }
+    const buyMedian = median(buyPrices);
+    const sellMedian = median(sellPrices);
 
-    const payload = (await response.json()) as BinanceResponse;
-    const prices = (payload.data ?? [])
-      .map((item) => Number(item.adv?.price))
-      .filter((value) => Number.isFinite(value) && value > 0)
-      .slice(0, TOP_N);
-
-    const medianPrice = median(prices);
-    if (!medianPrice) return null;
+    if (!buyMedian || !sellMedian) return null;
 
     const now = new Date();
     const result: RawRatePoint = {
       kind: 'PARALELO',
       timestamp: now.toISOString(),
-      buy: medianPrice,
-      sell: medianPrice,
+      buy: buyMedian,
+      sell: sellMedian,
       source: 'binance-p2p',
-      currencyPair: 'USD/BOB',
+      currencyPair: 'USDT/BOB',
       country: 'BO',
       raw: {
         method: 'median',
-        tradeType: 'SELL',
+        tradeTypes: ['BUY', 'SELL'],
         amountRangeUSD: [MIN_USD, MAX_USD],
-        topN: TOP_N
+        topN: TOP_N,
+        sampleSize: { buy: buyPrices.length, sell: sellPrices.length },
+        min: { buy: buyPrices.length ? Math.min(...buyPrices) : null, sell: sellPrices.length ? Math.min(...sellPrices) : null },
+        max: { buy: buyPrices.length ? Math.max(...buyPrices) : null, sell: sellPrices.length ? Math.max(...sellPrices) : null }
       }
     };
 

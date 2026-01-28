@@ -24,26 +24,29 @@ type BrechaHistoryRow = {
   gap_pct: number;
 };
 
-type LatestRateResponse = {
-  updatedAt: string;
-  quality?: {
-    status: 'OK' | 'DEGRADED' | 'ERROR';
-    notes?: string | null;
-    sources_used?: string[];
+type CurrentRatesResponse = {
+  updatedAt: string | null;
+  status: 'OK' | 'DEGRADED' | 'ERROR';
+  sources: {
+    bcb: 'OK' | 'ERROR';
+    binance_p2p: 'OK' | 'ERROR';
   };
   paralelo: {
-    buy: number;
-    sell: number;
-    timestamp: string;
-    sourcesCount: number;
+    buy: number | null;
+    sell: number | null;
+    sources_count: number;
+    sampleSize: number;
   } | null;
   oficial: {
-    buy: number;
-    sell: number;
-    timestamp: string;
-    sourcesCount: number;
+    buy: number | null;
+    sell: number | null;
+    sources_count: number;
   } | null;
-  errors?: { source: string; error: string }[];
+  brecha: {
+    gap_abs: number | null;
+    gap_pct: number | null;
+  } | null;
+  notes?: string | null;
 };
 
 type HistoryResponse<T> = {
@@ -100,7 +103,7 @@ export default async function HomePage() {
     brechaLatestResult,
     bcbResult
   ] = await Promise.all([
-    fetchJson<LatestRateResponse>('/api/rates/latest', {}, 600),
+    fetchJson<CurrentRatesResponse>('/api/rates/current', {}, 600),
     fetchJson<HistoryResponse<DailyHistoryRow>>('/api/rates/history?kind=PARALELO&days=365', {}, 600),
     fetchJson<HistoryResponse<DailyHistoryRow>>('/api/rates/history?kind=OFICIAL&days=365', {}, 600),
     fetchJson<HistoryResponse<BrechaHistoryRow>>('/api/brecha/history?days=365', {}, 600),
@@ -111,7 +114,7 @@ export default async function HomePage() {
   const latest = latestResult.data;
   const paralelo = latest?.paralelo ?? null;
   const oficial = latest?.oficial ?? null;
-  const brecha = brechaLatestResult.data?.brecha ?? null;
+  const brecha = latest?.brecha ?? brechaLatestResult.data?.brecha ?? null;
   const paraleloHistory = paraleloHistoryResult.data?.data ?? [];
   const oficialHistory = oficialHistoryResult.data?.data ?? [];
   const brechaHistory = brechaHistoryResult.data?.data ?? [];
@@ -143,27 +146,23 @@ export default async function HomePage() {
     }))
   };
 
-  const lastUpdated = paralelo?.timestamp
-    ? new Date(paralelo.timestamp)
-    : oficial?.timestamp
-      ? new Date(oficial.timestamp)
-      : null;
+  const lastUpdated = latest?.updatedAt ? new Date(latest.updatedAt) : null;
   const bcbData = bcbResult.ok ? bcbResult.data : null;
 
   const sourceBadges = [
-    { name: 'BCB', active: Boolean(bcbData) },
-    { name: 'Binance P2P', active: (paralelo?.sourcesCount ?? 0) > 0 },
-    { name: 'Fuentes oficiales', active: (oficial?.sourcesCount ?? 0) > 0 }
+    { name: 'BCB', active: latest?.sources?.bcb === 'OK' || Boolean(bcbData) },
+    { name: 'Binance P2P', active: latest?.sources?.binance_p2p === 'OK' }
   ];
 
-  const parallelSourceNote = (paralelo?.sourcesCount ?? 0) > 0
+  const parallelSourceNote = (paralelo?.sampleSize ?? 0) > 0
     ? 'Fuente base: Binance P2P (mediana de avisos).'
     : 'Paralelo sin fuentes activas. Intentaremos actualizar pronto.';
 
-  const activeSources = sourceBadges.filter((source) => source.active).length;
+  const parallelActive = (paralelo?.sampleSize ?? 0) > 0;
+  const officialActive = (oficial?.sources_count ?? 0) > 0;
+  const activeSources = [parallelActive, officialActive].filter(Boolean).length;
   const hasAnyData = Boolean(paralelo || oficial || brecha || bcbData);
-  const quality = latest?.quality ?? null;
-  const status = quality?.status ?? (hasAnyData ? 'DEGRADED' : 'ERROR');
+  const status = latest?.status ?? (hasAnyData ? 'DEGRADED' : 'ERROR');
   const statusLabel = status === 'OK' ? 'OK' : status === 'DEGRADED' ? 'Degradado' : 'Error';
   const statusClass =
     status === 'OK'
@@ -235,9 +234,9 @@ export default async function HomePage() {
               La información es referencial y se basa en múltiples fuentes públicas. No constituye
               una recomendación financiera.
             </p>
-            {status !== 'OK' && quality?.notes ? (
+            {status !== 'OK' && latest?.notes ? (
               <p className="text-xs text-ink/60">
-                Nota técnica: {quality.notes}
+                Nota técnica: {latest?.notes}
               </p>
             ) : null}
             <DeclareForm />
@@ -249,8 +248,8 @@ export default async function HomePage() {
               buy={paralelo?.buy}
               sell={paralelo?.sell}
               delta={paraleloDelta}
-              updatedAt={paralelo?.timestamp ? new Date(paralelo.timestamp) : null}
-              sourcesCount={paralelo?.sourcesCount}
+              updatedAt={lastUpdated}
+              sourcesCount={paralelo?.sampleSize}
               href="/paralelo"
               sourceNote={parallelSourceNote}
             />
@@ -259,8 +258,8 @@ export default async function HomePage() {
               buy={oficial?.buy}
               sell={oficial?.sell}
               delta={oficialDelta}
-              updatedAt={oficial?.timestamp ? new Date(oficial.timestamp) : null}
-              sourcesCount={oficial?.sourcesCount}
+              updatedAt={lastUpdated}
+              sourcesCount={oficial?.sources_count}
               href="/oficial"
             />
             <BrechaCard gapAbs={brecha?.gap_abs} gapPct={brecha?.gap_pct} />

@@ -57,6 +57,7 @@ npm run dev
 ## Environment Variables (Required)
 - `DATABASE_URL`: conexion a Postgres (requerido por Prisma)
 - `DECLARED_SALT`: secreto para hashear IP y user-agent en reportes declarados
+- `ADMIN_KEY`: clave para el endpoint `/api/rates/refresh`
 
 Configura estas variables en Vercel para Production, Preview y Development.
 
@@ -64,6 +65,7 @@ Configura estas variables en Vercel para Production, Preview y Development.
 - `DATABASE_URL`: conexion a Postgres (Neon recomendado)
 - `SITE_URL`: URL publica del sitio
 - `CRON_SECRET`: secreto para el endpoint interno de ingesta
+- `ADMIN_KEY`: clave para refrescar `/api/rates/refresh`
 - `DECLARED_SALT`: sal para anonimizar IP y user-agent en reportes declarados
 - `HASH_SALT`: legado (usa `DECLARED_SALT`)
 - `SOURCE_BASE_URL`: base URL para adaptador real

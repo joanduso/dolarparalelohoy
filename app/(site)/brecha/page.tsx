@@ -21,11 +21,9 @@ type BrechaLatestResponse = {
   } | null;
 };
 
-type LatestRateResponse = {
-  quality?: {
-    status: 'OK' | 'DEGRADED' | 'ERROR';
-    notes?: string | null;
-  };
+type CurrentRatesResponse = {
+  status: 'OK' | 'DEGRADED' | 'ERROR';
+  notes?: string | null;
 };
 
 type BrechaHistoryResponse = {
@@ -49,11 +47,12 @@ export default async function BrechaPage() {
   const [latestResult, historyResult, latestRateResult] = await Promise.all([
     fetchJson<BrechaLatestResponse>('/api/brecha/latest', {}, 600),
     fetchJson<BrechaHistoryResponse>('/api/brecha/history?days=365', {}, 600),
-    fetchJson<LatestRateResponse>('/api/rates/latest', {}, 600)
+    fetchJson<CurrentRatesResponse>('/api/rates/current', {}, 600)
   ]);
 
   const latest = latestResult.data?.brecha ?? null;
-  const quality = latestRateResult.data?.quality ?? null;
+  const status = latestRateResult.data?.status ?? null;
+  const notes = latestRateResult.data?.notes ?? null;
   const history = historyResult.data?.data ?? [];
 
   const hasAnyData = Boolean(latest || history.length);
@@ -80,12 +79,12 @@ export default async function BrechaPage() {
     inLanguage: siteConfig.language
   };
 
-  const status = quality?.status ?? (hasAnyData ? 'DEGRADED' : 'ERROR');
-  const statusLabel = status === 'OK' ? 'OK' : status === 'DEGRADED' ? 'Degradado' : 'Error';
+  const statusLabelValue = status ?? (hasAnyData ? 'DEGRADED' : 'ERROR');
+  const statusLabel = statusLabelValue === 'OK' ? 'OK' : statusLabelValue === 'DEGRADED' ? 'Degradado' : 'Error';
   const statusClass =
-    status === 'OK'
+    statusLabelValue === 'OK'
       ? 'border-emerald-200 text-emerald-700 bg-emerald-50'
-      : status === 'DEGRADED'
+      : statusLabelValue === 'DEGRADED'
         ? 'border-amber-200 text-amber-800 bg-amber-50'
         : 'border-rose-200 text-rose-700 bg-rose-50';
 
@@ -161,8 +160,8 @@ export default async function BrechaPage() {
         </div>
 
         <p className="text-sm text-ink/60">{sourceNote}</p>
-        {status !== 'OK' && quality?.notes ? (
-          <p className="text-xs text-ink/60">Nota técnica: {quality.notes}</p>
+        {statusLabelValue !== 'OK' && notes ? (
+          <p className="text-xs text-ink/60">Nota técnica: {notes}</p>
         ) : null}
 
         <AdSlot label="Brecha debajo del hero" />
