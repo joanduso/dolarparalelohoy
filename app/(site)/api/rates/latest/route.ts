@@ -3,7 +3,7 @@ import { headers } from 'next/headers';
 import { getLatestRate } from '@/lib/queries';
 import { rateLimit } from '@/lib/apiRateLimit';
 
-export const revalidate = 30;
+export const revalidate = 600;
 
 export async function GET() {
   const headerList = headers();
@@ -23,9 +23,14 @@ export async function GET() {
     getLatestRate('OFICIAL')
   ]);
 
+  const errors = [];
+  if (!paralelo) errors.push({ source: 'PARALELO', error: 'unavailable' });
+  if (!oficial) errors.push({ source: 'OFICIAL', error: 'unavailable' });
+
   return NextResponse.json({
     updatedAt: new Date().toISOString(),
     paralelo,
-    oficial
+    oficial,
+    errors
   });
 }

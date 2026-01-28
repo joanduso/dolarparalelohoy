@@ -3,6 +3,8 @@ import { headers } from 'next/headers';
 import { prisma } from '@/lib/db';
 import { rateLimit } from '@/lib/apiRateLimit';
 
+export const revalidate = 600;
+
 function parseDate(value: string | null, fallback: Date) {
   if (!value) return fallback;
   const parsed = new Date(value);
@@ -30,10 +32,13 @@ export async function GET(request: Request) {
   }
 
   let to = parseDate(url.searchParams.get('to'), new Date());
-  let from = parseDate(
-    url.searchParams.get('from'),
-    new Date(to.getTime() - 30 * 24 * 60 * 60 * 1000)
-  );
+  const daysParam = Number(url.searchParams.get('days') ?? '');
+  const defaultFrom = new Date(to.getTime() - 30 * 24 * 60 * 60 * 1000);
+  let from = parseDate(url.searchParams.get('from'), defaultFrom);
+
+  if (!Number.isNaN(daysParam) && daysParam > 0) {
+    from = new Date(to.getTime() - daysParam * 24 * 60 * 60 * 1000);
+  }
 
   if (from > to) {
     const temp = from;

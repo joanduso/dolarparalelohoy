@@ -1,10 +1,19 @@
-﻿import { JsonLd } from '@/app/(site)/_components/JsonLd';
+import { JsonLd } from '@/app/(site)/_components/JsonLd';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
-import { getDailyHistory } from '@/lib/queries';
+import { fetchJson } from '@/lib/serverFetch';
 import { formatCurrency, formatDate } from '@/lib/format';
 import type { Metadata } from 'next';
 
-export const revalidate = 600;
+type DailyHistoryRow = {
+  date: string;
+  buy_avg: number;
+  sell_avg: number;
+  sources_count: number;
+};
+
+type HistoryResponse = {
+  data: DailyHistoryRow[];
+};
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -20,7 +29,13 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HistoricoParaleloPage() {
-  const history = await getDailyHistory('PARALELO', 365);
+  const historyResult = await fetchJson<HistoryResponse>(
+    '/api/rates/history?kind=PARALELO&days=365',
+    {},
+    600
+  );
+
+  const history = historyResult.data?.data ?? [];
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -31,16 +46,40 @@ export default async function HistoricoParaleloPage() {
     inLanguage: siteConfig.language
   };
 
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: '?Qu? periodo cubre el hist?rico?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Mostramos hasta 12 meses de promedios diarios para comparar tendencias.'
+        }
+      },
+      {
+        '@type': 'Question',
+        name: '?Cada cu?nto se actualiza?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Los datos se refrescan autom?ticamente cada 10 minutos al expirar el cach?.'
+        }
+      }
+    ]
+  };
+
   return (
     <main className="section-shell pb-16">
       <JsonLd data={jsonLd} />
+      <JsonLd data={faqJsonLd} />
       <section className="grid gap-6">
         <div className="grid gap-3">
-          <p className="kicker">Histórico dólar paralelo Bolivia</p>
-          <h1 className="font-serif text-3xl sm:text-4xl">Histórico dólar paralelo Bolivia</h1>
+          <p className="kicker">Hist?rico d?lar paralelo Bolivia</p>
+          <h1 className="font-serif text-3xl sm:text-4xl">Hist?rico d?lar paralelo Bolivia</h1>
           <p className="text-ink/70 max-w-2xl">
-            Serie histórica con promedios diarios del dólar paralelo. Datos agregados de múltiples
-            fuentes y filtrados por validación.
+            Serie hist?rica con promedios diarios del d?lar paralelo. Datos agregados de m?ltiples
+            fuentes y filtrados por validaci?n.
           </p>
         </div>
 
@@ -58,13 +97,13 @@ export default async function HistoricoParaleloPage() {
               {history.length === 0 && (
                 <tr>
                   <td className="py-3" colSpan={4}>
-                    Sin datos disponibles.
+                    No pudimos actualizar las fuentes.
                   </td>
                 </tr>
               )}
               {[...history].reverse().map((row) => (
-                <tr key={row.date.toISOString()} className="border-t border-black/5">
-                  <td className="py-2">{formatDate(row.date)}</td>
+                <tr key={row.date} className="border-t border-black/5">
+                  <td className="py-2">{formatDate(new Date(row.date))}</td>
                   <td className="py-2">{formatCurrency(row.buy_avg)}</td>
                   <td className="py-2">{formatCurrency(row.sell_avg)}</td>
                   <td className="py-2">{row.sources_count}</td>
