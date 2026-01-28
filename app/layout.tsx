@@ -1,9 +1,10 @@
-﻿import type { Metadata } from 'next';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Alegreya, Commissioner } from 'next/font/google';
 import './globals.css';
 import { siteConfig } from '@/lib/seo';
 import { StickyAd } from '@/app/(site)/_components/StickyAd';
+import { Logo } from '@/components/Logo';
 
 const serif = Alegreya({
   subsets: ['latin'],
@@ -60,10 +61,8 @@ export default function RootLayout({
       <body className="font-sans">
         <div className="gradient-panel min-h-screen">
           <header className="section-shell py-6">
-            <div className="flex flex-col gap-2">
-              <Link href="/" className="font-serif text-2xl sm:text-3xl">
-                {siteConfig.name}
-              </Link>
+            <div className="flex flex-col gap-3">
+              <Logo />
               <p className="text-sm text-ink/70 max-w-2xl">
                 Seguimiento diario del dólar paralelo y oficial en Bolivia con metodología
                 transparente y datos agregados de múltiples fuentes.

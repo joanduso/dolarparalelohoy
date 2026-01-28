@@ -53,7 +53,7 @@ export default async function HistoricoParaleloPage() {
     mainEntity: [
       {
         '@type': 'Question',
-        name: '?Qu? periodo cubre el hist?rico?',
+        name: '¿Qué periodo cubre el histórico?',
         acceptedAnswer: {
           '@type': 'Answer',
           text: 'Mostramos hasta 12 meses de promedios diarios para comparar tendencias.'
@@ -61,10 +61,10 @@ export default async function HistoricoParaleloPage() {
       },
       {
         '@type': 'Question',
-        name: '?Cada cu?nto se actualiza?',
+        name: '¿Cada cuánto se actualiza?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Los datos se refrescan autom?ticamente cada 10 minutos al expirar el cach?.'
+          text: 'Los datos se refrescan automáticamente cada 10 minutos al expirar el cache.'
         }
       }
     ]
@@ -76,11 +76,11 @@ export default async function HistoricoParaleloPage() {
       <JsonLd data={faqJsonLd} />
       <section className="grid gap-6">
         <div className="grid gap-3">
-          <p className="kicker">Hist?rico d?lar paralelo Bolivia</p>
-          <h1 className="font-serif text-3xl sm:text-4xl">Hist?rico d?lar paralelo Bolivia</h1>
+          <p className="kicker">Histórico dólar paralelo Bolivia</p>
+          <h1 className="font-serif text-3xl sm:text-4xl">Histórico dólar paralelo Bolivia</h1>
           <p className="text-ink/70 max-w-2xl">
-            Serie hist?rica con promedios diarios del d?lar paralelo. Datos agregados de m?ltiples
-            fuentes y filtrados por validaci?n.
+            Serie histórica con promedios diarios del dólar paralelo. Datos agregados de múltiples
+            fuentes y filtrados por validación.
           </p>
         </div>
 

@@ -7,6 +7,7 @@ import { BCBCard } from '@/app/(site)/_components/BCBCard';
 import { MiniTable } from '@/app/(site)/_components/MiniTable';
 import { AdSlot } from '@/app/(site)/_components/AdSlot';
 import { Skeleton } from '@/app/(site)/_components/Skeleton';
+import { DeclareForm } from '@/app/(site)/_components/DeclareForm';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
 import { fetchJson } from '@/lib/serverFetch';
 import { formatDateTime } from '@/lib/format';
@@ -25,6 +26,11 @@ type BrechaHistoryRow = {
 
 type LatestRateResponse = {
   updatedAt: string;
+  quality?: {
+    status: 'OK' | 'DEGRADED' | 'ERROR';
+    notes?: string | null;
+    sources_used?: string[];
+  };
   paralelo: {
     buy: number;
     sell: number;
@@ -156,6 +162,15 @@ export default async function HomePage() {
 
   const activeSources = sourceBadges.filter((source) => source.active).length;
   const hasAnyData = Boolean(paralelo || oficial || brecha || bcbData);
+  const quality = latest?.quality ?? null;
+  const status = quality?.status ?? (hasAnyData ? 'DEGRADED' : 'ERROR');
+  const statusLabel = status === 'OK' ? 'OK' : status === 'DEGRADED' ? 'Degradado' : 'Error';
+  const statusClass =
+    status === 'OK'
+      ? 'border-emerald-200 text-emerald-700 bg-emerald-50'
+      : status === 'DEGRADED'
+        ? 'border-amber-200 text-amber-800 bg-amber-50'
+        : 'border-rose-200 text-rose-700 bg-rose-50';
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -178,21 +193,26 @@ export default async function HomePage() {
           <div className="grid gap-4">
             <p className="kicker">Actualizado cada 10 minutos</p>
             <h1 className="font-serif text-4xl sm:text-5xl leading-tight">
-              D?lar paralelo y oficial en Bolivia hoy
+              Dólar paralelo y oficial en Bolivia hoy
             </h1>
             <p className="text-lg text-ink max-w-2xl">
-              Datos reales, fuentes visibles y series hist?ricas para entender la brecha cambiaria
+              Datos reales, fuentes visibles y series históricas para entender la brecha cambiaria
               en Bolivia con confianza.
             </p>
           </div>
 
           <div className="card p-5 grid gap-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <h2 className="font-serif text-2xl">Fuentes y metodolog?a</h2>
-              <span className="text-sm text-ink/70">
-                ?ltima actualizaci?n:{' '}
-                {lastUpdated ? formatDateTime(lastUpdated) : <Skeleton className="h-4 w-24" />}
-              </span>
+              <h2 className="font-serif text-2xl">Fuentes y metodología</h2>
+              <div className="flex flex-wrap items-center gap-3 text-sm text-ink/70">
+                <span>
+                  Última actualización:{' '}
+                  {lastUpdated ? formatDateTime(lastUpdated) : <Skeleton className="h-4 w-24" />}
+                </span>
+                <span className={`px-2 py-1 rounded-full border text-xs ${statusClass}`}>
+                  Estado: {statusLabel}
+                </span>
+              </div>
             </div>
             <div className="flex flex-wrap items-center gap-4 text-sm text-ink/70">
               <span>Fuentes activas: {activeSources}</span>
@@ -212,14 +232,20 @@ export default async function HomePage() {
               </div>
             </div>
             <p className="text-xs text-ink/60">
-              La informaci?n es referencial y se basa en m?ltiples fuentes p?blicas. No constituye
-              una recomendaci?n financiera.
+              La información es referencial y se basa en múltiples fuentes públicas. No constituye
+              una recomendación financiera.
             </p>
+            {status !== 'OK' && quality?.notes ? (
+              <p className="text-xs text-ink/60">
+                Nota técnica: {quality.notes}
+              </p>
+            ) : null}
+            <DeclareForm />
           </div>
 
-          <div className="grid gap-4 lg:grid-cols-4 items-stretch">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 items-stretch">
             <RateCard
-              title="D?lar paralelo"
+              title="Dólar paralelo"
               buy={paralelo?.buy}
               sell={paralelo?.sell}
               delta={paraleloDelta}
@@ -229,7 +255,7 @@ export default async function HomePage() {
               sourceNote={parallelSourceNote}
             />
             <RateCard
-              title="D?lar oficial"
+              title="Dólar oficial"
               buy={oficial?.buy}
               sell={oficial?.sell}
               delta={oficialDelta}
@@ -260,44 +286,44 @@ export default async function HomePage() {
         <ChartCard data={chartData} />
 
         <div className="card p-5 flex flex-col gap-3">
-          <h2 className="font-serif text-2xl">Explora m?s datos</h2>
+          <h2 className="font-serif text-2xl">Explora más datos</h2>
           <div className="flex flex-wrap gap-4 text-sm">
             <Link href="/paralelo" className="underline underline-offset-4">
-              D?lar paralelo hoy
+              Dólar paralelo hoy
             </Link>
             <Link href="/oficial" className="underline underline-offset-4">
-              D?lar oficial hoy
+              Dólar oficial hoy
             </Link>
             <Link href="/brecha" className="underline underline-offset-4">
               Brecha cambiaria
             </Link>
             <Link href="/historico/paralelo" className="underline underline-offset-4">
-              Hist?rico paralelo
+              Histórico paralelo
             </Link>
             <Link href="/historico/oficial" className="underline underline-offset-4">
-              Hist?rico oficial
+              Histórico oficial
             </Link>
           </div>
         </div>
 
         <div className="grid gap-4 lg:grid-cols-2">
-          <MiniTable title="Hist?rico reciente paralelo" rows={paraleloMiniRows} href="/historico/paralelo" />
-          <MiniTable title="Hist?rico reciente oficial" rows={oficialMiniRows} href="/historico/oficial" />
+          <MiniTable title="Histórico reciente paralelo" rows={paraleloMiniRows} href="/historico/paralelo" />
+          <MiniTable title="Histórico reciente oficial" rows={oficialMiniRows} href="/historico/oficial" />
         </div>
 
         <div className="card p-6 flex flex-col gap-3">
-          <h2 className="font-serif text-2xl">Metodolog?a r?pida</h2>
+          <h2 className="font-serif text-2xl">Metodología rápida</h2>
           <p className="text-ink/70">
-            Publicamos promedios diarios basados en m?ltiples fuentes disponibles p?blicamente. Los
-            valores se actualizan durante el d?a y pasan por filtros de validaci?n para detectar
+            Publicamos promedios diarios basados en múltiples fuentes disponibles públicamente. Los
+            valores se actualizan durante el día y pasan por filtros de validación para detectar
             outliers.
           </p>
           <div className="flex flex-wrap gap-4 text-sm">
             <Link href="/faq" className="underline underline-offset-4">
-              Ver metodolog?a completa
+              Ver metodología completa
             </Link>
             <Link href="/brecha" className="underline underline-offset-4">
-              ?Qu? es la brecha cambiaria?
+              ¿Qué es la brecha cambiaria?
             </Link>
           </div>
         </div>

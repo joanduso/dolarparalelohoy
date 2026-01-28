@@ -19,6 +19,10 @@ type DailyHistoryRow = {
 };
 
 type LatestRateResponse = {
+  quality?: {
+    status: 'OK' | 'DEGRADED' | 'ERROR';
+    notes?: string | null;
+  };
   paralelo: {
     buy: number;
     sell: number;
@@ -51,6 +55,7 @@ export default async function ParaleloPage() {
   ]);
 
   const latest = latestResult.data?.paralelo ?? null;
+  const quality = latestResult.data?.quality ?? null;
   const history = historyResult.data?.data ?? [];
   const miniRows = history.slice(-14).reverse().map((row) => ({
     ...row,
@@ -79,24 +84,33 @@ export default async function ParaleloPage() {
     inLanguage: siteConfig.language
   };
 
+  const status = quality?.status ?? (hasAnyData ? 'DEGRADED' : 'ERROR');
+  const statusLabel = status === 'OK' ? 'OK' : status === 'DEGRADED' ? 'Degradado' : 'Error';
+  const statusClass =
+    status === 'OK'
+      ? 'border-emerald-200 text-emerald-700 bg-emerald-50'
+      : status === 'DEGRADED'
+        ? 'border-amber-200 text-amber-800 bg-amber-50'
+        : 'border-rose-200 text-rose-700 bg-rose-50';
+
   const faqJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
     mainEntity: [
       {
         '@type': 'Question',
-        name: '?C?mo se calcula el d?lar paralelo?',
+        name: '¿Cómo se calcula el dólar paralelo?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Se calcula con promedios diarios de fuentes p?blicas y P2P, filtrando valores at?picos.'
+          text: 'Se calcula con promedios diarios de fuentes públicas y P2P, filtrando valores atípicos.'
         }
       },
       {
         '@type': 'Question',
-        name: '?Cada cu?nto se actualiza?',
+        name: '¿Cada cuánto se actualiza?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Los datos se actualizan autom?ticamente cada 10 minutos cuando el cach? expira.'
+          text: 'Los datos se actualizan automáticamente cada 10 minutos cuando el cache expira.'
         }
       }
     ]
@@ -108,10 +122,10 @@ export default async function ParaleloPage() {
       <JsonLd data={faqJsonLd} />
       <section className="grid gap-8">
         <div className="grid gap-3">
-          <p className="kicker">D?lar paralelo hoy Bolivia</p>
-          <h1 className="font-serif text-3xl sm:text-4xl">Precio d?lar paralelo Bolivia</h1>
+          <p className="kicker">Dólar paralelo hoy Bolivia</p>
+          <h1 className="font-serif text-3xl sm:text-4xl">Precio dólar paralelo Bolivia</h1>
           <p className="text-ink/70 max-w-2xl">
-            El d?lar paralelo refleja operaciones fuera del canal oficial. Publicamos promedios
+            El dólar paralelo refleja operaciones fuera del canal oficial. Publicamos promedios
             diarios para ofrecer una referencia transparente.
           </p>
         </div>
@@ -123,11 +137,16 @@ export default async function ParaleloPage() {
           </div>
         ) : null}
         <div className="card p-5 grid gap-3">
-          <div className="flex flex-wrap items-center justify-between">
-            <h2 className="font-serif text-2xl">Cotizaci?n actual</h2>
-            <span className="text-sm text-ink/60">
-              {latest?.timestamp ? formatDateTime(new Date(latest.timestamp)) : <Skeleton className="h-4 w-28" />}
-            </span>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h2 className="font-serif text-2xl">Cotización actual</h2>
+            <div className="flex items-center gap-3 text-sm text-ink/60">
+              <span>
+                {latest?.timestamp ? formatDateTime(new Date(latest.timestamp)) : <Skeleton className="h-4 w-28" />}
+              </span>
+              <span className={`px-2 py-1 rounded-full border text-xs ${statusClass}`}>
+                Estado: {statusLabel}
+              </span>
+            </div>
           </div>
           <div className="flex flex-wrap gap-6">
             <div>
@@ -151,10 +170,13 @@ export default async function ParaleloPage() {
             <p className="text-sm text-ink/60">
               {latest?.sourcesCount && latest.sourcesCount >= 2
                 ? `Confirmado por ${latest.sourcesCount} fuentes`
-                : 'Estimaci?n pendiente'}
+                : 'Estimación pendiente'}
             </p>
           </div>
           <p className="text-sm text-ink/60">{sourceNote}</p>
+          {status !== 'OK' && quality?.notes ? (
+            <p className="text-xs text-ink/60">Nota técnica: {quality.notes}</p>
+          ) : null}
         </div>
 
         <Suspense
@@ -170,15 +192,15 @@ export default async function ParaleloPage() {
         <ChartCard data={chartData} />
 
         <div className="grid gap-4 lg:grid-cols-2">
-          <MiniTable title="?ltimos 14 d?as" rows={miniRows} href="/historico/paralelo" />
+          <MiniTable title="Últimos 14 días" rows={miniRows} href="/historico/paralelo" />
           <div className="card p-5 flex flex-col gap-3">
-            <h3 className="font-serif text-xl">Qu? es el d?lar paralelo</h3>
+            <h3 className="font-serif text-xl">Qué es el dólar paralelo</h3>
             <p className="text-ink/70">
               Es el tipo de cambio que surge de operaciones fuera del mercado oficial. Se calcula
-              con promedios de fuentes p?blicas y no representa una oferta vinculante.
+              con promedios de fuentes públicas y no representa una oferta vinculante.
             </p>
             <Link href="/faq" className="underline underline-offset-4 text-sm">
-              Metodolog?a completa
+              Metodología completa
             </Link>
           </div>
         </div>
