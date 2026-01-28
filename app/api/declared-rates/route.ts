@@ -94,7 +94,11 @@ export async function POST(request: Request) {
 
     let body: DeclaredBody;
     try {
-      body = await request.json();
+      const raw = await request.text();
+      if (!raw) {
+        return NextResponse.json({ error: 'invalid_payload' }, { status: 400 });
+      }
+      body = JSON.parse(raw);
     } catch (error) {
       console.error('[declared-rates] invalid json', { message: String(error) });
       return NextResponse.json({ error: 'invalid_payload' }, { status: 400 });
