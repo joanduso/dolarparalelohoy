@@ -4,6 +4,8 @@ import { headers } from 'next/headers';
 import { prisma } from '@/lib/db';
 import { getLatestRun } from '@/lib/engine/store';
 
+export const runtime = 'nodejs';
+
 const MIN_VALUE = 3;
 const MAX_VALUE = 30;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
@@ -104,6 +106,12 @@ export async function POST(request: Request) {
 
     const parsed = parseBody(body);
     if ('error' in parsed) {
+      console.error('[declared-rates] invalid payload', {
+        error: parsed.error,
+        kindType: typeof body.kind,
+        sideType: typeof body.side,
+        valueType: typeof body.value
+      });
       return NextResponse.json({ error: 'invalid_payload' }, { status: 400 });
     }
 
