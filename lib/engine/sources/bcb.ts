@@ -21,7 +21,7 @@ const normalizeNumber = (valueText: string) => {
 };
 
 const extractBlock = (html: string) => {
-  const marker = /VALOR\s+REFERENCIAL\s+DEL\s+D[ÓO]LAR\s+ESTADOUNIDENSE/i;
+  const marker = /VALOR\s+REFERENCIAL\s+DEL\s+D[\u00d3O]LAR\s+ESTADOUNIDENSE/i;
   const match = html.match(marker);
   if (!match || match.index === undefined) return null;
   const start = Math.max(match.index - 500, 0);
@@ -31,7 +31,7 @@ const extractBlock = (html: string) => {
 
 const extractDate = (block: string) => {
   const dateRegex =
-    /(lunes|martes|mi[ée]rcoles|jueves|viernes|s[áa]bado|domingo)\s+\d{1,2}\s+de\s+[a-záéíóúñ]+\s*(?:,?\s*de)?\s*\d{4}/i;
+    /(lunes|martes|mi(?:e|\u00e9)rcoles|jueves|viernes|s(?:a|\u00e1)bado|domingo)\s+\d{1,2}\s+de\s+[a-z\u00e1\u00e9\u00ed\u00f3\u00fa\u00f1]+\s*(?:,?\s*de)?\s*\d{4}/i;
   const match = block.match(dateRegex);
   return match ? match[0].trim() : null;
 };
@@ -58,25 +58,30 @@ export async function fetchBCB(): Promise<BcbResult> {
     });
 
     if (!response.ok) {
-      throw new Error(`BCB HTTP ${response.status}`);
+      throw new Error(`BCB fetch_failed: HTTP ${response.status}`);
+    }
+
+    const contentType = response.headers.get('content-type') ?? '';
+    if (!contentType.includes('text/html')) {
+      throw new Error(`BCB parse_failed: invalid_content_type ${contentType}`);
     }
 
     const html = await response.text();
     const block = extractBlock(html);
     if (!block) {
-      throw new Error('BCB section missing');
+      throw new Error('BCB parse_failed: section_missing');
     }
 
     const dateText = extractDate(block);
     const compraText = extractValue(block, 'compra');
     const ventaText = extractValue(block, 'venta');
     if (!ventaText) {
-      throw new Error('BCB venta missing');
+      throw new Error('BCB parse_failed: venta_missing');
     }
 
     const venta = normalizeNumber(ventaText);
     if (!venta) {
-      throw new Error('BCB venta invalid');
+      throw new Error('BCB parse_failed: venta_invalid');
     }
 
     return {

@@ -54,6 +54,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="es" className={`${serif.variable} ${sans.variable}`}>
+      <head>
+        <meta charSet="utf-8" />
+      </head>
       <body className="font-sans">
         <div className="gradient-panel min-h-screen">
           <header className="section-shell py-6">

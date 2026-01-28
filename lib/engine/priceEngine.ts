@@ -11,30 +11,6 @@ import { getLatestRun, getRun24hAgo, saveRun } from './store';
 const SOURCE_TTL_MS = 90_000;
 const LATEST_TTL_MS = 60_000;
 
-type SourceResult<T> = {
-  ok: boolean;
-  data?: T;
-  error?: string;
-};
-
-async function fetchBCBSource(): Promise<SourceResult<BcbResult>> {
-  try {
-    const data = await fetchBCB();
-    return { ok: true, data };
-  } catch (error) {
-    return { ok: false, error: String(error) };
-  }
-}
-
-async function fetchBinanceSource(): Promise<SourceResult<Sample[]>> {
-  try {
-    const data = await fetchBinanceP2P();
-    return { ok: true, data };
-  } catch (error) {
-    return { ok: false, error: String(error) };
-  }
-}
-
 export async function computeLatest() {
   const cached = getCache<LatestRateResult>('latest');
   if (cached) {
@@ -44,30 +20,38 @@ export async function computeLatest() {
   const start = Date.now();
   const errors: Array<{ source: PriceSource; reason: string }> = [];
 
-  const bcbCached = getCache<Awaited<ReturnType<typeof fetchBCB>> | null>('bcb');
+  const bcbCached = getCache<BcbResult | null>('bcb');
   const binanceCached = getCache<Sample[] | null>('binance');
 
-  const [bcbResult, binanceResult]: [SourceResult<BcbResult>, SourceResult<Sample[]>] =
-    await Promise.all([
-      bcbCached ? { ok: true, data: bcbCached, error: undefined } : fetchBCBSource(),
-      binanceCached ? { ok: true, data: binanceCached, error: undefined } : fetchBinanceSource()
-    ]);
+  let bcbData: BcbResult | null = bcbCached ?? null;
+  let binanceSamples: Sample[] = binanceCached ?? [];
 
-  if (!bcbCached && bcbResult.ok) {
-    setCache('bcb', bcbResult.data, SOURCE_TTL_MS);
-  }
-  if (!binanceCached && binanceResult.ok) {
-    setCache('binance', binanceResult.data, SOURCE_TTL_MS);
+  if (!bcbCached) {
+    try {
+      bcbData = await fetchBCB();
+      setCache('bcb', bcbData, SOURCE_TTL_MS);
+    } catch (error) {
+      errors.push({ source: 'BCB', reason: String(error) });
+    }
   }
 
-  const officialBcb = bcbResult.ok && bcbResult.data ? bcbResult.data.official_rate : null;
+  if (!binanceCached) {
+    try {
+      binanceSamples = await fetchBinanceP2P();
+      setCache('binance', binanceSamples, SOURCE_TTL_MS);
+    } catch (error) {
+      errors.push({ source: 'BINANCE', reason: String(error) });
+    }
+  }
+
+  const officialBcb = bcbData ? bcbData.official_rate : null;
   if (!officialBcb) {
-    errors.push({ source: 'BCB', reason: bcbResult.error ?? 'no_data' });
+    errors.push({ source: 'BCB', reason: 'no_data' });
   }
 
-  const rawSamples = binanceResult.ok && binanceResult.data ? binanceResult.data : [];
+  const rawSamples = binanceSamples ?? [];
   if (rawSamples.length === 0) {
-    errors.push({ source: 'BINANCE', reason: binanceResult.error ?? 'no_data' });
+    errors.push({ source: 'BINANCE', reason: 'no_data' });
   }
 
   const cleanSamples = outlierFilter(sanityFilter(rawSamples));
@@ -126,9 +110,9 @@ export async function computeLatest() {
 
   const notes =
     status === 'DEGRADED'
-      ? 'Fuentes incompletas o pocas muestras válidas.'
+      ? 'Fuentes incompletas o pocas muestras validas.'
       : status === 'ERROR'
-        ? 'No fue posible obtener datos válidos de las fuentes.'
+        ? 'No fue posible obtener datos validos de las fuentes.'
         : null;
 
   if (status === 'ERROR' && latestRun) {
@@ -156,7 +140,7 @@ export async function computeLatest() {
         },
         sources_used: latestRun.sourcesUsed as PriceSource[],
         status: 'DEGRADED',
-        notes: 'Fallback al último valor persistido.'
+        notes: 'Fallback al ultimo valor persistido.'
       },
       errors
     };
@@ -191,7 +175,12 @@ export async function computeLatest() {
     errors
   };
 
-  await saveRun(prisma, result);
+  try {
+    await saveRun(prisma, result);
+  } catch (error) {
+    logWarn('priceEngine save failed', { error: String(error) });
+  }
+
   setCache('latest', result, LATEST_TTL_MS);
 
   const durationMs = Date.now() - start;
