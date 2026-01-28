@@ -27,7 +27,7 @@ export function DeclareForm({ triggerLabel = 'Reportar precio', defaultKind = 'P
 
     if (!Number.isFinite(value) || value <= 0) {
       setLoading(false);
-      setError('Ingresa un valor válido.');
+      setError('Ingresa un valor valido.');
       return;
     }
 
@@ -45,27 +45,54 @@ export function DeclareForm({ triggerLabel = 'Reportar precio', defaultKind = 'P
       source_type: form.get('source_type')
     };
 
-    const res = await fetch('/api/declared-rates', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10_000);
 
-    const data = await res.json();
-    if (res.ok && data.ok) {
-      setStatus('Reporte recibido. Gracias por aportar.');
-      event.currentTarget.reset();
-    } else if (res.ok) {
-      setStatus('Reporte recibido. Quedó en revisión.');
-    } else if (data?.error === 'rate_limited') {
-      setError('Ya enviaste un reporte recientemente. Intenta más tarde.');
-    } else {
-      setError('No se pudo enviar el reporte. Intenta más tarde.');
+    try {
+      const res = await fetch('/api/declared-rates', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(payload),
+        signal: controller.signal
+      });
+
+      const text = await res.text();
+      let data: any = null;
+      if (text) {
+        try {
+          data = JSON.parse(text);
+        } catch {
+          data = null;
+        }
+      }
+
+      if (!res.ok) {
+        throw new Error(data?.error || `HTTP ${res.status}`);
+      }
+
+      if (data?.ok) {
+        setStatus('Reporte recibido. Gracias por aportar.');
+        event.currentTarget.reset();
+        setTimeout(() => setOpen(false), 1200);
+      } else {
+        setStatus('Reporte recibido. Quedo en revision.');
+        event.currentTarget.reset();
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      const name = err && typeof err === 'object' && 'name' in err ? String((err as { name?: string }).name) : '';
+      if (name === 'AbortError' || message.includes('AbortError')) {
+        setError('Tiempo de espera agotado. Intenta nuevamente.');
+      } else if (message === 'rate_limited') {
+        setError('Ya enviaste un reporte recientemente. Intenta mas tarde.');
+      } else {
+        setError('No se pudo enviar el reporte. Intenta mas tarde.');
+      }
+    } finally {
+      clearTimeout(timeoutId);
+      setLoading(false);
     }
-
-    setLoading(false);
   }
-
   return (
     <div className="flex items-center gap-3">
       <button

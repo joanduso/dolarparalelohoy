@@ -46,11 +46,18 @@ npm run ingest
 npm run dev
 ```
 
+## Environment Variables (Required)
+- `DATABASE_URL`: conexion a Postgres (requerido por Prisma)
+- `DECLARED_SALT`: secreto para hashear IP y user-agent en reportes declarados
+
+Configura estas variables en Vercel para Production, Preview y Development.
+
 ## Variables de entorno
 - `DATABASE_URL`: conexion a Postgres (Neon recomendado)
 - `SITE_URL`: URL publica del sitio
 - `CRON_SECRET`: secreto para el endpoint interno de ingesta
-- `HASH_SALT`: sal para anonimizar IP y user-agent en reportes declarados
+- `DECLARED_SALT`: sal para anonimizar IP y user-agent en reportes declarados
+- `HASH_SALT`: legado (usa `DECLARED_SALT`)
 - `SOURCE_BASE_URL`: base URL para adaptador real
 - `SOURCE_ROBOTS_URL`: URL de robots.txt del proveedor
 - `SOURCE_TERMS_URL`: URL de terminos del proveedor

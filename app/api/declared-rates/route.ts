@@ -17,7 +17,7 @@ type DeclaredBody = {
 };
 
 function hashWithSalt(value: string) {
-  const salt = process.env.DECLARED_SALT ?? '';
+  const salt = process.env.DECLARED_SALT ?? process.env.HASH_SALT ?? '';
   return crypto.createHash('sha256').update(`${salt}:${value}`).digest('hex');
 }
 
@@ -85,114 +85,154 @@ async function getLatestBase(kind: DeclaredBody['kind'], side: DeclaredBody['sid
 }
 
 export async function POST(request: Request) {
-  const headerList = headers();
-  const ip = getClientIp(headerList);
-  const userAgent = headerList.get('user-agent') ?? 'unknown';
-
-  let body: DeclaredBody;
   try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: 'invalid_json' }, { status: 400 });
-  }
+    const headerList = headers();
+    const ip = getClientIp(headerList);
+    const userAgent = headerList.get('user-agent') ?? 'unknown';
 
-  const parsed = parseBody(body);
-  if ('error' in parsed) {
-    return NextResponse.json({ error: parsed.error }, { status: 400 });
-  }
-
-  const ipHash = hashWithSalt(ip);
-  const uaHash = hashWithSalt(userAgent);
-  const recent = await prisma.declaredRate.findFirst({
-    where: {
-      ip_hash: ipHash,
-      created_at: { gte: new Date(Date.now() - RATE_LIMIT_WINDOW_MS) }
+    let body: DeclaredBody;
+    try {
+      body = await request.json();
+    } catch (error) {
+      console.error('[declared-rates] invalid json', { message: String(error) });
+      return NextResponse.json({ error: 'invalid_payload' }, { status: 400 });
     }
-  });
 
-  if (recent) {
-    return NextResponse.json({ error: 'rate_limited' }, { status: 429 });
-  }
-
-  const { base, baseAvailable } = await getLatestBase(parsed.kind, parsed.side);
-  const baseValue = baseAvailable && base !== null ? base : parsed.value;
-  const deviation_pct = baseAvailable
-    ? ((parsed.value - baseValue) / baseValue) * 100
-    : 0;
-
-  const deviationAbs = Math.abs(deviation_pct);
-  let status: 'ACCEPTED' | 'FLAGGED' | 'REJECTED';
-  let trust_score = 0.4;
-
-  if (!baseAvailable) {
-    status = 'FLAGGED';
-    trust_score = 0.4;
-  } else if (deviationAbs <= 10) {
-    status = 'ACCEPTED';
-    trust_score = 0.7;
-  } else if (deviationAbs <= 25) {
-    status = 'FLAGGED';
-    trust_score = 0.4;
-  } else {
-    status = 'REJECTED';
-    trust_score = 0.1;
-  }
-
-  await prisma.declaredRate.create({
-    data: {
-      kind: parsed.kind,
-      side: parsed.side,
-      value: parsed.value,
-      city: parsed.city,
-      source_type: parsed.source_type,
-      base_value_at_submit: baseValue,
-      deviation_pct,
-      status,
-      trust_score,
-      ip_hash: ipHash,
-      user_agent_hash: uaHash
+    if (!body || typeof body !== 'object') {
+      return NextResponse.json({ error: 'invalid_payload' }, { status: 400 });
     }
-  });
 
-  return NextResponse.json(
-    { ok: status === 'ACCEPTED', status, deviation_pct },
-    { status: 201 }
-  );
+    const parsed = parseBody(body);
+    if ('error' in parsed) {
+      return NextResponse.json({ error: 'invalid_payload' }, { status: 400 });
+    }
+
+    const ipHash = hashWithSalt(ip);
+    const uaHash = hashWithSalt(userAgent);
+    const recent = await prisma.declaredRate.findFirst({
+      where: {
+        ip_hash: ipHash,
+        created_at: { gte: new Date(Date.now() - RATE_LIMIT_WINDOW_MS) }
+      }
+    });
+
+    if (recent) {
+      return NextResponse.json({ error: 'rate_limited' }, { status: 429 });
+    }
+
+    let baseResult;
+    try {
+      baseResult = await getLatestBase(parsed.kind, parsed.side);
+    } catch (error) {
+      console.error('[declared-rates] latest base failed', { message: String(error) });
+      return NextResponse.json(
+        { error: 'internal_error', message: 'latest_base_failed' },
+        { status: 500 }
+      );
+    }
+
+    const { base, baseAvailable } = baseResult;
+    const baseValue = baseAvailable && base !== null ? base : parsed.value;
+    const deviation_pct = baseAvailable
+      ? ((parsed.value - baseValue) / baseValue) * 100
+      : 0;
+
+    const deviationAbs = Math.abs(deviation_pct);
+    let status: 'ACCEPTED' | 'FLAGGED' | 'REJECTED';
+    let trust_score = 0.4;
+
+    if (!baseAvailable) {
+      status = 'FLAGGED';
+      trust_score = 0.4;
+    } else if (deviationAbs <= 10) {
+      status = 'ACCEPTED';
+      trust_score = 0.7;
+    } else if (deviationAbs <= 25) {
+      status = 'FLAGGED';
+      trust_score = 0.4;
+    } else {
+      status = 'REJECTED';
+      trust_score = 0.1;
+    }
+
+    try {
+      await prisma.declaredRate.create({
+        data: {
+          kind: parsed.kind,
+          side: parsed.side,
+          value: parsed.value,
+          city: parsed.city,
+          source_type: parsed.source_type,
+          base_value_at_submit: baseValue,
+          deviation_pct,
+          status,
+          trust_score,
+          ip_hash: ipHash,
+          user_agent_hash: uaHash
+        }
+      });
+    } catch (error) {
+      console.error('[declared-rates] create failed', { message: String(error) });
+      return NextResponse.json(
+        { error: 'internal_error', message: 'insert_failed' },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json(
+      { ok: true, status, deviation_pct },
+      { status: 201 }
+    );
+  } catch (error) {
+    console.error('[declared-rates] handler failed', { message: String(error) });
+    return NextResponse.json(
+      { error: 'internal_error', message: String(error) },
+      { status: 500 }
+    );
+  }
 }
 
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const limitParam = Number(searchParams.get('limit') ?? '20');
-  const limit = Number.isFinite(limitParam) ? Math.min(Math.max(limitParam, 1), 50) : 20;
+  try {
+    const { searchParams } = new URL(request.url);
+    const limitParam = Number(searchParams.get('limit') ?? '20');
+    const limit = Number.isFinite(limitParam) ? Math.min(Math.max(limitParam, 1), 50) : 20;
 
-  const rows = await prisma.declaredRate.findMany({
-    where: { status: { in: ['ACCEPTED', 'FLAGGED'] } },
-    orderBy: { created_at: 'desc' },
-    take: limit,
-    select: {
-      id: true,
-      kind: true,
-      side: true,
-      value: true,
-      city: true,
-      source_type: true,
-      deviation_pct: true,
-      status: true,
-      created_at: true
-    }
-  });
+    const rows = await prisma.declaredRate.findMany({
+      where: { status: { in: ['ACCEPTED', 'FLAGGED'] } },
+      orderBy: { created_at: 'desc' },
+      take: limit,
+      select: {
+        id: true,
+        kind: true,
+        side: true,
+        value: true,
+        city: true,
+        source_type: true,
+        deviation_pct: true,
+        status: true,
+        created_at: true
+      }
+    });
 
-  return NextResponse.json({
-    data: rows.map((row) => ({
-      id: row.id,
-      kind: row.kind,
-      side: row.side,
-      value: row.value,
-      city: row.city,
-      source_type: row.source_type,
-      deviation_pct: row.deviation_pct,
-      status: row.status,
-      created_at: row.created_at
-    }))
-  });
+    return NextResponse.json({
+      data: rows.map((row) => ({
+        id: row.id,
+        kind: row.kind,
+        side: row.side,
+        value: row.value,
+        city: row.city,
+        source_type: row.source_type,
+        deviation_pct: row.deviation_pct,
+        status: row.status,
+        created_at: row.created_at
+      }))
+    });
+  } catch (error) {
+    console.error('[declared-rates] get failed', { message: String(error) });
+    return NextResponse.json(
+      { error: 'internal_error', message: String(error) },
+      { status: 500 }
+    );
+  }
 }
