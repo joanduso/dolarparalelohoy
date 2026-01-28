@@ -4,11 +4,11 @@ import { Skeleton } from '@/app/(site)/_components/Skeleton';
 
 type RateCardProps = {
   title: string;
-  buy?: number;
-  sell?: number;
+  buy?: number | null;
+  sell?: number | null;
   delta?: number | null;
   updatedAt?: Date | null;
-  sourcesCount?: number;
+  sourcesCount?: number | null;
   href: string;
   sourceNote?: string;
 };
