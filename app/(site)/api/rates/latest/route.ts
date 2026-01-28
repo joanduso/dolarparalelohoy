@@ -145,6 +145,10 @@ export async function GET() {
   const sampleBuy = toNumber(result.quality.sample_size.buy) ?? 0;
   const sampleSell = toNumber(result.quality.sample_size.sell) ?? 0;
 
+  const sourcesUsed = Array.isArray(result.quality.sources_used)
+    ? (result.quality.sources_used as string[])
+    : [];
+
   return NextResponse.json({
     timestamp_utc: timestampIso,
     official_bcb: officialBcb,
@@ -161,7 +165,7 @@ export async function GET() {
     quality: {
       confidence: result.quality.confidence,
       sample_size: { buy: sampleBuy, sell: sampleSell },
-      sources_used: result.quality.sources_used,
+      sources_used: sourcesUsed,
       status: result.quality.status,
       notes: result.quality.notes
     },
@@ -181,7 +185,7 @@ export async function GET() {
           buy: officialBcb,
           sell: officialBcb,
           timestamp: timestampIso,
-          sourcesCount: result.quality.sources_used.includes('BCB') ? 1 : 0
+          sourcesCount: sourcesUsed.includes('BCB') ? 1 : 0
         }
       : null
   }, { status: responseStatus, headers: rateHeaders });
