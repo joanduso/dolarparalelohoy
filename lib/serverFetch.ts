@@ -22,6 +22,7 @@ export async function fetchJson<T>(
   options: RequestInit = {},
   revalidate = 600
 ): Promise<FetchJsonResult<T>> {
+  // Pull-on-request + ISR: all server fetches use a shared 10-minute revalidate window.
   const baseUrl = getBaseUrl();
   const url = path.startsWith('http') ? path : `${baseUrl}${path}`;
   const response = await fetch(url, { ...options, next: { revalidate } });

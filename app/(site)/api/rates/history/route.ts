@@ -2,8 +2,10 @@
 import { headers } from 'next/headers';
 import { prisma } from '@/lib/db';
 import { rateLimit } from '@/lib/apiRateLimit';
+import { ensureFreshRates } from '@/lib/ingest/ensureFresh';
 
 export const revalidate = 600;
+export const dynamic = 'force-dynamic';
 
 function parseDate(value: string | null, fallback: Date) {
   if (!value) return fallback;
@@ -24,6 +26,8 @@ export async function GET(request: Request) {
       { status: 429, headers: { 'x-ratelimit-reset': String(limiter.resetAt) } }
     );
   }
+
+  await ensureFreshRates(prisma, 10 * 60_000);
 
   const url = new URL(request.url);
   const kindParam = url.searchParams.get('kind')?.toUpperCase() ?? 'PARALELO';

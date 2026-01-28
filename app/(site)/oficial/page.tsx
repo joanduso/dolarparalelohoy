@@ -54,6 +54,8 @@ export default async function OficialPage() {
     date: new Date(row.date)
   }));
 
+  const hasAnyData = Boolean(latest || history.length);
+
   const chartData = {
     paralelo: [],
     oficial: history.map((row) => ({
@@ -109,6 +111,12 @@ export default async function OficialPage() {
           </p>
         </div>
 
+
+        {!hasAnyData ? (
+          <div className="card p-4 text-sm text-ink/70">
+            No pudimos actualizar las fuentes. Intentaremos nuevamente en unos minutos.
+          </div>
+        ) : null}
         <div className="card p-5 grid gap-3">
           <div className="flex flex-wrap items-center justify-between">
             <h2 className="font-serif text-2xl">Cotizaci?n actual</h2>

@@ -2,8 +2,11 @@
 import { headers } from 'next/headers';
 import { getLatestRate } from '@/lib/queries';
 import { rateLimit } from '@/lib/apiRateLimit';
+import { prisma } from '@/lib/db';
+import { ensureFreshRates } from '@/lib/ingest/ensureFresh';
 
 export const revalidate = 600;
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   const headerList = headers();
@@ -17,6 +20,8 @@ export async function GET() {
       { status: 429, headers: { 'x-ratelimit-reset': String(limiter.resetAt) } }
     );
   }
+
+  await ensureFreshRates(prisma, 10 * 60_000);
 
   const [paralelo, oficial] = await Promise.all([
     getLatestRate('PARALELO'),

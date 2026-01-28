@@ -36,6 +36,7 @@ export default async function HistoricoParaleloPage() {
   );
 
   const history = historyResult.data?.data ?? [];
+  const hasAnyData = history.length > 0;
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -83,6 +84,12 @@ export default async function HistoricoParaleloPage() {
           </p>
         </div>
 
+
+        {!hasAnyData ? (
+          <div className="card p-4 text-sm text-ink/70">
+            No pudimos actualizar las fuentes. Intentaremos nuevamente en unos minutos.
+          </div>
+        ) : null}
         <div className="card p-5 overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="text-left text-ink/60">
