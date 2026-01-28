@@ -1,7 +1,6 @@
 ﻿import crypto from 'node:crypto';
 import type { PrismaClient } from '@prisma/client';
-import { paraleloSourceMock } from '../sources/paralelo_source_mock';
-import { oficialSourceMock } from '../sources/oficial_source_mock';
+import { bcbAdapter } from '../sources/bcb_adapter';
 import { binanceP2PAdapter } from '../sources/binance_p2p_adapter';
 import { normalizeRaw, type NormalizedRatePoint } from './normalize';
 import { validatePoint } from './validate';
@@ -9,7 +8,7 @@ import { computeDailyAggregates, computeBrecha } from './compute';
 import { throttle } from './rateLimit';
 import { median } from '../declared';
 
-const adapters = [paraleloSourceMock, oficialSourceMock, binanceP2PAdapter];
+const adapters = [bcbAdapter, binanceP2PAdapter];
 const BASE_SOURCE = 'base-median';
 
 function toNormalizedFromDb(row: {
