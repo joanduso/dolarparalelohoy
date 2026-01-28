@@ -96,16 +96,16 @@ export async function POST(request: Request) {
     try {
       const raw = await request.text();
       if (!raw) {
-        return NextResponse.json({ error: 'invalid_payload' }, { status: 400 });
+        return NextResponse.json({ error: 'invalid_payload', detail: 'empty_body' }, { status: 400 });
       }
       body = JSON.parse(raw);
     } catch (error) {
       console.error('[declared-rates] invalid json', { message: String(error) });
-      return NextResponse.json({ error: 'invalid_payload' }, { status: 400 });
+      return NextResponse.json({ error: 'invalid_payload', detail: 'invalid_json' }, { status: 400 });
     }
 
     if (!body || typeof body !== 'object') {
-      return NextResponse.json({ error: 'invalid_payload' }, { status: 400 });
+      return NextResponse.json({ error: 'invalid_payload', detail: 'invalid_body' }, { status: 400 });
     }
 
     const parsed = parseBody(body);
@@ -116,7 +116,7 @@ export async function POST(request: Request) {
         sideType: typeof body.side,
         valueType: typeof body.value
       });
-      return NextResponse.json({ error: 'invalid_payload' }, { status: 400 });
+      return NextResponse.json({ error: 'invalid_payload', detail: parsed.error }, { status: 400 });
     }
 
     const ipHash = hashWithSalt(ip);
