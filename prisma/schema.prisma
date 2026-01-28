@@ -36,6 +36,18 @@ enum DeclaredStatus {
   FLAGGED
 }
 
+enum RateStatus {
+  OK
+  DEGRADED
+  ERROR
+}
+
+enum ConfidenceLevel {
+  HIGH
+  MEDIUM
+  LOW
+}
+
 model RatePoint {
   id            String   @id @default(cuid())
   kind          RateKind
@@ -103,4 +115,25 @@ model AuditLog {
   status         AuditStatus
   errors_json    Json?
   inserted_count Int
+}
+
+model RatesHistory {
+  id             String           @id @default(cuid())
+  timestampUtc   DateTime
+  officialBcb    Float?
+  parallelBuy    Float?
+  parallelSell   Float?
+  parallelMid    Float?
+  minBuy         Float?
+  maxBuy         Float?
+  minSell        Float?
+  maxSell        Float?
+  sampleSizeBuy  Int
+  sampleSizeSell Int
+  sourcesUsed    String[]
+  confidence     ConfidenceLevel
+  status         RateStatus
+  notes          String?
+
+  @@index([timestampUtc])
 }

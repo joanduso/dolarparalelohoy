@@ -1,9 +1,7 @@
 ﻿import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
-import { getLatestRate } from '@/lib/queries';
 import { rateLimit } from '@/lib/apiRateLimit';
-import { prisma } from '@/lib/db';
-import { ensureFreshRates } from '@/lib/ingest/ensureFresh';
+import { computeLatest } from '@/lib/engine/priceEngine';
 
 export const revalidate = 600;
 export const dynamic = 'force-dynamic';
@@ -21,21 +19,40 @@ export async function GET() {
     );
   }
 
-  await ensureFreshRates(prisma, 10 * 60_000);
-
-  const [paralelo, oficial] = await Promise.all([
-    getLatestRate('PARALELO'),
-    getLatestRate('OFICIAL')
-  ]);
-
-  const errors = [];
-  if (!paralelo) errors.push({ source: 'PARALELO', error: 'unavailable' });
-  if (!oficial) errors.push({ source: 'OFICIAL', error: 'unavailable' });
+  const { result } = await computeLatest();
 
   return NextResponse.json({
-    updatedAt: new Date().toISOString(),
-    paralelo,
-    oficial,
-    errors
+    timestamp_utc: result.timestampUtc.toISOString(),
+    official_bcb: result.officialBcb,
+    parallel: {
+      buy: result.parallel.buy,
+      sell: result.parallel.sell,
+      mid: result.parallel.mid,
+      range: {
+        buy: { min: result.parallel.range.buy.min, max: result.parallel.range.buy.max },
+        sell: { min: result.parallel.range.sell.min, max: result.parallel.range.sell.max }
+      }
+    },
+    delta: result.delta,
+    quality: result.quality,
+    errors: result.errors,
+    // Legacy fields to avoid breaking current frontend.
+    updatedAt: result.timestampUtc.toISOString(),
+    paralelo: result.parallel.mid
+      ? {
+          buy: result.parallel.buy,
+          sell: result.parallel.sell,
+          timestamp: result.timestampUtc.toISOString(),
+          sourcesCount: result.quality.sample_size.sell
+        }
+      : null,
+    oficial: result.officialBcb
+      ? {
+          buy: result.officialBcb,
+          sell: result.officialBcb,
+          timestamp: result.timestampUtc.toISOString(),
+          sourcesCount: result.quality.sources_used.includes('BCB') ? 1 : 0
+        }
+      : null
   });
 }
