@@ -150,6 +150,10 @@ export default async function HomePage() {
     { name: 'Fuentes oficiales', active: (oficial?.sourcesCount ?? 0) > 0 }
   ];
 
+  const parallelSourceNote = (paralelo?.sourcesCount ?? 0) > 0
+    ? 'Fuente base: Binance P2P (mediana de avisos).'
+    : 'Paralelo sin fuentes activas. Intentaremos actualizar pronto.';
+
   const activeSources = sourceBadges.filter((source) => source.active).length;
   const hasAnyData = Boolean(paralelo || oficial || brecha || bcbData);
 
@@ -222,6 +226,7 @@ export default async function HomePage() {
               updatedAt={paralelo?.timestamp ? new Date(paralelo.timestamp) : null}
               sourcesCount={paralelo?.sourcesCount}
               href="/paralelo"
+              sourceNote={parallelSourceNote}
             />
             <RateCard
               title="D?lar oficial"

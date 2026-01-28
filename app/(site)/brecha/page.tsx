@@ -49,6 +49,8 @@ export default async function BrechaPage() {
 
   const hasAnyData = Boolean(latest || history.length);
 
+  const sourceNote = latest ? 'Fuente base: c?lculos diarios con BCB + Binance P2P.' : 'Brecha sin fuentes activas. Intentaremos actualizar pronto.';
+
   const chartData = {
     paralelo: [],
     oficial: [],
@@ -132,6 +134,8 @@ export default async function BrechaPage() {
             </div>
           </div>
         </div>
+
+        <p className="text-sm text-ink/60">{sourceNote}</p>
 
         <AdSlot label="Brecha debajo del hero" />
 

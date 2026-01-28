@@ -56,6 +56,8 @@ export default async function OficialPage() {
 
   const hasAnyData = Boolean(latest || history.length);
 
+  const sourceNote = latest ? 'Fuente base: Banco Central de Bolivia (BCB).' : 'Oficial sin fuentes activas. Intentaremos actualizar pronto.';
+
   const chartData = {
     paralelo: [],
     oficial: history.map((row) => ({
@@ -150,6 +152,8 @@ export default async function OficialPage() {
             </p>
           </div>
         </div>
+
+        <p className="text-sm text-ink/60">{sourceNote}</p>
 
         <AdSlot label="Oficial debajo del hero" />
 

@@ -10,6 +10,7 @@ type RateCardProps = {
   updatedAt?: Date | null;
   sourcesCount?: number;
   href: string;
+  sourceNote?: string;
 };
 
 export function RateCard({
@@ -19,10 +20,12 @@ export function RateCard({
   delta,
   updatedAt,
   sourcesCount,
-  href
+  href,
+  sourceNote
 }: RateCardProps) {
   const sources = sourcesCount ?? 0;
   const status = sources >= 2 ? `Confirmado por ${sources} fuentes` : 'Estimación pendiente';
+  const note = sourceNote ?? status;
   const hasBuy = typeof buy === 'number';
   const hasSell = typeof sell === 'number';
 
@@ -59,7 +62,7 @@ export function RateCard({
           {updatedAt ? formatDateTime(updatedAt) : <Skeleton className="h-4 w-24" />}
         </span>
       </div>
-      <p className="text-xs text-ink/60">{status}</p>
+      <p className="text-xs text-ink/60">{note}</p>
     </Link>
   );
 }

@@ -59,6 +59,8 @@ export default async function ParaleloPage() {
 
   const hasAnyData = Boolean(latest || history.length);
 
+  const sourceNote = latest?.sourcesCount ? 'Fuente base: Binance P2P (mediana de avisos).' : 'Paralelo sin fuentes activas. Intentaremos actualizar pronto.';
+
   const chartData = {
     paralelo: history.map((row) => ({
       date: row.date,
@@ -152,9 +154,7 @@ export default async function ParaleloPage() {
                 : 'Estimaci?n pendiente'}
             </p>
           </div>
-          <p className="text-sm text-ink/60">
-            Fuente base: agregaci?n de mercado P2P y fuentes informativas.
-          </p>
+          <p className="text-sm text-ink/60">{sourceNote}</p>
         </div>
 
         <Suspense
