@@ -1,6 +1,7 @@
 ﻿import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
-import { rateLimit } from '@/lib/apiRateLimit';
+import { rateLimit } from '@/lib/rateLimit';
+import { getApiKeyAuth } from '@/lib/auth/apiKey';
 import { computeLatest } from '@/lib/engine/priceEngine';
 
 export const revalidate = 600;
@@ -10,12 +11,19 @@ export async function GET() {
   const headerList = headers();
   const forwarded = headerList.get('x-forwarded-for') ?? 'anonymous';
   const ip = forwarded.split(',')[0].trim();
-  const limiter = rateLimit(`latest:${ip}`, 60, 60_000);
+  const auth = getApiKeyAuth();
+  const limit = auth.ok ? 120 : 60;
+  const limiter = rateLimit(`latest:${auth.key ?? ip}`, limit, 60_000);
+  const rateHeaders = {
+    'X-RateLimit-Limit': String(limiter.limit),
+    'X-RateLimit-Remaining': String(limiter.remaining),
+    'X-RateLimit-Reset': String(limiter.resetAt)
+  };
 
   if (!limiter.ok) {
     return NextResponse.json(
       { error: 'rate_limited' },
-      { status: 429, headers: { 'x-ratelimit-reset': String(limiter.resetAt) } }
+      { status: 429, headers: rateHeaders }
     );
   }
 
@@ -54,5 +62,5 @@ export async function GET() {
           sourcesCount: result.quality.sources_used.includes('BCB') ? 1 : 0
         }
       : null
-  });
+  }, { headers: rateHeaders });
 }
