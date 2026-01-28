@@ -58,55 +58,37 @@ export async function GET() {
     result = (await computeLatest()).result;
   } catch (error) {
     console.error('[rates/latest] computeLatest failed', { error: String(error) });
+    let latestRun = null;
     try {
-      const latestRun = await getLatestRun(prisma);
-      if (latestRun) {
-        result = {
-          timestampUtc: latestRun.timestampUtc,
-          officialBcb: latestRun.officialBcb,
-          parallel: {
-            buy: latestRun.parallelBuy,
-            sell: latestRun.parallelSell,
-            mid: latestRun.parallelMid,
-            range: {
-              buy: { min: latestRun.minBuy, max: latestRun.maxBuy },
-              sell: { min: latestRun.minSell, max: latestRun.maxSell }
-            }
-          },
-          delta: { vs_5m: null, vs_24h: null },
-          quality: {
-            confidence: latestRun.confidence,
-            sample_size: { buy: latestRun.sampleSizeBuy, sell: latestRun.sampleSizeSell },
-            sources_used: latestRun.sourcesUsed,
-            status: 'DEGRADED',
-            notes: 'Fallback al ultimo valor persistido.'
-          },
-          errors: [{ source: 'ENGINE', reason: String(error) }]
-        };
-      } else {
-        responseStatus = 503;
-        result = {
-          timestampUtc: new Date(),
-          officialBcb: null,
-          parallel: {
-            buy: null,
-            sell: null,
-            mid: null,
-            range: { buy: { min: null, max: null }, sell: { min: null, max: null } }
-          },
-          delta: { vs_5m: null, vs_24h: null },
-          quality: {
-            confidence: 'LOW',
-            sample_size: { buy: 0, sell: 0 },
-            sources_used: [],
-            status: 'ERROR',
-            notes: 'No fue posible obtener datos validos de las fuentes.'
-          },
-          errors: [{ source: 'ENGINE', reason: String(error) }]
-        };
-      }
-    } catch (fallbackError) {
-      console.error('[rates/latest] fallback failed', { error: String(fallbackError) });
+      latestRun = await getLatestRun(prisma);
+    } catch (dbErr) {
+      console.error('[rates/latest] fallback DB failed', { message: String(dbErr) });
+    }
+
+    if (latestRun) {
+      result = {
+        timestampUtc: latestRun.timestampUtc,
+        officialBcb: latestRun.officialBcb,
+        parallel: {
+          buy: latestRun.parallelBuy,
+          sell: latestRun.parallelSell,
+          mid: latestRun.parallelMid,
+          range: {
+            buy: { min: latestRun.minBuy, max: latestRun.maxBuy },
+            sell: { min: latestRun.minSell, max: latestRun.maxSell }
+          }
+        },
+        delta: { vs_5m: null, vs_24h: null },
+        quality: {
+          confidence: latestRun.confidence,
+          sample_size: { buy: latestRun.sampleSizeBuy, sell: latestRun.sampleSizeSell },
+          sources_used: latestRun.sourcesUsed,
+          status: 'DEGRADED',
+          notes: 'Fallback al ultimo valor persistido.'
+        },
+        errors: [{ source: 'ENGINE', reason: String(error) }]
+      };
+    } else {
       responseStatus = 503;
       result = {
         timestampUtc: new Date(),
@@ -124,11 +106,11 @@ export async function GET() {
           sources_used: [],
           status: 'ERROR',
           notes: 'No fue posible obtener datos validos de las fuentes.'
-        },
-        errors: [
-          { source: 'ENGINE', reason: String(error) },
-          { source: 'FALLBACK', reason: String(fallbackError) }
-        ]
+          },
+          errors: [
+            { source: 'ENGINE', reason: String(error) },
+            { source: 'FALLBACK', reason: 'db_unavailable' }
+          ]
       };
     }
   }
@@ -148,6 +130,16 @@ export async function GET() {
   const sourcesUsed = Array.isArray(result.quality.sources_used)
     ? (result.quality.sources_used as string[])
     : [];
+
+  const hasAnyData =
+    officialBcb !== null ||
+    parallelBuy !== null ||
+    parallelSell !== null ||
+    parallelMid !== null;
+
+  if (result.quality.status === 'ERROR' && !hasAnyData) {
+    responseStatus = 503;
+  }
 
   return NextResponse.json({
     timestamp_utc: timestampIso,

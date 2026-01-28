@@ -95,8 +95,17 @@ export async function computeLatest() {
   if (officialBcb) sourcesUsed.push('BCB');
   if (sampleSizeBuy || sampleSizeSell) sourcesUsed.push('BINANCE');
 
-  const latestRun = await getLatestRun(prisma);
-  const run24h = await getRun24hAgo(prisma);
+  let latestRun = null;
+  let run24h = null;
+  let dbUnavailable = false;
+
+  try {
+    latestRun = await getLatestRun(prisma);
+    run24h = await getRun24hAgo(prisma);
+  } catch (dbErr) {
+    dbUnavailable = true;
+    logWarn('priceEngine db unavailable', { message: String(dbErr) });
+  }
 
   const deltaVsLatest =
     latestRun?.parallelMid && parallelMid
@@ -108,12 +117,22 @@ export async function computeLatest() {
       ? ((parallelMid - run24h.parallelMid) / run24h.parallelMid) * 100
       : null;
 
-  const notes =
-    status === 'DEGRADED'
-      ? 'Fuentes incompletas o pocas muestras validas.'
-      : status === 'ERROR'
-        ? 'No fue posible obtener datos validos de las fuentes.'
-        : null;
+  if (dbUnavailable && status !== 'ERROR') {
+    status = 'DEGRADED';
+  }
+
+  let notes: LatestRateResult['quality']['notes'] = null;
+  if (status === 'DEGRADED') {
+    notes = 'Fuentes incompletas o pocas muestras validas.';
+  } else if (status === 'ERROR') {
+    notes = 'No fue posible obtener datos validos de las fuentes.';
+  }
+
+  if (dbUnavailable && status === 'DEGRADED') {
+    notes = notes
+      ? `${notes} DB unavailable, deltas disabled.`
+      : 'DB unavailable, deltas disabled.';
+  }
 
   if (status === 'ERROR' && latestRun) {
     const fallback: LatestRateResult = {
@@ -162,8 +181,8 @@ export async function computeLatest() {
       }
     },
     delta: {
-      vs_5m: deltaVsLatest,
-      vs_24h: deltaVs24h
+      vs_5m: latestRun ? deltaVsLatest : null,
+      vs_24h: run24h ? deltaVs24h : null
     },
     quality: {
       confidence,
