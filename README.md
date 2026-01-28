@@ -34,6 +34,14 @@ npx prisma migrate dev
 npx prisma generate
 ```
 
+Para Vercel, el build usa:
+
+```bash
+prisma generate && prisma migrate deploy && next build
+```
+
+Si la migracion falla, el error se vera en los logs de build de Vercel.
+
 4. Ejecuta el ingestor (mock):
 
 ```bash

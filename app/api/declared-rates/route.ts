@@ -28,6 +28,15 @@ function getClientIp(headerList: Headers) {
   return forwarded.split(',')[0].trim();
 }
 
+function errorDetails(error: unknown) {
+  if (!error || typeof error !== 'object') return { message: String(error) };
+  const maybe = error as { message?: string; code?: string };
+  return {
+    message: maybe.message ?? String(error),
+    code: maybe.code
+  };
+}
+
 function parseBody(body: DeclaredBody) {
   const kind = body.kind?.toUpperCase?.() ?? '';
   const side = body.side?.toUpperCase?.() ?? '';
@@ -96,16 +105,16 @@ export async function POST(request: Request) {
     try {
       const raw = await request.text();
       if (!raw) {
-        return NextResponse.json({ error: 'invalid_payload', detail: 'empty_body' }, { status: 400 });
+        return NextResponse.json({ error: 'invalid_payload' }, { status: 400 });
       }
       body = JSON.parse(raw);
     } catch (error) {
-      console.error('[declared-rates] invalid json', { message: String(error) });
-      return NextResponse.json({ error: 'invalid_payload', detail: 'invalid_json' }, { status: 400 });
+      console.error('[declared-rates] invalid json', errorDetails(error));
+      return NextResponse.json({ error: 'invalid_payload' }, { status: 400 });
     }
 
     if (!body || typeof body !== 'object') {
-      return NextResponse.json({ error: 'invalid_payload', detail: 'invalid_body' }, { status: 400 });
+      return NextResponse.json({ error: 'invalid_payload' }, { status: 400 });
     }
 
     const parsed = parseBody(body);
@@ -116,7 +125,7 @@ export async function POST(request: Request) {
         sideType: typeof body.side,
         valueType: typeof body.value
       });
-      return NextResponse.json({ error: 'invalid_payload', detail: parsed.error }, { status: 400 });
+      return NextResponse.json({ error: 'invalid_payload' }, { status: 400 });
     }
 
     const ipHash = hashWithSalt(ip);
@@ -136,7 +145,7 @@ export async function POST(request: Request) {
     try {
       baseResult = await getLatestBase(parsed.kind, parsed.side);
     } catch (error) {
-      console.error('[declared-rates] latest base failed', { message: String(error) });
+      console.error('[declared-rates] latest base failed', errorDetails(error));
       return NextResponse.json(
         { error: 'internal_error', message: 'latest_base_failed' },
         { status: 500 }
@@ -184,7 +193,7 @@ export async function POST(request: Request) {
         }
       });
     } catch (error) {
-      console.error('[declared-rates] create failed', { message: String(error) });
+      console.error('[declared-rates] create failed', errorDetails(error));
       return NextResponse.json(
         { error: 'internal_error', message: 'insert_failed' },
         { status: 500 }
@@ -196,7 +205,7 @@ export async function POST(request: Request) {
       { status: 201 }
     );
   } catch (error) {
-    console.error('[declared-rates] handler failed', { message: String(error) });
+    console.error('[declared-rates] handler failed', errorDetails(error));
     return NextResponse.json(
       { error: 'internal_error', message: String(error) },
       { status: 500 }
@@ -241,7 +250,7 @@ export async function GET(request: Request) {
       }))
     });
   } catch (error) {
-    console.error('[declared-rates] get failed', { message: String(error) });
+    console.error('[declared-rates] get failed', errorDetails(error));
     return NextResponse.json(
       { error: 'internal_error', message: String(error) },
       { status: 500 }
