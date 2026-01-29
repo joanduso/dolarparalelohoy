@@ -18,7 +18,8 @@ export const pageTitles = {
   brecha: 'Brecha dólar oficial vs paralelo Bolivia',
   historicoParalelo: 'Histórico dólar paralelo Bolivia',
   historicoOficial: 'Histórico dólar oficial Bolivia',
-  faq: 'Metodología y preguntas frecuentes'
+  faq: 'Metodología y preguntas frecuentes',
+  devs: 'API pública para desarrolladores'
 };
 
 export const pageDescriptions = {
@@ -35,5 +36,7 @@ export const pageDescriptions = {
   historicoOficial:
     'Serie histórica del dólar oficial en Bolivia con datos diarios y metodología transparente.',
   faq:
-    'Preguntas frecuentes, metodología, validación y avisos legales sobre el dólar en Bolivia.'
+    'Preguntas frecuentes, metodología, validación y avisos legales sobre el dólar en Bolivia.',
+  devs:
+    'Documentación de la API pública con endpoints de cotización, histórico y estadísticas del dólar en Bolivia.'
 };

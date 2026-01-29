@@ -12,7 +12,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/brecha',
     '/historico/paralelo',
     '/historico/oficial',
-    '/faq'
+    '/faq',
+    '/devs'
   ];
 
   return routes.map((path) => ({
