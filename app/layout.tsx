@@ -72,6 +72,23 @@ export default function RootLayout({
                 Seguimiento diario del dólar paralelo y oficial en Bolivia con metodología
                 transparente y datos agregados de múltiples fuentes.
               </p>
+              <nav className="flex flex-wrap gap-4 text-sm">
+                <Link href="/paralelo" className="underline underline-offset-4">
+                  D?lar paralelo
+                </Link>
+                <Link href="/oficial" className="underline underline-offset-4">
+                  D?lar oficial
+                </Link>
+                <Link href="/brecha" className="underline underline-offset-4">
+                  Brecha
+                </Link>
+                <Link href="/faq" className="underline underline-offset-4">
+                  Metodolog?a
+                </Link>
+                <Link href="/devs" className="underline underline-offset-4">
+                  API
+                </Link>
+              </nav>
             </div>
           </header>
           {children}
@@ -91,6 +108,18 @@ export default function RootLayout({
                 </Link>
                 <Link href="/historico/oficial" className="underline underline-offset-4">
                   Histórico dólar oficial
+                </Link>
+                <Link href="/fuentes" className="underline underline-offset-4">
+                  Fuentes
+                </Link>
+                <Link href="/terminos" className="underline underline-offset-4">
+                  T?rminos
+                </Link>
+                <Link href="/privacidad" className="underline underline-offset-4">
+                  Privacidad
+                </Link>
+                <Link href="/devs" className="underline underline-offset-4">
+                  API
                 </Link>
               </div>
             </div>
