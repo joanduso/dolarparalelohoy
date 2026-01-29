@@ -3,11 +3,10 @@ import { getCache, setCache } from '../ingest/cache';
 import { throttle } from '../ingest/rateLimit';
 import { median } from '../declared';
 
-const BINANCE_P2P_URL = process.env.BINANCE_P2P_URL ?? '';
+const BINANCE_P2P_URL = 'https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search';
 const BINANCE_ROBOTS_URL = process.env.BINANCE_ROBOTS_URL ?? '';
 const BINANCE_TERMS_URL = process.env.BINANCE_TERMS_URL ?? '';
-const BINANCE_ENABLED =
-  process.env.ENABLE_BINANCE_P2P === 'true' || process.env.BINANCE_P2P_ENABLED === 'true';
+const BINANCE_ENABLED = process.env.ENABLE_BINANCE_P2P === 'true';
 const TOP_N = Number(process.env.BINANCE_P2P_TOP_N ?? 20);
 const MIN_USD = Number(process.env.BINANCE_P2P_MIN_USD ?? 100);
 const MAX_USD = Number(process.env.BINANCE_P2P_MAX_USD ?? 1000);
@@ -64,7 +63,7 @@ async function fetchSide(tradeType: 'BUY' | 'SELL', controller: AbortController)
 }
 
 async function fetchBinanceP2P(): Promise<RawRatePoint | null> {
-  if (!BINANCE_ENABLED || !BINANCE_P2P_URL) return null;
+  if (!BINANCE_ENABLED) return null;
 
   const cacheKey = `binance:p2p:usdt-bob:${MIN_USD}:${MAX_USD}:${TOP_N}`;
   const cached = getCache(cacheKey);

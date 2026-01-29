@@ -1,8 +1,7 @@
 import type { Sample, PriceSource } from '../types';
 
-const BINANCE_P2P_URL = process.env.BINANCE_P2P_URL ?? '';
-const BINANCE_ENABLED =
-  process.env.ENABLE_BINANCE_P2P === 'true' || process.env.BINANCE_P2P_ENABLED === 'true';
+const BINANCE_P2P_URL = 'https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search';
+const BINANCE_ENABLED = process.env.ENABLE_BINANCE_P2P === 'true';
 const TOP_N = Number(process.env.BINANCE_P2P_TOP_N ?? 20);
 const MIN_USD = Number(process.env.BINANCE_P2P_MIN_USD ?? 100);
 const MAX_USD = Number(process.env.BINANCE_P2P_MAX_USD ?? 1000);
@@ -20,7 +19,7 @@ type BinanceResponse = {
 };
 
 async function fetchSide(tradeType: 'BUY' | 'SELL'): Promise<Sample[]> {
-  if (!BINANCE_ENABLED || !BINANCE_P2P_URL) return [];
+  if (!BINANCE_ENABLED) return [];
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
 

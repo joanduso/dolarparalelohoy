@@ -107,6 +107,13 @@ export async function computeLatest() {
     logWarn('priceEngine db unavailable', { message: String(dbErr) });
   }
 
+  let effectiveOfficial = officialBcb;
+  let usedOfficialFallback = false;
+  if (!effectiveOfficial && latestRun?.officialBcb) {
+    effectiveOfficial = latestRun.officialBcb;
+    usedOfficialFallback = true;
+  }
+
   const deltaVsLatest =
     latestRun?.parallelMid && parallelMid
       ? ((parallelMid - latestRun.parallelMid) / latestRun.parallelMid) * 100
@@ -132,6 +139,12 @@ export async function computeLatest() {
     notes = notes
       ? `${notes} DB unavailable, deltas disabled.`
       : 'DB unavailable, deltas disabled.';
+  }
+
+  if (usedOfficialFallback && status === 'DEGRADED') {
+    notes = notes
+      ? `${notes} BCB unavailable, using last official.`
+      : 'BCB unavailable, using last official.';
   }
 
   if (status === 'ERROR' && latestRun) {
@@ -170,7 +183,7 @@ export async function computeLatest() {
 
   const result: LatestRateResult = {
     timestampUtc: new Date(),
-    officialBcb,
+    officialBcb: effectiveOfficial,
     parallel: {
       buy: parallelBuy,
       sell: parallelSell,
@@ -196,12 +209,13 @@ export async function computeLatest() {
 
   try {
     if (officialBcb) {
+    if (effectiveOfficial !== null) {
       await prisma.ratePoint.create({
         data: {
           kind: 'OFICIAL',
           timestamp: result.timestampUtc,
-          buy: officialBcb,
-          sell: officialBcb,
+          buy: effectiveOfficial,
+          sell: effectiveOfficial,
           source: 'bcb',
           currency_pair: 'USD/BOB',
           country: 'BO',
@@ -209,6 +223,7 @@ export async function computeLatest() {
         }
       });
     }
+  }
 
     if (parallelBuy !== null && parallelSell !== null) {
       await prisma.ratePoint.create({
