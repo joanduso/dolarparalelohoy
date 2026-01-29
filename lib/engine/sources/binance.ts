@@ -1,7 +1,8 @@
 import type { Sample, PriceSource } from '../types';
 
 const BINANCE_P2P_URL = process.env.BINANCE_P2P_URL ?? '';
-const BINANCE_ENABLED = process.env.BINANCE_P2P_ENABLED === 'true';
+const BINANCE_ENABLED =
+  process.env.ENABLE_BINANCE_P2P === 'true' || process.env.BINANCE_P2P_ENABLED === 'true';
 const TOP_N = Number(process.env.BINANCE_P2P_TOP_N ?? 20);
 const MIN_USD = Number(process.env.BINANCE_P2P_MIN_USD ?? 100);
 const MAX_USD = Number(process.env.BINANCE_P2P_MAX_USD ?? 1000);
@@ -30,7 +31,7 @@ async function fetchSide(tradeType: 'BUY' | 'SELL'): Promise<Sample[]> {
         'content-type': 'application/json'
       },
       body: JSON.stringify({
-        asset: 'USD',
+        asset: 'USDT',
         fiat: 'BOB',
         tradeType,
         transAmount: MIN_USD,

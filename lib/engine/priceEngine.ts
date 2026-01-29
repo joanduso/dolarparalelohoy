@@ -195,6 +195,40 @@ export async function computeLatest() {
   };
 
   try {
+    if (officialBcb) {
+      await prisma.ratePoint.create({
+        data: {
+          kind: 'OFICIAL',
+          timestamp: result.timestampUtc,
+          buy: officialBcb,
+          sell: officialBcb,
+          source: 'bcb',
+          currency_pair: 'USD/BOB',
+          country: 'BO',
+          raw: bcbData?.meta ?? undefined
+        }
+      });
+    }
+
+    if (parallelBuy !== null && parallelSell !== null) {
+      await prisma.ratePoint.create({
+        data: {
+          kind: 'PARALELO',
+          timestamp: result.timestampUtc,
+          buy: parallelBuy,
+          sell: parallelSell,
+          source: 'binance-p2p',
+          currency_pair: 'USDT/BOB',
+          country: 'BO',
+          raw: {
+            sampleSize: { buy: sampleSizeBuy, sell: sampleSizeSell },
+            min: { buy: minBuy, sell: minSell },
+            max: { buy: maxBuy, sell: maxSell }
+          }
+        }
+      });
+    }
+
     await saveRun(prisma, result);
   } catch (error) {
     logWarn('priceEngine save failed', { error: String(error) });
