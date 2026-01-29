@@ -252,6 +252,8 @@ export default async function HomePage() {
               sourcesCount={paralelo?.sampleSize}
               href="/paralelo"
               sourceNote={parallelSourceNote}
+              logoSrc="/logos/binance.svg"
+              logoAlt="Binance P2P"
             />
             <RateCard
               title="Dólar oficial"
@@ -261,6 +263,8 @@ export default async function HomePage() {
               updatedAt={lastUpdated}
               sourcesCount={oficial?.sources_count}
               href="/oficial"
+              logoSrc="/logos/bcb.svg"
+              logoAlt="BCB"
             />
             <BrechaCard gapAbs={brecha?.gap_abs} gapPct={brecha?.gap_pct} />
             <BCBCard

@@ -1,4 +1,5 @@
 ﻿import Link from 'next/link';
+import Image from 'next/image';
 import { formatCurrency, formatDateTime, formatNumber } from '@/lib/format';
 import { Skeleton } from '@/app/(site)/_components/Skeleton';
 
@@ -11,6 +12,8 @@ type RateCardProps = {
   sourcesCount?: number | null;
   href: string;
   sourceNote?: string;
+  logoSrc?: string;
+  logoAlt?: string;
 };
 
 export function RateCard({
@@ -21,7 +24,9 @@ export function RateCard({
   updatedAt,
   sourcesCount,
   href,
-  sourceNote
+  sourceNote,
+  logoSrc,
+  logoAlt
 }: RateCardProps) {
   const sources = sourcesCount ?? 0;
   const status = sources >= 2 ? `Confirmado por ${sources} fuentes` : 'Estimación pendiente';
@@ -32,7 +37,18 @@ export function RateCard({
   return (
     <Link href={href} className="card p-5 flex flex-col gap-3 h-full">
       <div className="flex items-center justify-between">
-        <h2 className="font-serif text-xl">{title}</h2>
+        <div className="flex items-center gap-2">
+          {logoSrc ? (
+            <Image
+              src={logoSrc}
+              alt={logoAlt ?? title}
+              width={24}
+              height={24}
+              className="h-6 w-6 rounded-full border border-black/10 bg-white"
+            />
+          ) : null}
+          <h2 className="font-serif text-xl">{title}</h2>
+        </div>
         <span className="text-xs text-ink/60">{sources} fuentes</span>
       </div>
       <div className="flex items-end justify-between">

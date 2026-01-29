@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Skeleton } from '@/app/(site)/_components/Skeleton';
 
 type BcbCardProps = {
@@ -14,7 +15,16 @@ export function BCBCard({ dateText, compraText, ventaText, error }: BcbCardProps
   return (
     <div className="card p-5 flex flex-col gap-3 h-full">
       <div className="flex items-center justify-between">
-        <h2 className="font-serif text-xl">Dólar referencial BCB</h2>
+        <div className="flex items-center gap-2">
+          <Image
+            src="/logos/usd.svg"
+            alt="USD"
+            width={24}
+            height={24}
+            className="h-6 w-6 rounded-full border border-black/10 bg-white"
+          />
+          <h2 className="font-serif text-xl">Dólar referencial BCB</h2>
+        </div>
         <Link href="https://www.bcb.gob.bo" className="text-xs text-ink/60 underline">
           bcb.gob.bo
         </Link>

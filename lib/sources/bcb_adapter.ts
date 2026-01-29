@@ -1,37 +1,7 @@
 import type { RawRatePoint, SourceAdapter } from './base';
+import { parseBcbOfficial } from './bcb_html';
 
-const SOURCE_URL = 'https://api.dolarbluebolivia.click/v1/bcb';
-
-function toNumber(value: unknown) {
-  if (value == null) return null;
-  if (typeof value == 'number') return Number.isFinite(value) ? value : null;
-  if (typeof value == 'string') {
-    const normalized = value.replace(/\./g, '').replace(',', '.');
-    const parsed = Number(normalized);
-    return Number.isFinite(parsed) ? parsed : null;
-  }
-  return null;
-}
-
-function pickValue(payload: Record<string, unknown>, keys: string[]) {
-  for (const key of keys) {
-    if (key in payload) return payload[key];
-  }
-  return null;
-}
-
-function parseTimestamp(payload: Record<string, unknown>) {
-  const raw = pickValue(payload, ['timestamp', 'updatedAt', 'fecha', 'date', 'fetchedAt']);
-  if (typeof raw == 'number') {
-    const date = new Date(raw);
-    return Number.isNaN(date.getTime()) ? new Date() : date;
-  }
-  if (typeof raw == 'string') {
-    const date = new Date(raw);
-    return Number.isNaN(date.getTime()) ? new Date() : date;
-  }
-  return new Date();
-}
+const SOURCE_URL = 'https://www.bcb.gob.bo/';
 
 async function fetchBCB(): Promise<RawRatePoint | null> {
   const controller = new AbortController();
@@ -48,21 +18,15 @@ async function fetchBCB(): Promise<RawRatePoint | null> {
 
     if (!response.ok) return null;
 
-    const payload = (await response.json()) as Record<string, unknown>;
-    const buy = toNumber(
-      pickValue(payload, ['buy', 'compra', 'compra_oficial', 'official_buy', 'bcb_buy'])
-    );
-    const sell = toNumber(
-      pickValue(payload, ['sell', 'venta', 'venta_oficial', 'official_sell', 'bcb_sell'])
-    );
-
-    const resolvedBuy = buy ?? sell;
-    const resolvedSell = sell ?? buy;
-    if (resolvedBuy == null || resolvedSell == null) return null;
+    const html = await response.text();
+    const parsed = parseBcbOfficial(html);
+    if (!parsed) return null;
+    const resolvedBuy = parsed.buy;
+    const resolvedSell = parsed.sell;
 
     return {
       kind: 'OFICIAL',
-      timestamp: parseTimestamp(payload).toISOString(),
+      timestamp: new Date().toISOString(),
       buy: resolvedBuy,
       sell: resolvedSell,
       source: 'bcb-api',
@@ -70,8 +34,11 @@ async function fetchBCB(): Promise<RawRatePoint | null> {
       country: 'BO',
       raw: {
         sourceUrl: SOURCE_URL,
-        buy,
-        sell
+        buy: parsed.buy,
+        sell: parsed.sell,
+        dateText: parsed.dateText,
+        compraText: parsed.compraText,
+        ventaText: parsed.ventaText
       }
     };
   } finally {

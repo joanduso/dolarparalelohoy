@@ -74,16 +74,16 @@ export default function RootLayout({
               </p>
               <nav className="flex flex-wrap gap-4 text-sm">
                 <Link href="/paralelo" className="underline underline-offset-4">
-                  D?lar paralelo
+                  Dólar paralelo
                 </Link>
                 <Link href="/oficial" className="underline underline-offset-4">
-                  D?lar oficial
+                  Dólar oficial
                 </Link>
                 <Link href="/brecha" className="underline underline-offset-4">
                   Brecha
                 </Link>
                 <Link href="/faq" className="underline underline-offset-4">
-                  Metodolog?a
+                  Metodología
                 </Link>
                 <Link href="/devs" className="underline underline-offset-4">
                   API
@@ -113,7 +113,7 @@ export default function RootLayout({
                   Fuentes
                 </Link>
                 <Link href="/terminos" className="underline underline-offset-4">
-                  T?rminos
+                  Términos
                 </Link>
                 <Link href="/privacidad" className="underline underline-offset-4">
                   Privacidad

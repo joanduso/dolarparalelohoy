@@ -1,38 +1,9 @@
 import { NextResponse } from 'next/server';
+import { parseBcbReferencial } from '@/lib/sources/bcb_html';
 
 export const runtime = 'nodejs';
 
 const SOURCE_URL = 'https://www.bcb.gob.bo/';
-
-const normalizeNumber = (valueText: string) => {
-  const normalized = valueText.replace(/\./g, '').replace(',', '.');
-  const value = Number(normalized);
-  return Number.isFinite(value) ? value : null;
-};
-
-const extractBlock = (html: string) => {
-  const marker = /VALOR\s+REFERENCIAL\s+DEL\s+D[ÓO]LAR\s+ESTADOUNIDENSE/i;
-  const match = html.match(marker);
-  if (!match || match.index === undefined) return null;
-  const start = Math.max(match.index - 500, 0);
-  const end = Math.min(match.index + 2500, html.length);
-  return html.slice(start, end);
-};
-
-const extractDate = (block: string) => {
-  const dateRegex =
-    /(lunes|martes|mi[ée]rcoles|jueves|viernes|s[áa]bado|domingo)\s+\d{1,2}\s+de\s+[a-záéíóúñ]+\s*(?:,?\s*de)?\s*\d{4}/i;
-  const match = block.match(dateRegex);
-  return match ? match[0].trim() : null;
-};
-
-const extractValue = (block: string, label: 'compra' | 'venta') => {
-  const regex = label === 'compra'
-    ? /compra[^0-9]*([0-9]+,[0-9]+)/i
-    : /venta[^0-9]*([0-9]+,[0-9]+)/i;
-  const match = block.match(regex);
-  return match ? match[1] : null;
-};
 
 export async function GET() {
   try {
@@ -52,47 +23,24 @@ export async function GET() {
     }
 
     const html = await response.text();
-    const block = extractBlock(html);
+    const parsed = parseBcbReferencial(html);
 
-    if (!block) {
+    if (!parsed) {
       return NextResponse.json(
         { error: 'parse_failed', reason: 'section_not_found' },
         { status: 502 }
       );
     }
 
-    const dateText = extractDate(block);
-    const compraText = extractValue(block, 'compra');
-    const ventaText = extractValue(block, 'venta');
-
-    if (!dateText || !compraText || !ventaText) {
-      return NextResponse.json(
-        {
-          error: 'parse_failed',
-          reason: 'missing_fields',
-          details: { dateText, compraText, ventaText }
-        },
-        { status: 502 }
-      );
-    }
-
-    const compra = normalizeNumber(compraText);
-    const venta = normalizeNumber(ventaText);
-
-    if (compra === null || venta === null) {
-      return NextResponse.json(
-        { error: 'parse_failed', reason: 'invalid_number' },
-        { status: 502 }
-      );
-    }
+    const { dateText, compraText, ventaText, buy, sell } = parsed;
 
     return NextResponse.json({
       source: 'bcb.gob.bo',
       dateText,
       compraText,
       ventaText,
-      compra,
-      venta,
+      compra: buy,
+      venta: sell,
       fetchedAt: new Date().toISOString()
     });
   } catch (error) {
