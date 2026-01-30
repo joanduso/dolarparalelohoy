@@ -104,22 +104,24 @@ BINANCE_TERMS_URL=https://www.binance.com/es/terms
 - Se publica solo si hay 5 o mas reportes validos en las ultimas 24h.
 
 ## Vercel Cron
-El endpoint interno esta en `/api/internal/ingest` y requiere `CRON_SECRET`.
+El endpoint interno est? en `/api/cron/refresh` y requiere `CRON_SECRET`.
 
-1. Mantén `vercel.json` con el path limpio (sin query string):
+1. Mant?n `vercel.json` con el path limpio (sin query string):
 
 ```json
 {
   "crons": [
     {
-      "path": "/api/internal/ingest",
-      "schedule": "*/10 * * * *"
+      "path": "/api/cron/refresh",
+      "schedule": "*/15 * * * *"
     }
   ]
 }
 ```
 
-2. Vercel Cron envía el header `x-vercel-cron: 1` automáticamente. Si además quieres protección extra, configura `CRON_SECRET` y usa el header `x-cron-secret` para invocaciones manuales.
+2. Vercel Cron env?a el header `x-vercel-cron: 1` autom?ticamente. Adem?s configuramos `CRON_SECRET` y usamos el header `x-cron-secret` para proteger el endpoint.
+
+La cadencia de refresco es cada 15 minutos.
 
 ## Tests
 
