@@ -16,37 +16,46 @@ export async function GET() {
     });
 
     if (!response.ok) {
-      return NextResponse.json(
-        { error: 'fetch_failed', reason: `HTTP ${response.status}` },
-        { status: 502 }
-      );
+      return NextResponse.json({
+        ok: false,
+        status: 'ERROR',
+        reason: 'no_data_or_parse_failed',
+        details: { httpStatus: response.status }
+      });
     }
 
     const html = await response.text();
-    const parsed = parseBcbReferencial(html);
+    const { parsed, debug } = parseBcbReferencial(html);
+
+    console.info('[bcb][valor-referencial]', {
+      fallbackRegex: debug.fallbackRegex,
+      compraText: debug.compraText,
+      ventaText: debug.ventaText
+    });
 
     if (!parsed) {
-      return NextResponse.json(
-        { error: 'parse_failed', reason: 'section_not_found' },
-        { status: 502 }
-      );
+      return NextResponse.json({
+        ok: false,
+        status: 'ERROR',
+        reason: 'no_data_or_parse_failed',
+        details: debug
+      });
     }
 
-    const { dateText, compraText, ventaText, buy, sell } = parsed;
-
     return NextResponse.json({
-      source: 'bcb.gob.bo',
-      dateText,
-      compraText,
-      ventaText,
-      compra: buy,
-      venta: sell,
+      ok: true,
+      buy: parsed.buy,
+      sell: parsed.sell,
+      dateText: parsed.dateText,
+      source: 'BCB',
       fetchedAt: new Date().toISOString()
     });
   } catch (error) {
-    return NextResponse.json(
-      { error: 'fetch_failed', reason: String(error) },
-      { status: 502 }
-    );
+    return NextResponse.json({
+      ok: false,
+      status: 'ERROR',
+      reason: 'no_data_or_parse_failed',
+      details: { error: String(error) }
+    });
   }
 }

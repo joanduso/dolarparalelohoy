@@ -91,21 +91,6 @@ export async function runIngest(prisma: PrismaClient) {
 
       await throttle(adapter.id);
       const raw = await adapter.fetchLatest();
-      if (adapter.id === 'bcb') {
-        if (raw) {
-          console.info('[refresh][bcb] parsed', {
-            buy: raw.buy,
-            sell: raw.sell,
-            valid: true
-          });
-        } else {
-          console.info('[refresh][bcb] parsed', {
-            buy: null,
-            sell: null,
-            valid: false
-          });
-        }
-      }
       if (!raw) {
         errors.push({ adapter: adapter.id, reason: 'no_data' });
         continue;

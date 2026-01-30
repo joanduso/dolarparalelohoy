@@ -14,6 +14,7 @@ export type BcbResult = {
     dateText: string | null;
     compraText: string | null;
     ventaText: string | null;
+    fallbackRegex?: boolean;
   };
 };
 
@@ -35,23 +36,30 @@ export async function fetchBCB(): Promise<BcbResult> {
     }
 
     const raw = await response.text();
-    const parsed = parseBcbOfficial(raw);
+    const { parsed, debug } = parseBcbOfficial(raw);
     if (!parsed) {
       console.error('[bcb] parse failed', {
         status: response.status,
+        fallbackRegex: debug.fallbackRegex,
+        compraText: debug.compraText,
+        ventaText: debug.ventaText,
         preview: raw.slice(0, 300)
       });
       throw new Error('BCB parse_failed: official_missing');
     }
 
-    const { buy, sell, dateText, compraText, ventaText } = parsed;
     return {
-      official_rate: sell ?? buy ?? null,
-      buy,
-      sell,
+      official_rate: parsed.sell ?? parsed.buy ?? null,
+      buy: parsed.buy,
+      sell: parsed.sell,
       timestamp: new Date(),
       source: 'BCB',
-      meta: { dateText, compraText, ventaText }
+      meta: {
+        dateText: parsed.dateText,
+        compraText: parsed.compraText,
+        ventaText: parsed.ventaText,
+        fallbackRegex: parsed.fallbackRegex
+      }
     };
   } finally {
     clearTimeout(timeout);

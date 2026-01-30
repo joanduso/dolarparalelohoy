@@ -19,7 +19,12 @@ async function fetchBCB(): Promise<RawRatePoint | null> {
     if (!response.ok) return null;
 
     const html = await response.text();
-    const parsed = parseBcbOfficial(html);
+    const { parsed, debug } = parseBcbOfficial(html);
+    console.info('[refresh][bcb] parsed', {
+      fallbackRegex: debug.fallbackRegex,
+      compraText: debug.compraText,
+      ventaText: debug.ventaText
+    });
     if (!parsed) return null;
     const resolvedBuy = parsed.buy;
     const resolvedSell = parsed.sell;
@@ -38,7 +43,8 @@ async function fetchBCB(): Promise<RawRatePoint | null> {
         sell: parsed.sell,
         dateText: parsed.dateText,
         compraText: parsed.compraText,
-        ventaText: parsed.ventaText
+        ventaText: parsed.ventaText,
+        fallbackRegex: parsed.fallbackRegex
       }
     };
   } finally {

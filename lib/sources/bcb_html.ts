@@ -1,6 +1,14 @@
-type BcbParsed = {
+export type BcbParsed = {
   buy: number;
   sell: number;
+  dateText: string | null;
+  compraText: string | null;
+  ventaText: string | null;
+  fallbackRegex: boolean;
+};
+
+export type BcbParseDebug = {
+  fallbackRegex: boolean;
   dateText: string | null;
   compraText: string | null;
   ventaText: string | null;
@@ -11,18 +19,18 @@ const ENTITY_MAP: Record<string, string> = {
   amp: '&',
   quot: '"',
   apos: "'",
-  aacute: '\u00e1',
-  eacute: '\u00e9',
-  iacute: '\u00ed',
-  oacute: '\u00f3',
-  uacute: '\u00fa',
-  ntilde: '\u00f1',
-  Aacute: '\u00c1',
-  Eacute: '\u00c9',
-  Iacute: '\u00cd',
-  Oacute: '\u00d3',
-  Uacute: '\u00da',
-  Ntilde: '\u00d1'
+  aacute: 'á',
+  eacute: 'é',
+  iacute: 'í',
+  oacute: 'ó',
+  uacute: 'ú',
+  ntilde: 'ñ',
+  Aacute: 'Á',
+  Eacute: 'É',
+  Iacute: 'Í',
+  Oacute: 'Ó',
+  Uacute: 'Ú',
+  Ntilde: 'Ñ'
 };
 
 function decodeHtmlEntities(value: string) {
@@ -70,7 +78,7 @@ function extractSection(text: string, start: RegExp, endMarkers: RegExp[]) {
 
 function extractDate(section: string) {
   const dateRegex =
-    /(lunes|martes|mi(?:e|\u00e9)rcoles|jueves|viernes|s(?:a|\u00e1)bado|domingo)\s+\d{1,2}\s+de\s+[a-z\u00e1\u00e9\u00ed\u00f3\u00fa\u00f1]+\s*(?:,?\s*de)?\s*\d{4}/i;
+    /(lunes|martes|mi(?:e|é)rcoles|jueves|viernes|s(?:a|á)bado|domingo)\s+\d{1,2}\s+de\s+[a-záéíóúñ]+\s*(?:,?\s*de)?\s*\d{4}/i;
   const match = section.match(dateRegex);
   return match ? match[0].trim() : null;
 }
@@ -83,74 +91,120 @@ function extractValue(section: string, label: 'compra' | 'venta') {
   return match ? match[1] : null;
 }
 
+function fallbackRegex(html: string) {
+  const text = normalizeText(html);
+  const compraMatch = text.match(/Compra\s*:?\s*([0-9]+(?:[\.,][0-9]+)?)/i);
+  const ventaMatch = text.match(/Venta\s*:?\s*([0-9]+(?:[\.,][0-9]+)?)/i);
+  const fechaMatch = text.match(
+    /(lunes|martes|mi[e?]rcoles|jueves|viernes|s[a?]bado|domingo)\s+\d{1,2}\s+de\s+[a-z?????]+\s*,\s*\d{4}/i
+  );
+  return {
+    dateText: fechaMatch ? fechaMatch[0].trim() : null,
+    compraText: compraMatch ? compraMatch[1] : null,
+    ventaText: ventaMatch ? ventaMatch[1] : null
+  };
+}
+
 function inRange(value: number) {
   return value >= 5 && value <= 15;
 }
 
-export function parseBcbOfficial(html: string): BcbParsed | null {
-  const text = normalizeText(html);
-  const section = extractSection(
-    text,
-    /TIPO\s+DE\s+CAMBIO/i,
-    [
-      /VALOR\s+REFERENCIAL\s+DEL\s+D[\u00d3O]LAR/i,
-      /COTIZACI[\u00d3O]N\s+INTERNACIONAL/i,
-      /TASA\s+DE\s+REFERENCIA/i
-    ]
-  );
+function buildParsed(values: {
+  dateText: string | null;
+  compraText: string | null;
+  ventaText: string | null;
+  fallbackRegex: boolean;
+}) {
+  const buy = values.compraText ? normalizeNumber(values.compraText) : null;
+  const sell = values.ventaText ? normalizeNumber(values.ventaText) : null;
 
-  if (!section || !/Tipo\s+de\s+cambio\s+Bs\s+por\s+1\s+D[\u00f3o]lar/i.test(section)) {
-    return null;
-  }
-
-  const dateText = extractDate(section);
-  const compraText = extractValue(section, 'compra');
-  const ventaText = extractValue(section, 'venta');
-  if (!compraText || !ventaText) return null;
-
-  const buy = normalizeNumber(compraText);
-  const sell = normalizeNumber(ventaText);
   if (buy === null || sell === null) return null;
-
   if (!inRange(buy) || !inRange(sell)) return null;
 
   return {
     buy,
     sell,
-    dateText,
-    compraText,
-    ventaText
-  };
+    dateText: values.dateText,
+    compraText: values.compraText,
+    ventaText: values.ventaText,
+    fallbackRegex: values.fallbackRegex
+  } as BcbParsed;
 }
 
-export function parseBcbReferencial(html: string): BcbParsed | null {
+export function parseBcbOfficial(html: string): { parsed: BcbParsed | null; debug: BcbParseDebug } {
   const text = normalizeText(html);
   const section = extractSection(
     text,
-    /VALOR\s+REFERENCIAL\s+DEL\s+D[\u00d3O]LAR\s+ESTADOUNIDENSE/i,
+    /TIPO\s+DE\s+CAMBIO/i,
+    [
+      /VALOR\s+REFERENCIAL\s+DEL\s+D[ÓO]LAR/i,
+      /COTIZACI[ÓO]N\s+INTERNACIONAL/i,
+      /TASA\s+DE\s+REFERENCIA/i
+    ]
+  );
+
+  let dateText: string | null = null;
+  let compraText: string | null = null;
+  let ventaText: string | null = null;
+  let fallbackUsed = false;
+
+  if (section && /Tipo\s+de\s+cambio\s+Bs\s+por\s+1\s+D[óo]lar/i.test(section)) {
+    dateText = extractDate(section);
+    compraText = extractValue(section, 'compra');
+    ventaText = extractValue(section, 'venta');
+  }
+
+  if (!dateText || !compraText || !ventaText) {
+    const fallback = fallbackRegex(html);
+    fallbackUsed = true;
+    dateText = dateText ?? fallback.dateText;
+    compraText = compraText ?? fallback.compraText;
+    ventaText = ventaText ?? fallback.ventaText;
+  }
+
+  const parsed = buildParsed({ dateText, compraText, ventaText, fallbackRegex: fallbackUsed });
+
+  return {
+    parsed,
+    debug: { fallbackRegex: fallbackUsed, dateText, compraText, ventaText }
+  };
+}
+
+export function parseBcbReferencial(html: string): { parsed: BcbParsed | null; debug: BcbParseDebug } {
+  const text = normalizeText(html);
+  const section = extractSection(
+    text,
+    /VALOR\s+REFERENCIAL\s+DEL\s+D[ÓO]LAR\s+ESTADOUNIDENSE/i,
     [
       /UNIDAD\s+DE\s+FOMENTO/i,
-      /INDICADORES\s+DE\s+INFLACI[\u00d3O]N/i,
+      /INDICADORES\s+DE\s+INFLACI[ÓO]N/i,
       /CARTERAS\s+ADMINISTRADAS/i
     ]
   );
 
-  if (!section) return null;
+  let dateText: string | null = null;
+  let compraText: string | null = null;
+  let ventaText: string | null = null;
+  let fallbackUsed = false;
 
-  const dateText = extractDate(section);
-  const compraText = extractValue(section, 'compra');
-  const ventaText = extractValue(section, 'venta');
-  if (!compraText || !ventaText) return null;
+  if (section) {
+    dateText = extractDate(section);
+    compraText = extractValue(section, 'compra');
+    ventaText = extractValue(section, 'venta');
+  }
 
-  const buy = normalizeNumber(compraText);
-  const sell = normalizeNumber(ventaText);
-  if (buy === null || sell === null) return null;
+  if (!dateText || !compraText || !ventaText) {
+    const fallback = fallbackRegex(html);
+    fallbackUsed = true;
+    dateText = dateText ?? fallback.dateText;
+    compraText = compraText ?? fallback.compraText;
+    ventaText = ventaText ?? fallback.ventaText;
+  }
+
+  const parsed = buildParsed({ dateText, compraText, ventaText, fallbackRegex: fallbackUsed });
 
   return {
-    buy,
-    sell,
-    dateText,
-    compraText,
-    ventaText
+    parsed,
+    debug: { fallbackRegex: fallbackUsed, dateText, compraText, ventaText }
   };
 }
