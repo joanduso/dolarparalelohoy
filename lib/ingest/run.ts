@@ -7,6 +7,7 @@ import { validatePoint } from './validate';
 import { computeDailyAggregates, computeBrecha } from './compute';
 import { throttle } from './rateLimit';
 import { median } from '../declared';
+import type { PrismaWithRatesHistory } from '../engine/store';
 
 const adapters = [bcbAdapter, binanceP2PAdapter];
 const BASE_SOURCE = 'base-median';
@@ -270,7 +271,8 @@ export async function runIngest(prisma: PrismaClient) {
         ? 'No fue posible obtener datos validos de las fuentes.'
         : null;
 
-    await prisma.ratesHistory.create({
+    const client = prisma as PrismaWithRatesHistory;
+    await client.ratesHistory.create({
       data: {
         timestampUtc: new Date(),
         officialBcb,

@@ -1,13 +1,14 @@
 import type { PrismaClient } from '@prisma/client';
 import type { LatestRateResult, QualityStatus, ConfidenceLevel } from './types';
 
-type RatesHistoryDelegate = {
+export type RatesHistoryDelegate = {
   create: (args: unknown) => Promise<unknown>;
   findFirst: (args: unknown) => Promise<RateHistoryRow | null>;
   findMany: (args: unknown) => Promise<RateHistoryRow[]>;
+  updateMany: (args: unknown) => Promise<{ count: number }>;
 };
 
-type PrismaWithRatesHistory = PrismaClient & { ratesHistory: RatesHistoryDelegate };
+export type PrismaWithRatesHistory = PrismaClient & { ratesHistory: RatesHistoryDelegate };
 
 export type RateHistoryRow = {
   timestampUtc: Date;
@@ -23,6 +24,8 @@ export type RateHistoryRow = {
   maxSell: number | null;
   sourcesUsed: string[];
   confidence: string;
+  status: string;
+  notes: string | null;
 };
 
 export async function saveRun(prisma: PrismaClient, result: LatestRateResult) {

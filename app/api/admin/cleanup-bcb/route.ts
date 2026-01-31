@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
+import type { PrismaWithRatesHistory } from '@/lib/engine/store';
 
 export const runtime = 'nodejs';
 
@@ -16,7 +17,8 @@ export async function POST(request: Request) {
   }
 
   try {
-    const result = await prisma.ratesHistory.updateMany({
+    const client = prisma as PrismaWithRatesHistory;
+    const result = await client.ratesHistory.updateMany({
       where: {
         officialBcb: {
           not: null

@@ -171,7 +171,7 @@ export async function getLatestSnapshot() {
 export async function getDeclaredLatest(side: DeclaredSide = 'SELL'): Promise<DeclaredSnapshot> {
   const cached = unstable_cache(
     async () => {
-      return safeQuery(async () => {
+      return safeQuery<DeclaredSnapshot>(async () => {
         const since = new Date(Date.now() - DECLARED_WINDOW_MS);
         const rows: DeclaredRate[] = await prisma.declaredRate.findMany({
           where: {
@@ -235,9 +235,10 @@ export async function getDeclaredAggregate(kind: RateKind = 'PARALELO'): Promise
 
         const buyMedian = median(buyRows.map((row) => row.value));
         const sellMedian = median(sellRows.map((row) => row.value));
-        const updatedAt = [buyRows[0]?.created_at, sellRows[0]?.created_at]
-          .filter(Boolean)
-          .sort((a, b) => (b as Date).getTime() - (a as Date).getTime())[0] ?? null;
+        const updatedAtCandidates = [buyRows[0]?.created_at, sellRows[0]?.created_at]
+          .filter((value): value is Date => Boolean(value))
+          .sort((a, b) => b.getTime() - a.getTime());
+        const updatedAt: Date | null = updatedAtCandidates.length ? updatedAtCandidates[0] : null;
 
         return {
           buy: buyMedian,

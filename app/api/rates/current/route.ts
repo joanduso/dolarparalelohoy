@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
+import type { PrismaWithRatesHistory } from '@/lib/engine/store';
 
 export const runtime = 'nodejs';
 
@@ -11,7 +12,8 @@ function errorDetails(error: unknown) {
 
 export async function GET() {
   try {
-    const latest = await prisma.ratesHistory.findFirst({
+    const client = prisma as PrismaWithRatesHistory;
+    const latest = await client.ratesHistory.findFirst({
       orderBy: { timestampUtc: 'desc' }
     });
 
