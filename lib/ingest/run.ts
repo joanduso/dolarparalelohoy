@@ -301,7 +301,7 @@ export async function runIngest(prisma: PrismaClient) {
       }
     });
 
-    return { runId, inserted, errors };
+    return { runId, inserted, errors, status, sourcesUsed: Array.from(sourcesUsed.values()) };
   } catch (error) {
     await prisma.auditLog.create({
       data: {

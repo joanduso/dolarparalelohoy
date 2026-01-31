@@ -21,6 +21,8 @@ export async function POST(request: Request) {
     console.info('[cron/refresh] completed', {
       runId: result.runId,
       inserted: result.inserted,
+      status: result.status,
+      sourcesUsed: result.sourcesUsed,
       errors: result.errors
     });
     return NextResponse.json({

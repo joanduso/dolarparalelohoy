@@ -58,6 +58,7 @@ npm run dev
 - `DATABASE_URL`: conexion a Postgres (requerido por Prisma)
 - `DECLARED_SALT`: secreto para hashear IP y user-agent en reportes declarados
 - `ADMIN_KEY`: clave para el endpoint `/api/rates/refresh`
+- `CRON_SECRET`: secreto para el endpoint `/api/cron/refresh`
 
 Configura estas variables en Vercel para Production, Preview y Development.
 
