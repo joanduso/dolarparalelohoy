@@ -1,15 +1,15 @@
 ﻿import Link from 'next/link';
-import { getDeclaredLatest } from '@/lib/queries';
+import { getDeclaredAggregate } from '@/lib/queries';
 import { formatCurrency, formatDateTime } from '@/lib/format';
 
 export async function DeclaredBlock() {
-  const declared = await getDeclaredLatest('SELL');
-  const show = declared.count >= 5 && declared.median !== null;
+  const declared = await getDeclaredAggregate('PARALELO');
+  const show = declared.sampleSize >= 5 && declared.sell !== null;
 
   return (
     <div className="card p-5 flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <h3 className="font-serif text-xl">Precio declarado (24h)</h3>
+        <h3 className="font-serif text-xl">Dólar declarado (24h)</h3>
         <span className="text-xs text-ink/60">Indicador secundario</span>
       </div>
       <p className="text-sm text-ink/70">
@@ -19,12 +19,16 @@ export async function DeclaredBlock() {
       {show ? (
         <div className="flex flex-wrap items-center gap-6">
           <div>
-            <p className="text-xs uppercase text-ink/50">Mediana venta</p>
-            <p className="text-2xl font-semibold">{formatCurrency(declared.median ?? undefined)}</p>
+            <p className="text-xs uppercase text-ink/50">Venta declarada</p>
+            <p className="text-2xl font-semibold">{formatCurrency(declared.sell ?? undefined)}</p>
+          </div>
+          <div>
+            <p className="text-xs uppercase text-ink/50">Compra declarada</p>
+            <p className="text-2xl font-semibold">{formatCurrency(declared.buy ?? undefined)}</p>
           </div>
           <div>
             <p className="text-xs uppercase text-ink/50">Reportes</p>
-            <p className="text-2xl font-semibold">{declared.count}</p>
+            <p className="text-2xl font-semibold">{declared.sampleSize}</p>
           </div>
           <div>
             <p className="text-xs uppercase text-ink/50">Actualizado</p>

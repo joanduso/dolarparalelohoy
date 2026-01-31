@@ -3,12 +3,14 @@ import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import { prisma } from '@/lib/db';
 import { getLatestRun } from '@/lib/engine/store';
+import { deviationPct } from '@/lib/declared';
 
 export const runtime = 'nodejs';
 
 const MIN_VALUE = 3;
 const MAX_VALUE = 30;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
+const MAX_DEVIATION = 15;
 
 type DeclaredBody = {
   kind: 'PARALELO' | 'OFICIAL';
@@ -153,28 +155,33 @@ export async function POST(request: Request) {
     }
 
     const { base, baseAvailable } = baseResult;
-    const baseValue = baseAvailable && base !== null ? base : parsed.value;
-    const deviation_pct = baseAvailable
-      ? ((parsed.value - baseValue) / baseValue) * 100
-      : 0;
-
-    const deviationAbs = Math.abs(deviation_pct);
-    let status: 'ACCEPTED' | 'FLAGGED' | 'REJECTED';
-    let trust_score = 0.4;
-
-    if (!baseAvailable) {
-      status = 'FLAGGED';
-      trust_score = 0.4;
-    } else if (deviationAbs <= 10) {
-      status = 'ACCEPTED';
-      trust_score = 0.7;
-    } else if (deviationAbs <= 25) {
-      status = 'FLAGGED';
-      trust_score = 0.4;
-    } else {
-      status = 'REJECTED';
-      trust_score = 0.1;
+    if (!baseAvailable || base === null) {
+      return NextResponse.json(
+        { error: 'base_unavailable' },
+        { status: 503 }
+      );
     }
+
+    const deviation_pct = deviationPct(parsed.value, base);
+    if (deviation_pct > MAX_DEVIATION) {
+      return NextResponse.json(
+        {
+          error: 'deviation_too_high',
+          details: {
+            base,
+            value: parsed.value,
+            deviation_pct,
+            max_deviation: MAX_DEVIATION,
+            kind: parsed.kind,
+            side: parsed.side
+          }
+        },
+        { status: 400 }
+      );
+    }
+
+    const status: 'ACCEPTED' = 'ACCEPTED';
+    const trust_score = Math.max(0.6, 1 - deviation_pct / MAX_DEVIATION);
 
     try {
       await prisma.declaredRate.create({
@@ -184,7 +191,7 @@ export async function POST(request: Request) {
           value: parsed.value,
           city: parsed.city,
           source_type: parsed.source_type,
-          base_value_at_submit: baseValue,
+          base_value_at_submit: base,
           deviation_pct,
           status,
           trust_score,

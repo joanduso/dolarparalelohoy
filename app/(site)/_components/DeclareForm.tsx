@@ -85,6 +85,8 @@ export function DeclareForm({ triggerLabel = 'Reportar precio', defaultKind = 'P
         setError('Tiempo de espera agotado. Intenta nuevamente.');
       } else if (message === 'rate_limited') {
         setError('Ya enviaste un reporte recientemente. Intenta mas tarde.');
+      } else if (message === 'deviation_too_high') {
+        setError('El valor está fuera del 15% del precio base.');
       } else {
         setError('No se pudo enviar el reporte. Intenta mas tarde.');
       }

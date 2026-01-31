@@ -20,6 +20,16 @@ export type DeclaredSnapshot = {
   confidence: string;
 };
 
+export type DeclaredAggregate = {
+  buy: number | null;
+  sell: number | null;
+  sampleSize: number;
+  updatedAt: Date | null;
+};
+
+const DECLARED_WINDOW_MS = 24 * 60 * 60 * 1000;
+const DECLARED_LIMIT = 200;
+
 async function safeQuery<T>(fn: () => Promise<T>, fallback: T): Promise<T> {
   try {
     return await fn();
@@ -162,7 +172,7 @@ export async function getDeclaredLatest(side: DeclaredSide = 'SELL'): Promise<De
   const cached = unstable_cache(
     async () => {
       return safeQuery(async () => {
-        const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
+        const since = new Date(Date.now() - DECLARED_WINDOW_MS);
         const rows: DeclaredRate[] = await prisma.declaredRate.findMany({
           where: {
             kind: 'PARALELO',
@@ -170,12 +180,13 @@ export async function getDeclaredLatest(side: DeclaredSide = 'SELL'): Promise<De
             status: 'ACCEPTED',
             created_at: { gte: since }
           },
-          orderBy: { created_at: 'asc' }
+          orderBy: { created_at: 'desc' },
+          take: DECLARED_LIMIT
         });
 
         const values = rows.map((row: DeclaredRate) => row.value);
         const medianValue = median(values);
-        const updatedAt = rows.length ? rows[rows.length - 1].created_at : null;
+        const updatedAt = rows.length ? rows[0].created_at : null;
 
         return {
           median: medianValue,
@@ -186,6 +197,57 @@ export async function getDeclaredLatest(side: DeclaredSide = 'SELL'): Promise<De
       }, { median: null, count: 0, updatedAt: null, confidence: 'insuficiente' });
     },
     ['declared-latest', side],
+    { revalidate: 60 }
+  );
+
+  return cached();
+}
+
+export async function getDeclaredAggregate(kind: RateKind = 'PARALELO'): Promise<DeclaredAggregate> {
+  const cached = unstable_cache(
+    async () => {
+      return safeQuery(async () => {
+        const since = new Date(Date.now() - DECLARED_WINDOW_MS);
+        const [buyRows, sellRows] = await Promise.all([
+          prisma.declaredRate.findMany({
+            where: {
+              kind,
+              side: 'BUY',
+              status: 'ACCEPTED',
+              created_at: { gte: since }
+            },
+            orderBy: { created_at: 'desc' },
+            take: DECLARED_LIMIT,
+            select: { value: true, created_at: true }
+          }),
+          prisma.declaredRate.findMany({
+            where: {
+              kind,
+              side: 'SELL',
+              status: 'ACCEPTED',
+              created_at: { gte: since }
+            },
+            orderBy: { created_at: 'desc' },
+            take: DECLARED_LIMIT,
+            select: { value: true, created_at: true }
+          })
+        ]);
+
+        const buyMedian = median(buyRows.map((row) => row.value));
+        const sellMedian = median(sellRows.map((row) => row.value));
+        const updatedAt = [buyRows[0]?.created_at, sellRows[0]?.created_at]
+          .filter(Boolean)
+          .sort((a, b) => (b as Date).getTime() - (a as Date).getTime())[0] ?? null;
+
+        return {
+          buy: buyMedian,
+          sell: sellMedian,
+          sampleSize: buyRows.length + sellRows.length,
+          updatedAt
+        };
+      }, { buy: null, sell: null, sampleSize: 0, updatedAt: null });
+    },
+    ['declared-aggregate', kind],
     { revalidate: 60 }
   );
 
