@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { parseBcbReferencial } from '@/lib/sources/bcb_html';
+import { parseValorReferencial } from '@/lib/sources/bcb_html';
 
 export const runtime = 'nodejs';
 
@@ -25,20 +25,39 @@ export async function GET() {
     }
 
     const html = await response.text();
-    const { parsed, debug } = parseBcbReferencial(html);
+    const fetcher = async (url: string) => {
+      const linked = await fetch(url, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0',
+          'Accept-Language': 'es'
+        },
+        next: { revalidate: 600 }
+      });
+      if (!linked.ok) return null;
+      return linked.text();
+    };
 
-    console.info('[bcb][valor-referencial]', {
-      fallbackRegex: debug.fallbackRegex,
-      compraText: debug.compraText,
-      ventaText: debug.ventaText
+    const { parsed, debug } = await parseValorReferencial(html, {
+      fetcher,
+      baseUrl: SOURCE_URL
     });
 
     if (!parsed) {
+      console.warn('[bcb][valor-referencial] parse_failed', {
+        anchorFound: debug.anchorFound,
+        compraFound: debug.compraFound,
+        ventaFound: debug.ventaFound,
+        snippet: debug.anchorSnippet
+      });
       return NextResponse.json({
         ok: false,
-        status: 'ERROR',
-        reason: 'no_data_or_parse_failed',
-        details: debug
+        error: 'parse_failed',
+        reason: 'missing_fields',
+        details: {
+          anchorFound: debug.anchorFound,
+          compraFound: debug.compraFound,
+          ventaFound: debug.ventaFound
+        }
       });
     }
 

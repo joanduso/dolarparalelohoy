@@ -12,6 +12,10 @@ export type BcbParseDebug = {
   dateText: string | null;
   compraText: string | null;
   ventaText: string | null;
+  anchorFound: boolean;
+  compraFound: boolean;
+  ventaFound: boolean;
+  anchorSnippet: string | null;
 };
 
 const ENTITY_MAP: Record<string, string> = {
@@ -59,21 +63,21 @@ function normalizeNumber(valueText: string) {
   return Number.isFinite(value) ? value : null;
 }
 
-function extractSection(text: string, start: RegExp, endMarkers: RegExp[]) {
-  const startMatch = text.match(start);
+function extractSection(html: string, start: RegExp, endMarkers: RegExp[]) {
+  const startMatch = html.match(start);
   if (!startMatch || startMatch.index === undefined) return null;
   const startIndex = startMatch.index;
-  let endIndex = text.length;
+  let endIndex = html.length;
 
   for (const marker of endMarkers) {
-    const endMatch = marker.exec(text.slice(startIndex + 1));
+    const endMatch = marker.exec(html.slice(startIndex + 1));
     if (endMatch && endMatch.index !== undefined) {
       const absolute = startIndex + 1 + endMatch.index;
       if (absolute < endIndex) endIndex = absolute;
     }
   }
 
-  return text.slice(startIndex, endIndex);
+  return html.slice(startIndex, endIndex);
 }
 
 function extractDate(section: string) {
@@ -83,18 +87,32 @@ function extractDate(section: string) {
   return match ? match[0].trim() : null;
 }
 
-function extractValue(section: string, label: 'compra' | 'venta') {
-  const regex = label === 'compra'
-    ? /compra\s*:?\s*([0-9]+(?:[.,][0-9]+)?)/i
-    : /venta\s*:?\s*([0-9]+(?:[.,][0-9]+)?)/i;
-  const match = section.match(regex);
-  return match ? match[1] : null;
+function extractValueAfterLabel(sectionHtml: string, label: 'compra' | 'venta') {
+  const labelRegex = new RegExp(`${label}\\s*:?.{0,200}`, 'i');
+  const match = labelRegex.exec(sectionHtml);
+  if (!match || match.index === undefined) {
+    return { text: null, found: false };
+  }
+  const windowText = sectionHtml.slice(match.index, match.index + 240);
+  const numberMatch = windowText.match(/([0-9]{1,2}(?:[\.,][0-9]{1,4})?)/);
+  return { text: numberMatch ? numberMatch[1] : null, found: Boolean(numberMatch) };
+}
+
+function extractValueAfterLabelFromText(sectionText: string, label: 'compra' | 'venta') {
+  const labelRegex = new RegExp(`${label}\\s*:?.{0,200}`, 'i');
+  const match = labelRegex.exec(sectionText);
+  if (!match || match.index === undefined) {
+    return { text: null, found: false };
+  }
+  const windowText = sectionText.slice(match.index, match.index + 240);
+  const numberMatch = windowText.match(/([0-9]{1,2}(?:[\.,][0-9]{1,4})?)/);
+  return { text: numberMatch ? numberMatch[1] : null, found: Boolean(numberMatch) };
 }
 
 function fallbackRegex(html: string) {
   const text = normalizeText(html);
-  const compraMatch = text.match(/Compra\s*:?\s*([0-9]+(?:[\.,][0-9]+)?)/i);
-  const ventaMatch = text.match(/Venta\s*:?\s*([0-9]+(?:[\.,][0-9]+)?)/i);
+  const compraMatch = text.match(/Compra\s*:?:?\s*([0-9]+(?:[\.,][0-9]+)?)/i);
+  const ventaMatch = text.match(/Venta\s*:?:?\s*([0-9]+(?:[\.,][0-9]+)?)/i);
   const fechaMatch = text.match(
     /(lunes|martes|mi[e?]rcoles|jueves|viernes|s[a?]bado|domingo)\s+\d{1,2}\s+de\s+[a-z?????]+\s*,\s*\d{4}/i
   );
@@ -107,6 +125,13 @@ function fallbackRegex(html: string) {
 
 function inRange(value: number) {
   return value >= 5 && value <= 15;
+}
+
+function keepIfInRange(valueText: string | null) {
+  if (!valueText) return null;
+  const numeric = normalizeNumber(valueText);
+  if (numeric === null) return null;
+  return inRange(numeric) ? valueText : null;
 }
 
 function buildParsed(values: {
@@ -131,10 +156,79 @@ function buildParsed(values: {
   } as BcbParsed;
 }
 
-export function parseBcbOfficial(html: string): { parsed: BcbParsed | null; debug: BcbParseDebug } {
-  const text = normalizeText(html);
-  const section = extractSection(
-    text,
+function findAnchorSnippet(text: string, anchor: RegExp) {
+  const match = text.match(anchor);
+  if (!match || match.index === undefined) return null;
+  const start = Math.max(0, match.index - 250);
+  const end = Math.min(text.length, match.index + 250);
+  return text.slice(start, end);
+}
+
+function parseSectionValues(html: string, anchor: RegExp, endMarkers: RegExp[]) {
+  const decodedHtml = decodeHtmlEntities(html);
+  const normalizedText = normalizeText(decodedHtml);
+  const section = extractSection(decodedHtml, anchor, endMarkers);
+  const sectionText = section ? normalizeText(section) : null;
+  const anchorFound = Boolean(normalizedText.match(anchor));
+
+  let dateText: string | null = null;
+  let compraText: string | null = null;
+  let ventaText: string | null = null;
+  let compraFound = false;
+  let ventaFound = false;
+
+  if (section) {
+    dateText = extractDate(sectionText ?? '');
+    const compraResult = extractValueAfterLabel(section, 'compra');
+    const ventaResult = extractValueAfterLabel(section, 'venta');
+    compraText = compraResult.text;
+    ventaText = ventaResult.text;
+    compraFound = compraResult.found;
+    ventaFound = ventaResult.found;
+
+    if (!compraText || !ventaText) {
+      const compraFallback = extractValueAfterLabelFromText(sectionText ?? '', 'compra');
+      const ventaFallback = extractValueAfterLabelFromText(sectionText ?? '', 'venta');
+      compraText = compraText ?? compraFallback.text;
+      ventaText = ventaText ?? ventaFallback.text;
+      compraFound = compraFound || compraFallback.found;
+      ventaFound = ventaFound || ventaFallback.found;
+    }
+  }
+
+  return {
+    dateText,
+    compraText,
+    ventaText,
+    anchorFound,
+    compraFound,
+    ventaFound,
+    anchorSnippet: findAnchorSnippet(normalizedText, anchor)
+  };
+}
+
+function parseLinkedValue(html: string, label: 'compra' | 'venta') {
+  const decodedHtml = decodeHtmlEntities(html);
+  const text = normalizeText(decodedHtml);
+  const primary = extractValueAfterLabelFromText(text, label);
+  if (primary.text) return primary.text;
+  const anyNumber = text.match(/([0-9]{1,2}(?:[\.,][0-9]{1,4})?)/);
+  return anyNumber ? anyNumber[1] : null;
+}
+
+function extractLink(sectionHtml: string, needle: RegExp) {
+  const hrefRegex = /href\s*=\s*["']([^"']+)["']/gi;
+  let match: RegExpExecArray | null;
+  while ((match = hrefRegex.exec(sectionHtml)) !== null) {
+    const href = match[1];
+    if (needle.test(href)) return href;
+  }
+  return null;
+}
+
+export function parseTipoDeCambio(html: string): { parsed: BcbParsed | null; debug: BcbParseDebug } {
+  const values = parseSectionValues(
+    html,
     /TIPO\s+DE\s+CAMBIO/i,
     [
       /VALOR\s+REFERENCIAL\s+DEL\s+D[ÓO]LAR/i,
@@ -143,37 +237,34 @@ export function parseBcbOfficial(html: string): { parsed: BcbParsed | null; debu
     ]
   );
 
-  let dateText: string | null = null;
-  let compraText: string | null = null;
-  let ventaText: string | null = null;
-  let fallbackUsed = false;
-
-  if (section && /Tipo\s+de\s+cambio\s+Bs\s+por\s+1\s+D[óo]lar/i.test(section)) {
-    dateText = extractDate(section);
-    compraText = extractValue(section, 'compra');
-    ventaText = extractValue(section, 'venta');
-  }
-
-  if (!dateText || !compraText || !ventaText) {
-    const fallback = fallbackRegex(html);
-    fallbackUsed = true;
-    dateText = dateText ?? fallback.dateText;
-    compraText = compraText ?? fallback.compraText;
-    ventaText = ventaText ?? fallback.ventaText;
-  }
-
-  const parsed = buildParsed({ dateText, compraText, ventaText, fallbackRegex: fallbackUsed });
+  const parsed = buildParsed({
+    dateText: values.dateText,
+    compraText: values.compraText,
+    ventaText: values.ventaText,
+    fallbackRegex: false
+  });
 
   return {
     parsed,
-    debug: { fallbackRegex: fallbackUsed, dateText, compraText, ventaText }
+    debug: {
+      fallbackRegex: false,
+      dateText: values.dateText,
+      compraText: values.compraText,
+      ventaText: values.ventaText,
+      anchorFound: values.anchorFound,
+      compraFound: values.compraFound,
+      ventaFound: values.ventaFound,
+      anchorSnippet: values.anchorSnippet
+    }
   };
 }
 
-export function parseBcbReferencial(html: string): { parsed: BcbParsed | null; debug: BcbParseDebug } {
-  const text = normalizeText(html);
-  const section = extractSection(
-    text,
+export async function parseValorReferencial(
+  html: string,
+  options?: { fetcher?: (url: string) => Promise<string | null>; baseUrl?: string }
+): Promise<{ parsed: BcbParsed | null; debug: BcbParseDebug }> {
+  const values = parseSectionValues(
+    html,
     /VALOR\s+REFERENCIAL\s+DEL\s+D[ÓO]LAR\s+ESTADOUNIDENSE/i,
     [
       /UNIDAD\s+DE\s+FOMENTO/i,
@@ -182,29 +273,64 @@ export function parseBcbReferencial(html: string): { parsed: BcbParsed | null; d
     ]
   );
 
-  let dateText: string | null = null;
-  let compraText: string | null = null;
-  let ventaText: string | null = null;
-  let fallbackUsed = false;
+  let compraText = keepIfInRange(values.compraText);
+  let ventaText = keepIfInRange(values.ventaText);
+  let dateText = values.dateText;
 
-  if (section) {
-    dateText = extractDate(section);
-    compraText = extractValue(section, 'compra');
-    ventaText = extractValue(section, 'venta');
+  if ((!compraText || !ventaText) && options?.fetcher) {
+    const decodedHtml = decodeHtmlEntities(html);
+    const sectionHtml = extractSection(
+      decodedHtml,
+      /VALOR\s+REFERENCIAL\s+DEL\s+D[ÓO]LAR\s+ESTADOUNIDENSE/i,
+      [
+        /UNIDAD\s+DE\s+FOMENTO/i,
+        /INDICADORES\s+DE\s+INFLACI[ÓO]N/i,
+        /CARTERAS\s+ADMINISTRADAS/i
+      ]
+    );
+
+    if (sectionHtml) {
+      const compraLink = extractLink(sectionHtml, /valor-referencial-de-compra/i);
+      const ventaLink = extractLink(sectionHtml, /valor-referencial-de-venta/i);
+      const base = options.baseUrl ?? '';
+
+      if (!compraText && compraLink) {
+        const url = new URL(compraLink, base).toString();
+        const compraHtml = await options.fetcher(url);
+        if (compraHtml) {
+          compraText = keepIfInRange(parseLinkedValue(compraHtml, 'compra'));
+          dateText = dateText ?? extractDate(normalizeText(decodeHtmlEntities(compraHtml)));
+        }
+      }
+
+      if (!ventaText && ventaLink) {
+        const url = new URL(ventaLink, base).toString();
+        const ventaHtml = await options.fetcher(url);
+        if (ventaHtml) {
+          ventaText = keepIfInRange(parseLinkedValue(ventaHtml, 'venta'));
+          dateText = dateText ?? extractDate(normalizeText(decodeHtmlEntities(ventaHtml)));
+        }
+      }
+    }
   }
 
-  if (!dateText || !compraText || !ventaText) {
-    const fallback = fallbackRegex(html);
-    fallbackUsed = true;
-    dateText = dateText ?? fallback.dateText;
-    compraText = compraText ?? fallback.compraText;
-    ventaText = ventaText ?? fallback.ventaText;
-  }
-
-  const parsed = buildParsed({ dateText, compraText, ventaText, fallbackRegex: fallbackUsed });
+  const parsed = buildParsed({ dateText, compraText, ventaText, fallbackRegex: false });
 
   return {
     parsed,
-    debug: { fallbackRegex: fallbackUsed, dateText, compraText, ventaText }
+    debug: {
+      fallbackRegex: false,
+      dateText,
+      compraText,
+      ventaText,
+      anchorFound: values.anchorFound,
+      compraFound: Boolean(compraText),
+      ventaFound: Boolean(ventaText),
+      anchorSnippet: values.anchorSnippet
+    }
   };
+}
+
+export function parseBcbOfficial(html: string): { parsed: BcbParsed | null; debug: BcbParseDebug } {
+  return parseTipoDeCambio(html);
 }
