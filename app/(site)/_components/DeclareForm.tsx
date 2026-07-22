@@ -7,6 +7,18 @@ type DeclareFormProps = {
   defaultKind?: 'PARALELO' | 'OFICIAL';
 };
 
+const departments = [
+  'Beni',
+  'Chuquisaca',
+  'Cochabamba',
+  'La Paz',
+  'Oruro',
+  'Pando',
+  'Potosí',
+  'Santa Cruz',
+  'Tarija'
+];
+
 export function DeclareForm({ triggerLabel = 'Reportar precio', defaultKind = 'PARALELO' }: DeclareFormProps) {
   const [status, setStatus] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -165,15 +177,20 @@ export function DeclareForm({ triggerLabel = 'Reportar precio', defaultKind = 'P
                   />
                 </label>
                 <label className="text-sm text-ink/70">
-                  Ciudad (opcional)
-                  <input name="city" className="mt-1 w-full rounded-lg border border-black/10 p-2" />
+                  Departamento (opcional)
+                  <select name="city" defaultValue="" className="mt-1 w-full rounded-lg border border-black/10 p-2">
+                    <option value="">Sin especificar</option>
+                    {departments.map((department) => (
+                      <option key={department} value={department}>{department}</option>
+                    ))}
+                  </select>
                 </label>
                 <label className="text-sm text-ink/70">
                   Fuente
                   <select name="source_type" className="mt-1 w-full rounded-lg border border-black/10 p-2">
-                    <option value="P2P">P2P</option>
-                    <option value="CasaCambio">Casa de cambio</option>
                     <option value="Calle">Calle</option>
+                    <option value="CasaCambio">Casa de cambio</option>
+                    <option value="Banco">Banco</option>
                     <option value="Otro">Otro</option>
                   </select>
                 </label>

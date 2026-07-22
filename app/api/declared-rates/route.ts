@@ -17,7 +17,7 @@ type DeclaredBody = {
   side: 'BUY' | 'SELL';
   value: number;
   city?: string | null;
-  source_type: 'P2P' | 'CasaCambio' | 'Calle' | 'Otro';
+  source_type: 'CasaCambio' | 'Calle' | 'Banco' | 'Otro';
 };
 
 function hashWithSalt(value: string) {
@@ -57,7 +57,7 @@ function parseBody(body: DeclaredBody) {
     return { error: 'invalid_value' as const };
   }
 
-  const allowedSources: DeclaredBody['source_type'][] = ['P2P', 'CasaCambio', 'Calle', 'Otro'];
+  const allowedSources: DeclaredBody['source_type'][] = ['CasaCambio', 'Calle', 'Banco', 'Otro'];
   const source_type = allowedSources.includes(sourceType) ? sourceType : 'Otro';
 
   return {

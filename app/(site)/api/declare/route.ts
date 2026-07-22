@@ -90,7 +90,7 @@ export async function POST(request: Request) {
     }
   }
 
-  const allowedSourceTypes: DeclaredSourceType[] = ['P2P', 'CasaCambio', 'Calle', 'Otro'];
+  const allowedSourceTypes: DeclaredSourceType[] = ['CasaCambio', 'Calle', 'Banco', 'Otro'];
   const source_type: DeclaredSourceType = allowedSourceTypes.includes(
     sourceType as DeclaredSourceType
   )

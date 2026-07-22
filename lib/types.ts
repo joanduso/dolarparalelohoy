@@ -1,6 +1,6 @@
 export type RateKind = 'PARALELO' | 'OFICIAL';
 export type DeclaredSide = 'BUY' | 'SELL';
-export type DeclaredSourceType = 'P2P' | 'CasaCambio' | 'Calle' | 'Otro';
+export type DeclaredSourceType = 'P2P' | 'CasaCambio' | 'Calle' | 'Banco' | 'Otro';
 export type RatePoint = {
   timestamp: Date;
   buy: number;
