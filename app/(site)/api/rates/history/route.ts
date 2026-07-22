@@ -9,6 +9,7 @@ import { parseHistoryParams } from '@/lib/engine/query';
 
 export const revalidate = 600;
 export const dynamic = 'force-dynamic';
+export const maxDuration = 30;
 
 type HistoryDataRow = {
   date: string;
