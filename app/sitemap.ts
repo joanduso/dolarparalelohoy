@@ -13,13 +13,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/historico/paralelo',
     '/historico/oficial',
     '/faq',
+    '/fuentes',
+    '/terminos',
+    '/privacidad',
     '/devs'
   ];
 
   return routes.map((path) => ({
     url: `${base}${path}`,
     lastModified: now,
-    changeFrequency: 'hourly',
-    priority: path === '' ? 1 : 0.7
+    changeFrequency: path === '' || ['/paralelo', '/oficial', '/brecha'].includes(path)
+      ? 'hourly'
+      : path.startsWith('/historico')
+        ? 'daily'
+        : 'monthly',
+    priority: path === '' ? 1 : ['/paralelo', '/oficial', '/brecha'].includes(path) ? 0.9 : 0.6
   }));
 }

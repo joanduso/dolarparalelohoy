@@ -8,8 +8,14 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: '*',
         allow: '/',
         disallow: ['/api/']
+      },
+      {
+        userAgent: 'Googlebot',
+        allow: '/',
+        disallow: ['/api/']
       }
     ],
+    host: siteConfig.url,
     sitemap: `${siteConfig.url}/sitemap.xml`
   };
 }

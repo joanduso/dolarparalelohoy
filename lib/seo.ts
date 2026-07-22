@@ -1,10 +1,12 @@
 ﻿export const siteConfig = {
   name: 'Dólar Paralelo Hoy Bolivia',
+  shortName: 'Dólar Paralelo Hoy',
+  alternateName: 'Dólar Paralelo Bolivia',
   description:
     'Cotización del dólar paralelo y oficial en Bolivia hoy. Brecha cambiaria, histórico y metodología transparente.',
   url: (() => {
     const rawUrl =
-      process.env.NEXT_PUBLIC_SITE_URL ?? process.env.SITE_URL ?? 'http://localhost:3000';
+      process.env.NEXT_PUBLIC_SITE_URL ?? process.env.SITE_URL ?? 'https://dolarparalelohoy.com';
     return rawUrl.startsWith('http') ? rawUrl : `https://${rawUrl}`;
   })(),
   locale: 'es-BO',
@@ -19,7 +21,10 @@ export const pageTitles = {
   historicoParalelo: 'Histórico dólar paralelo Bolivia',
   historicoOficial: 'Histórico dólar oficial Bolivia',
   faq: 'Metodología y preguntas frecuentes',
-  devs: 'API pública para desarrolladores'
+  devs: 'API pública para desarrolladores',
+  fuentes: 'Fuentes del dólar en Bolivia',
+  terminos: 'Términos de uso',
+  privacidad: 'Política de privacidad'
 };
 
 export const pageDescriptions = {
@@ -38,5 +43,11 @@ export const pageDescriptions = {
   faq:
     'Preguntas frecuentes, metodología, validación y avisos legales sobre el dólar en Bolivia.',
   devs:
-    'Documentación de la API pública con endpoints de cotización, histórico y estadísticas del dólar en Bolivia.'
+    'Documentación de la API pública con endpoints de cotización, histórico y estadísticas del dólar en Bolivia.',
+  fuentes:
+    'Conoce las fuentes, criterios de validación y metodología de la cotización del dólar paralelo y oficial en Bolivia.',
+  terminos:
+    'Términos de uso de Dólar Paralelo Hoy Bolivia y alcance informativo de las cotizaciones publicadas.',
+  privacidad:
+    'Política de privacidad y tratamiento de datos de los reportes voluntarios de precios en Bolivia.'
 };
