@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { computeLatest } from '@/lib/engine/priceEngine';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 function errorDetails(error: unknown) {
   if (!error || typeof error !== 'object') return { message: String(error) };
