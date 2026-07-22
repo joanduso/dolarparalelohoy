@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { parseValorReferencial } from '@/lib/sources/bcb_html';
+import { parseBcbOfficial, parseValorReferencial } from '@/lib/sources/bcb_html';
 
 export const runtime = 'nodejs';
 
@@ -37,10 +37,17 @@ export async function GET() {
       return linked.text();
     };
 
-    const { parsed, debug } = await parseValorReferencial(html, {
+    let { parsed, debug } = await parseValorReferencial(html, {
       fetcher,
       baseUrl: SOURCE_URL
     });
+
+    // The BCB currently exposes a unified official value on its homepage. If
+    // the former referential buy/sell pages are unavailable, use that official
+    // value for both sides instead of leaving the card empty.
+    if (!parsed) {
+      ({ parsed, debug } = parseBcbOfficial(html));
+    }
 
     if (!parsed) {
       console.warn('[bcb][valor-referencial] parse_failed', {
@@ -65,6 +72,10 @@ export async function GET() {
       ok: true,
       buy: parsed.buy,
       sell: parsed.sell,
+      compra: parsed.buy,
+      venta: parsed.sell,
+      compraText: `Bs ${parsed.buy.toFixed(2).replace('.', ',')}`,
+      ventaText: `Bs ${parsed.sell.toFixed(2).replace('.', ',')}`,
       dateText: parsed.dateText,
       source: 'BCB',
       fetchedAt: new Date().toISOString()

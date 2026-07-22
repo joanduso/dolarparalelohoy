@@ -82,7 +82,7 @@ function extractSection(html: string, start: RegExp, endMarkers: RegExp[]) {
 
 function extractDate(section: string) {
   const dateRegex =
-    /(lunes|martes|mi(?:e|é)rcoles|jueves|viernes|s(?:a|á)bado|domingo)\s+\d{1,2}\s+de\s+[a-záéíóúñ]+\s*(?:,?\s*de)?\s*\d{4}/i;
+    /(lunes|martes|mi(?:e|é)rcoles|jueves|viernes|s(?:a|á)bado|domingo)\s+\d{1,2}\s+de\s+[a-záéíóúñ]+\s*,?\s*(?:de\s+)?\d{4}/i;
   const match = section.match(dateRegex);
   return match ? match[0].trim() : null;
 }
@@ -237,10 +237,22 @@ export function parseTipoDeCambio(html: string): { parsed: BcbParsed | null; deb
     ]
   );
 
+  // The current BCB home page publishes one unified official value instead of
+  // separate Compra/Venta labels (for example "Bs 11,00"). Treat it as both
+  // sides so consumers continue receiving the official rate.
+  const pageText = normalizeText(html);
+  const unifiedMatch = pageText.match(
+    /tipo\s+de\s+cambio\s+oficial[\s\S]{0,180}?\bBs\b[^0-9]{0,40}([0-9]{1,2}(?:[\.,][0-9]{1,4})?)/i
+  );
+  const unifiedText = keepIfInRange(unifiedMatch?.[1] ?? null);
+  const compraText = keepIfInRange(values.compraText) ?? unifiedText;
+  const ventaText = keepIfInRange(values.ventaText) ?? unifiedText;
+  const dateText = values.dateText ?? extractDate(pageText);
+
   const parsed = buildParsed({
-    dateText: values.dateText,
-    compraText: values.compraText,
-    ventaText: values.ventaText,
+    dateText,
+    compraText,
+    ventaText,
     fallbackRegex: false
   });
 
@@ -248,12 +260,12 @@ export function parseTipoDeCambio(html: string): { parsed: BcbParsed | null; deb
     parsed,
     debug: {
       fallbackRegex: false,
-      dateText: values.dateText,
-      compraText: values.compraText,
-      ventaText: values.ventaText,
+      dateText,
+      compraText,
+      ventaText,
       anchorFound: values.anchorFound,
-      compraFound: values.compraFound,
-      ventaFound: values.ventaFound,
+      compraFound: Boolean(compraText),
+      ventaFound: Boolean(ventaText),
       anchorSnippet: values.anchorSnippet
     }
   };

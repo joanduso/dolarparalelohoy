@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
-import type { PrismaWithRatesHistory } from '@/lib/engine/store';
+import { computeLatest } from '@/lib/engine/priceEngine';
 
 export const runtime = 'nodejs';
 
@@ -12,29 +11,19 @@ function errorDetails(error: unknown) {
 
 export async function GET() {
   try {
-    const client = prisma as PrismaWithRatesHistory;
-    const latest = await client.ratesHistory.findFirst({
-      orderBy: { timestampUtc: 'desc' }
-    });
-
-    if (!latest) {
-      return NextResponse.json({
-        updatedAt: null,
-        status: 'ERROR',
-        sources: { bcb: 'ERROR', binance_p2p: 'ERROR' },
-        paralelo: null,
-        oficial: null,
-        brecha: null
-      });
-    }
-
-    const sourcesUsed = Array.isArray(latest.sourcesUsed) ? latest.sourcesUsed : [];
+    // Current quotes come directly from the public sources. Persistence is
+    // best-effort inside the engine, so a paused history database cannot leave
+    // the homepage serving a stale snapshot indefinitely.
+    const { result: latest } = await computeLatest();
+    const sourcesUsed = Array.isArray(latest.quality.sources_used)
+      ? latest.quality.sources_used
+      : [];
     const bcbOk = sourcesUsed.includes('BCB');
-    const binanceOk = sourcesUsed.includes('BINANCE_P2P');
+    const binanceOk = sourcesUsed.includes('BINANCE');
 
     const officialValue = latest.officialBcb ?? null;
-    const parallelSell = latest.parallelSell ?? null;
-    const parallelBuy = latest.parallelBuy ?? null;
+    const parallelSell = latest.parallel.sell ?? null;
+    const parallelBuy = latest.parallel.buy ?? null;
 
     const gapAbs = officialValue !== null && parallelSell !== null
       ? parallelSell - officialValue
@@ -45,7 +34,7 @@ export async function GET() {
 
     return NextResponse.json({
       updatedAt: latest.timestampUtc.toISOString(),
-      status: latest.status,
+      status: latest.quality.status,
       sources: {
         bcb: bcbOk ? 'OK' : 'ERROR',
         binance_p2p: binanceOk ? 'OK' : 'ERROR'
@@ -54,7 +43,10 @@ export async function GET() {
         buy: parallelBuy,
         sell: parallelSell,
         sources_count: binanceOk ? 1 : 0,
-        sampleSize: Math.max(latest.sampleSizeBuy ?? 0, latest.sampleSizeSell ?? 0)
+        sampleSize: Math.max(
+          latest.quality.sample_size.buy ?? 0,
+          latest.quality.sample_size.sell ?? 0
+        )
       },
       oficial: {
         buy: officialValue,
@@ -65,7 +57,8 @@ export async function GET() {
         gap_abs: gapAbs,
         gap_pct: gapPct
       },
-      notes: latest.notes
+      notes: latest.quality.notes,
+      errors: latest.errors
     });
   } catch (error) {
     console.error('[rates/current] failed', errorDetails(error));
