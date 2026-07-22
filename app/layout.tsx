@@ -18,7 +18,7 @@ const sans = Commissioner({
   display: 'swap'
 });
 
-const metadataBaseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+const metadataBaseUrl = process.env.NEXT_PUBLIC_SITE_URL || siteConfig.url;
 const metadataBase = new URL(
   metadataBaseUrl.startsWith('http') ? metadataBaseUrl : `https://${metadataBaseUrl}`
 );
@@ -32,8 +32,32 @@ export const metadata: Metadata = {
     template: `%s | ${siteConfig.name}`
   },
   description: siteConfig.description,
+  applicationName: siteConfig.shortName,
+  keywords: [
+    'dólar paralelo Bolivia',
+    'dólar Bolivia hoy',
+    'tipo de cambio Bolivia',
+    'dólar oficial Bolivia',
+    'USDT BOB',
+    'precio dólar Bolivia',
+    'brecha cambiaria Bolivia'
+  ],
+  creator: siteConfig.name,
+  publisher: siteConfig.name,
+  category: 'finanzas',
   alternates: {
     canonical: absoluteUrl('/')
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1
+    }
   },
   openGraph: {
     type: 'website',
@@ -41,12 +65,14 @@ export const metadata: Metadata = {
     title: siteConfig.name,
     description: siteConfig.description,
     siteName: siteConfig.name,
-    locale: siteConfig.locale
+    locale: siteConfig.locale,
+    images: [{ url: absoluteUrl('/opengraph-image'), alt: siteConfig.name }]
   },
   twitter: {
     card: 'summary_large_image',
     title: siteConfig.name,
-    description: siteConfig.description
+    description: siteConfig.description,
+    images: [absoluteUrl('/opengraph-image')]
   },
   icons: {
     icon: '/icon.png',
@@ -58,12 +84,42 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children
 }: Readonly<{ children: React.ReactNode }>) {
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebSite',
+        '@id': `${siteConfig.url}/#website`,
+        url: siteConfig.url,
+        name: siteConfig.shortName,
+        alternateName: [siteConfig.name, siteConfig.alternateName],
+        description: siteConfig.description,
+        inLanguage: siteConfig.locale,
+        publisher: { '@id': `${siteConfig.url}/#organization` }
+      },
+      {
+        '@type': 'Organization',
+        '@id': `${siteConfig.url}/#organization`,
+        name: siteConfig.name,
+        alternateName: siteConfig.shortName,
+        url: siteConfig.url,
+        logo: { '@type': 'ImageObject', url: `${siteConfig.url}/icon.png` }
+      }
+    ]
+  };
+
   return (
     <html lang="es" className={`${serif.variable} ${sans.variable}`}>
       <head>
         <meta charSet="utf-8" />
       </head>
       <body className="font-sans">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(structuredData).replace(/</g, '\\u003c')
+          }}
+        />
         <div className="gradient-panel min-h-screen">
           <header className="section-shell py-6">
             <div className="flex flex-col gap-3">

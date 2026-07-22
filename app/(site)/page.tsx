@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { ChartCard } from '@/app/(site)/_components/ChartCard';
-import { JsonLd } from '@/app/(site)/_components/JsonLd';
 import { RateCard } from '@/app/(site)/_components/RateCard';
 import { BrechaCard } from '@/app/(site)/_components/BrechaCard';
 import { BCBCard } from '@/app/(site)/_components/BCBCard';
@@ -190,22 +189,8 @@ export default async function HomePage() {
         ? 'border-amber-200 text-amber-800 bg-amber-50'
         : 'border-rose-200 text-rose-700 bg-rose-50';
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: siteConfig.name,
-    url: siteConfig.url,
-    inLanguage: siteConfig.language,
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: `${siteConfig.url}/?q={search_term_string}`,
-      'query-input': 'required name=search_term_string'
-    }
-  };
-
   return (
     <main className="pb-16">
-      <JsonLd data={jsonLd} />
       <section className="w-full bg-gradient-to-b from-sand/70 via-sand/30 to-transparent">
         <div className="section-shell py-12 grid gap-6">
           <div className="grid gap-4">
