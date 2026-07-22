@@ -115,7 +115,7 @@ El endpoint interno est? en `/api/cron/refresh` y requiere `CRON_SECRET`.
   "crons": [
     {
       "path": "/api/cron/refresh",
-      "schedule": "*/15 * * * *"
+      "schedule": "0 12 * * *"
     }
   ]
 }
@@ -123,7 +123,7 @@ El endpoint interno est? en `/api/cron/refresh` y requiere `CRON_SECRET`.
 
 2. Vercel Cron invoca el endpoint con `GET` y envía `Authorization: Bearer <CRON_SECRET>` automáticamente. El endpoint también conserva `POST` y `x-cron-secret` para llamadas manuales anteriores.
 
-La cadencia de refresco es cada 15 minutos.
+En Vercel Hobby la cadencia automática es diaria a las 12:00 UTC (08:00 en Bolivia), que es el máximo permitido por ese plan. En Pro puede configurarse una frecuencia mayor.
 
 ## Tests
 
