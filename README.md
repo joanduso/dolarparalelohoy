@@ -72,7 +72,8 @@ Configura estas variables en Vercel para Production, Preview y Development.
 - `SOURCE_BASE_URL`: base URL para adaptador real
 - `SOURCE_ROBOTS_URL`: URL de robots.txt del proveedor
 - `SOURCE_TERMS_URL`: URL de terminos del proveedor
-- `ENABLE_BINANCE_P2P`: activar Binance P2P (requerido)
+- `BINANCE_P2P_ENABLED`: activar Binance P2P (usa `true`; requerido)
+- `ENABLE_BINANCE_P2P`: nombre legado, todavia compatible
 - `BINANCE_P2P_URL`: endpoint P2P configurado por el usuario
 - `BINANCE_ROBOTS_URL`: robots.txt de Binance
 - `BINANCE_TERMS_URL`: terminos de Binance
@@ -120,7 +121,7 @@ El endpoint interno est? en `/api/cron/refresh` y requiere `CRON_SECRET`.
 }
 ```
 
-2. Vercel Cron env?a el header `x-vercel-cron: 1` autom?ticamente. Adem?s configuramos `CRON_SECRET` y usamos el header `x-cron-secret` para proteger el endpoint.
+2. Vercel Cron invoca el endpoint con `GET` y envía `Authorization: Bearer <CRON_SECRET>` automáticamente. El endpoint también conserva `POST` y `x-cron-secret` para llamadas manuales anteriores.
 
 La cadencia de refresco es cada 15 minutos.
 

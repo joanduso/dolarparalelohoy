@@ -10,9 +10,15 @@ function errorDetails(error: unknown) {
   return { message: maybe.message ?? String(error), code: maybe.code };
 }
 
-export async function POST(request: Request) {
-  const cronSecret = request.headers.get('x-cron-secret') ?? '';
-  if (!process.env.CRON_SECRET || cronSecret !== process.env.CRON_SECRET) {
+async function refresh(request: Request) {
+  const authorization = request.headers.get('authorization') ?? '';
+  const legacySecret = request.headers.get('x-cron-secret') ?? '';
+  const expectedSecret = process.env.CRON_SECRET;
+  const authorized = Boolean(expectedSecret) && (
+    authorization === `Bearer ${expectedSecret}` || legacySecret === expectedSecret
+  );
+
+  if (!authorized) {
     return NextResponse.json({ ok: false, error: 'unauthorized' }, { status: 401 });
   }
 
@@ -40,3 +46,8 @@ export async function POST(request: Request) {
     });
   }
 }
+
+// Vercel Cron invokes configured paths with GET and sends CRON_SECRET as a
+// Bearer token. POST remains available for backwards-compatible manual calls.
+export const GET = refresh;
+export const POST = refresh;

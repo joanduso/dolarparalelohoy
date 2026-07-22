@@ -9,6 +9,25 @@ async function loadFixture(name: string) {
 }
 
 describe('BCB parsers', () => {
+  it('parses the unified official value used by the current BCB homepage', () => {
+    const html = `
+      <section>
+        <h2>Tipo de cambio oficial</h2>
+        <p>Bolivianos por dólar estadounidense</p>
+        <time>MIÉRCOLES 22 DE JULIO, 2026</time>
+        <strong>Bs 11,00</strong>
+      </section>
+    `;
+
+    const { parsed } = parseTipoDeCambio(html);
+
+    expect(parsed).toMatchObject({
+      buy: 11,
+      sell: 11,
+      dateText: 'MIÉRCOLES 22 DE JULIO, 2026'
+    });
+  });
+
   it('parseTipoDeCambio extracts numeric values', async () => {
     const html = await loadFixture('bcb_home.html');
     const { parsed } = parseTipoDeCambio(html);
