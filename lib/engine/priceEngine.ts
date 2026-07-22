@@ -95,16 +95,19 @@ export async function computeLatest() {
   if (officialBcb) sourcesUsed.push('BCB');
   if (sampleSizeBuy || sampleSizeSell) sourcesUsed.push('BINANCE');
 
+  const useDatabase = process.env.ENABLE_RATE_DB === 'true';
   let latestRun = null;
   let run24h = null;
   let dbUnavailable = false;
 
-  try {
-    latestRun = await getLatestRun(prisma);
-    run24h = await getRun24hAgo(prisma);
-  } catch (dbErr) {
-    dbUnavailable = true;
-    logWarn('priceEngine db unavailable', { message: String(dbErr) });
+  if (useDatabase) {
+    try {
+      latestRun = await getLatestRun(prisma);
+      run24h = await getRun24hAgo(prisma);
+    } catch (dbErr) {
+      dbUnavailable = true;
+      logWarn('priceEngine db unavailable', { message: String(dbErr) });
+    }
   }
 
   let effectiveOfficial = officialBcb;
@@ -207,46 +210,46 @@ export async function computeLatest() {
     errors
   };
 
-  try {
-    if (officialBcb) {
-    if (effectiveOfficial !== null) {
-      await prisma.ratePoint.create({
-        data: {
-          kind: 'OFICIAL',
-          timestamp: result.timestampUtc,
-          buy: effectiveOfficial,
-          sell: effectiveOfficial,
-          source: 'bcb',
-          currency_pair: 'USD/BOB',
-          country: 'BO',
-          raw: bcbData?.meta ?? undefined
-        }
-      });
-    }
-  }
-
-    if (parallelBuy !== null && parallelSell !== null) {
-      await prisma.ratePoint.create({
-        data: {
-          kind: 'PARALELO',
-          timestamp: result.timestampUtc,
-          buy: parallelBuy,
-          sell: parallelSell,
-          source: 'binance-p2p',
-          currency_pair: 'USDT/BOB',
-          country: 'BO',
-          raw: {
-            sampleSize: { buy: sampleSizeBuy, sell: sampleSizeSell },
-            min: { buy: minBuy, sell: minSell },
-            max: { buy: maxBuy, sell: maxSell }
+  if (useDatabase) {
+    try {
+      if (officialBcb && effectiveOfficial !== null) {
+        await prisma.ratePoint.create({
+          data: {
+            kind: 'OFICIAL',
+            timestamp: result.timestampUtc,
+            buy: effectiveOfficial,
+            sell: effectiveOfficial,
+            source: 'bcb',
+            currency_pair: 'USD/BOB',
+            country: 'BO',
+            raw: bcbData?.meta ?? undefined
           }
-        }
-      });
-    }
+        });
+      }
 
-    await saveRun(prisma, result);
-  } catch (error) {
-    logWarn('priceEngine save failed', { error: String(error) });
+      if (parallelBuy !== null && parallelSell !== null) {
+        await prisma.ratePoint.create({
+          data: {
+            kind: 'PARALELO',
+            timestamp: result.timestampUtc,
+            buy: parallelBuy,
+            sell: parallelSell,
+            source: 'binance-p2p',
+            currency_pair: 'USDT/BOB',
+            country: 'BO',
+            raw: {
+              sampleSize: { buy: sampleSizeBuy, sell: sampleSizeSell },
+              min: { buy: minBuy, sell: minSell },
+              max: { buy: maxBuy, sell: maxSell }
+            }
+          }
+        });
+      }
+
+      await saveRun(prisma, result);
+    } catch (error) {
+      logWarn('priceEngine save failed', { error: String(error) });
+    }
   }
 
   setCache('latest', result, LATEST_TTL_MS);

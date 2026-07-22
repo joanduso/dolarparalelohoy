@@ -27,6 +27,7 @@ enum DeclaredSourceType {
   P2P
   CasaCambio
   Calle
+  Banco
   Otro
 }
 

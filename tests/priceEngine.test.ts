@@ -34,6 +34,7 @@ function makeSamples(side: Sample['side'], count: number, priceBase: number): Sa
 }
 
 beforeEach(() => {
+  process.env.ENABLE_RATE_DB = 'true';
   clearCache('latest');
   clearCache('bcb');
   clearCache('binance');

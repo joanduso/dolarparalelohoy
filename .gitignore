@@ -10,3 +10,4 @@ out
 .DS_Store
 tsconfig.tsbuildinfo
 bcb.html
+.env*
