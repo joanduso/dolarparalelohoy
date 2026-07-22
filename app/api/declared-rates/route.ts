@@ -4,11 +4,10 @@ import { headers } from 'next/headers';
 import { prisma } from '@/lib/db';
 import { getLatestRun } from '@/lib/engine/store';
 import { deviationPct } from '@/lib/declared';
+import { computeLatest } from '@/lib/engine/priceEngine';
 
 export const runtime = 'nodejs';
 
-const MIN_VALUE = 3;
-const MAX_VALUE = 30;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const MAX_DEVIATION = 15;
 
@@ -57,10 +56,6 @@ function parseBody(body: DeclaredBody) {
     return { error: 'invalid_value' as const };
   }
 
-  if (value < MIN_VALUE || value > MAX_VALUE) {
-    return { error: 'value_out_of_range' as const };
-  }
-
   const allowedSources: DeclaredBody['source_type'][] = ['P2P', 'CasaCambio', 'Calle', 'Otro'];
   const source_type = allowedSources.includes(sourceType) ? sourceType : 'Otro';
 
@@ -74,27 +69,38 @@ function parseBody(body: DeclaredBody) {
 }
 
 async function getLatestBase(kind: DeclaredBody['kind'], side: DeclaredBody['side']) {
-  const latest = await getLatestRun(prisma);
+  try {
+    const latest = await getLatestRun(prisma);
 
-  if (!latest) return { base: null, baseAvailable: false };
+    if (latest) {
+      if (kind === 'OFICIAL') {
+        return {
+          base: latest.officialBcb ?? null,
+          baseAvailable: latest.officialBcb !== null
+        };
+      }
 
-  if (kind === 'OFICIAL') {
-    return {
-      base: latest.officialBcb ?? null,
-      baseAvailable: latest.officialBcb !== null
-    };
+      const sideValue = side === 'BUY' ? latest.parallelBuy : latest.parallelSell;
+      if (sideValue !== null && sideValue !== undefined) {
+        return { base: sideValue, baseAvailable: true };
+      }
+
+      if (latest.parallelMid !== null && latest.parallelMid !== undefined) {
+        return { base: latest.parallelMid, baseAvailable: true };
+      }
+    }
+  } catch (error) {
+    console.warn('[declared-rates] stored base unavailable', errorDetails(error));
   }
 
-  const sideValue = side === 'BUY' ? latest.parallelBuy : latest.parallelSell;
-  if (sideValue !== null && sideValue !== undefined) {
-    return { base: sideValue, baseAvailable: true };
-  }
+  const { result } = await computeLatest();
+  const liveValue = kind === 'OFICIAL'
+    ? result.officialBcb
+    : side === 'BUY'
+      ? result.parallel.buy
+      : result.parallel.sell;
 
-  if (latest.parallelMid !== null && latest.parallelMid !== undefined) {
-    return { base: latest.parallelMid, baseAvailable: true };
-  }
-
-  return { base: null, baseAvailable: false };
+  return { base: liveValue, baseAvailable: liveValue !== null };
 }
 
 export async function POST(request: Request) {
@@ -130,19 +136,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'invalid_payload' }, { status: 400 });
     }
 
-    const ipHash = hashWithSalt(ip);
-    const uaHash = hashWithSalt(userAgent);
-    const recent = await prisma.declaredRate.findFirst({
-      where: {
-        ip_hash: ipHash,
-        created_at: { gte: new Date(Date.now() - RATE_LIMIT_WINDOW_MS) }
-      }
-    });
-
-    if (recent) {
-      return NextResponse.json({ error: 'rate_limited' }, { status: 429 });
-    }
-
     let baseResult;
     try {
       baseResult = await getLatestBase(parsed.kind, parsed.side);
@@ -164,6 +157,8 @@ export async function POST(request: Request) {
 
     const deviation_pct = deviationPct(parsed.value, base);
     if (deviation_pct > MAX_DEVIATION) {
+      const minimum = Number((base * (1 - MAX_DEVIATION / 100)).toFixed(2));
+      const maximum = Number((base * (1 + MAX_DEVIATION / 100)).toFixed(2));
       return NextResponse.json(
         {
           error: 'deviation_too_high',
@@ -172,12 +167,31 @@ export async function POST(request: Request) {
             value: parsed.value,
             deviation_pct,
             max_deviation: MAX_DEVIATION,
+            minimum,
+            maximum,
             kind: parsed.kind,
             side: parsed.side
           }
         },
         { status: 400 }
       );
+    }
+
+    const ipHash = hashWithSalt(ip);
+    const uaHash = hashWithSalt(userAgent);
+    try {
+      const recent = await prisma.declaredRate.findFirst({
+        where: {
+          ip_hash: ipHash,
+          created_at: { gte: new Date(Date.now() - RATE_LIMIT_WINDOW_MS) }
+        }
+      });
+
+      if (recent) {
+        return NextResponse.json({ error: 'rate_limited' }, { status: 429 });
+      }
+    } catch (error) {
+      console.warn('[declared-rates] rate limit storage unavailable', errorDetails(error));
     }
 
     const status: 'ACCEPTED' = 'ACCEPTED';
@@ -202,8 +216,8 @@ export async function POST(request: Request) {
     } catch (error) {
       console.error('[declared-rates] create failed', errorDetails(error));
       return NextResponse.json(
-        { error: 'internal_error', message: 'insert_failed' },
-        { status: 500 }
+        { error: 'storage_unavailable' },
+        { status: 503 }
       );
     }
 
