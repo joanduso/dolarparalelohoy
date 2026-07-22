@@ -17,6 +17,34 @@ type HistoryDataRow = {
   sources_count: number;
 };
 
+type PublicParallelHistory = {
+  points?: Array<{ t: string; v: number }>;
+};
+
+async function getPublicParallelHistory(from: Date, to: Date): Promise<HistoryDataRow[]> {
+  try {
+    const response = await fetch('https://paralelo.bo/api/v1/historical.json', {
+      next: { revalidate: 60 * 60 }
+    });
+    if (!response.ok) return [];
+    const payload = (await response.json()) as PublicParallelHistory;
+    return (payload.points ?? [])
+      .filter((point) => {
+        const timestamp = new Date(point.t).getTime();
+        return Number.isFinite(point.v) && point.v > 0 && timestamp >= from.getTime() && timestamp <= to.getTime();
+      })
+      .map((point) => ({
+        date: point.t,
+        buy_avg: point.v,
+        sell_avg: point.v,
+        sources_count: 1
+      }));
+  } catch (error) {
+    console.warn('[rates-history] public parallel history unavailable', String(error));
+    return [];
+  }
+}
+
 function dailyRows(rows: HistoryDataRow[]) {
   const byDay = new Map<string, HistoryDataRow>();
   for (const row of rows) {
@@ -69,7 +97,11 @@ export async function GET(request: Request) {
     );
   }
 
-  const { from, to, interval } = parsed.value;
+  let { from, to, interval } = parsed.value;
+  const daysParam = Number(url.searchParams.get('days'));
+  if (Number.isFinite(daysParam) && daysParam > 0 && daysParam <= 1000) {
+    from = new Date(to.getTime() - daysParam * 24 * 60 * 60 * 1000);
+  }
 
   let rows: RateHistoryRow[] = [];
   try {
@@ -92,6 +124,11 @@ export async function GET(request: Request) {
     sources_count: row.sampleSizeSell ?? 0
   }));
 
+  const publicHistory =
+    kindParam === 'PARALELO' && storedData.length === 0
+      ? await getPublicParallelHistory(from, to)
+      : [];
+
   const liveBuy = kindParam === 'OFICIAL' ? latest.officialBcb : latest.parallel.buy;
   const liveSell = kindParam === 'OFICIAL' ? latest.officialBcb : latest.parallel.sell;
   const liveRow: HistoryDataRow[] =
@@ -104,7 +141,7 @@ export async function GET(request: Request) {
             kindParam === 'OFICIAL' ? 1 : Math.max(latest.quality.sample_size.buy, latest.quality.sample_size.sell)
         }]
       : [];
-  const data = dailyRows([...storedData, ...liveRow]);
+  const data = dailyRows([...publicHistory, ...storedData, ...liveRow]);
 
   return NextResponse.json({
     from: from.toISOString(),
@@ -114,6 +151,7 @@ export async function GET(request: Request) {
     // Legacy fields to avoid breaking current frontend.
     kind: kindParam,
     count: data.length,
-    data
+    data,
+    source: publicHistory.length > 0 ? 'paralelo.bo (CC-BY-4.0)' : 'local'
   }, { headers: rateHeaders });
 }

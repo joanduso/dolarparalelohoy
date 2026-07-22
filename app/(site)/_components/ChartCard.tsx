@@ -27,7 +27,8 @@ const ranges = [
   { label: '7D', days: 7 },
   { label: '30D', days: 30 },
   { label: '6M', days: 180 },
-  { label: '1A', days: 365 }
+  { label: '1A', days: 365 },
+  { label: 'Todo', days: 0 }
 ];
 
 export function ChartCard({ data }: { data: ChartPayload }) {
@@ -37,6 +38,7 @@ export function ChartCard({ data }: { data: ChartPayload }) {
   const selected = data[series];
 
   const filtered = useMemo(() => {
+    if (range === 0) return selected;
     const from = new Date();
     from.setDate(from.getDate() - range);
     return selected.filter((point) => new Date(point.date) >= from);
@@ -104,6 +106,11 @@ export function ChartCard({ data }: { data: ChartPayload }) {
           }}
         />
       )}
+      {series === 'paralelo' ? (
+        <p className="text-xs text-ink/50">
+          Histórico diario: <a className="underline underline-offset-2" href="https://paralelo.bo" target="_blank" rel="noreferrer">paralelo.bo</a> (CC BY 4.0), desde agosto de 2024. Cotización actual: cálculo propio con anuncios P2P.
+        </p>
+      ) : null}
     </div>
   );
 }
