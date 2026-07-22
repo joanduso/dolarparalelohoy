@@ -45,7 +45,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function OficialPage() {
   const [latestResult, historyResult] = await Promise.all([
-    fetchJson<CurrentRatesResponse>('/api/rates/current', {}, 600),
+    fetchJson<CurrentRatesResponse>('/api/rates/current?v=live-20260722', {}, 600),
     fetchJson<HistoryResponse<DailyHistoryRow>>('/api/rates/history?kind=OFICIAL&days=365', {}, 600)
   ]);
 

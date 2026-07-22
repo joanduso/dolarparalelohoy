@@ -49,7 +49,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function ParaleloPage() {
   const [latestResult, historyResult] = await Promise.all([
-    fetchJson<CurrentRatesResponse>('/api/rates/current', {}, 600),
+    fetchJson<CurrentRatesResponse>('/api/rates/current?v=live-20260722', {}, 600),
     fetchJson<HistoryResponse<DailyHistoryRow>>('/api/rates/history?kind=PARALELO&days=365', {}, 600)
   ]);
 
