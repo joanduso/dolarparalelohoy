@@ -27,11 +27,12 @@ export function DeclareForm({ triggerLabel = 'Reportar precio', defaultKind = 'P
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const formElement = event.currentTarget;
     setLoading(true);
     setStatus(null);
     setError(null);
 
-    const form = new FormData(event.currentTarget);
+    const form = new FormData(formElement);
     const value = Number(form.get('value'));
 
     if (!Number.isFinite(value) || value <= 0) {
@@ -89,11 +90,11 @@ export function DeclareForm({ triggerLabel = 'Reportar precio', defaultKind = 'P
 
       if (data?.ok) {
         setStatus('Reporte recibido. Gracias por aportar.');
-        event.currentTarget.reset();
+        formElement.reset();
         setTimeout(() => setOpen(false), 1200);
       } else {
         setStatus('Reporte recibido. Quedo en revision.');
-        event.currentTarget.reset();
+        formElement.reset();
       }
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
