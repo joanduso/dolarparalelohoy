@@ -5,6 +5,7 @@ import { prisma } from '@/lib/db';
 import { getLatestRun } from '@/lib/engine/store';
 import { deviationPct } from '@/lib/declared';
 import { computeLatest } from '@/lib/engine/priceEngine';
+import { fetchP2PIndex } from '@/lib/p2pIndex';
 
 export const runtime = 'nodejs';
 
@@ -69,6 +70,16 @@ function parseBody(body: DeclaredBody) {
 }
 
 async function getLatestBase(kind: DeclaredBody['kind'], side: DeclaredBody['side']) {
+  if (kind === 'PARALELO') {
+    const index = await fetchP2PIndex();
+    if (index) {
+      return {
+        base: side === 'BUY' ? index.buy : index.sell,
+        baseAvailable: true
+      };
+    }
+  }
+
   try {
     const latest = await getLatestRun(prisma);
 

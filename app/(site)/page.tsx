@@ -14,6 +14,7 @@ import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
 import { fetchJson } from '@/lib/serverFetch';
 import { formatDateTime } from '@/lib/format';
 import type { Metadata } from 'next';
+import { fetchP2PIndex } from '@/lib/p2pIndex';
 
 type DailyHistoryRow = {
   date: string;
@@ -103,20 +104,33 @@ export default async function HomePage() {
     oficialHistoryResult,
     brechaHistoryResult,
     brechaLatestResult,
-    bcbResult
+    bcbResult,
+    p2pIndex
   ] = await Promise.all([
     fetchJson<CurrentRatesResponse>('/api/rates/current?v=live-20260722', {}, 600),
     fetchJson<HistoryResponse<DailyHistoryRow>>('/api/rates/history?kind=PARALELO&days=900&v=public-history-20260722', {}, 600),
     fetchJson<HistoryResponse<DailyHistoryRow>>('/api/rates/history?kind=OFICIAL&days=365&v=daily-20260722', {}, 600),
     fetchJson<HistoryResponse<BrechaHistoryRow>>('/api/brecha/history?days=365', {}, 600),
     fetchJson<BrechaLatestResponse>('/api/brecha/latest', {}, 600),
-    fetchJson<BcbResponse>('/api/bcb/valor-referencial?v=live-20260722', {}, 600)
+    fetchJson<BcbResponse>('/api/bcb/valor-referencial?v=live-20260722', {}, 600),
+    fetchP2PIndex()
   ]);
 
   const latest = latestResult.data;
   const paralelo = latest?.paralelo ?? null;
   const oficial = latest?.oficial ?? null;
-  const brecha = latest?.brecha ?? brechaLatestResult.data?.brecha ?? null;
+  const indexBuy = p2pIndex?.buy ?? paralelo?.buy ?? null;
+  const indexSell = p2pIndex?.sell ?? paralelo?.sell ?? null;
+  const indexSources = p2pIndex?.sourceCount ?? (paralelo?.sampleSize ? 1 : 0);
+  const indexUpdatedAt = p2pIndex?.timestamp ? new Date(p2pIndex.timestamp) : null;
+  const officialSell = oficial?.sell ?? null;
+  const indexBrecha = indexSell !== null && officialSell !== null
+    ? {
+        gap_abs: indexSell - officialSell,
+        gap_pct: ((indexSell - officialSell) / officialSell) * 100
+      }
+    : null;
+  const brecha = indexBrecha ?? latest?.brecha ?? brechaLatestResult.data?.brecha ?? null;
   const paraleloHistory = paraleloHistoryResult.data?.data ?? [];
   const oficialHistory = oficialHistoryResult.data?.data ?? [];
   const brechaHistory = brechaHistoryResult.data?.data ?? [];
@@ -153,16 +167,19 @@ export default async function HomePage() {
 
   const sourceBadges = [
     { name: 'BCB', active: latest?.sources?.bcb === 'OK' || Boolean(bcbData) },
+    { name: 'Índice P2P', active: Boolean(p2pIndex) },
     { name: 'Binance P2P', active: latest?.sources?.binance_p2p === 'OK' }
   ];
 
-  const parallelSourceNote = (paralelo?.sampleSize ?? 0) > 0
-    ? 'Fuente base: Binance P2P (mediana de avisos).'
+  const parallelSourceNote = indexSources > 1
+    ? `Mediana multi-exchange con ${indexSources} fuentes activas. Datos agregados por paralelo.bo.`
+    : (paralelo?.sampleSize ?? 0) > 0
+      ? 'Respaldo temporal: Binance P2P (mediana de anuncios).'
     : 'Paralelo sin fuentes activas. Intentaremos actualizar pronto.';
 
-  const parallelActive = (paralelo?.sampleSize ?? 0) > 0;
+  const parallelActive = indexSources > 0;
   const officialActive = (oficial?.sources_count ?? 0) > 0;
-  const activeSources = [parallelActive, officialActive].filter(Boolean).length;
+  const activeSources = indexSources + (officialActive ? 1 : 0);
   const hasAnyData = Boolean(paralelo || oficial || brecha || bcbData);
   const status = latest?.status ?? (hasAnyData ? 'DEGRADED' : 'ERROR');
   const statusLabel = status === 'OK' ? 'OK' : status === 'DEGRADED' ? 'Degradado' : 'Error';
@@ -246,16 +263,14 @@ export default async function HomePage() {
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 items-stretch">
             <RateCard
-              title="Dólar paralelo"
-              buy={paralelo?.buy}
-              sell={paralelo?.sell}
+              title="Índice P2P Bolivia"
+              buy={indexBuy}
+              sell={indexSell}
               delta={paraleloDelta}
-              updatedAt={lastUpdated}
-              sourcesCount={paralelo?.sampleSize}
+              updatedAt={indexUpdatedAt ?? lastUpdated}
+              sourcesCount={indexSources}
               href="/paralelo"
               sourceNote={parallelSourceNote}
-              logoSrc="/logos/binance.svg"
-              logoAlt="Binance P2P"
             />
             <RateCard
               title="Dólar oficial"
