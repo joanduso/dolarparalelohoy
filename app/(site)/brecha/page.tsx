@@ -47,7 +47,7 @@ export default async function BrechaPage() {
   const [latestResult, historyResult, latestRateResult] = await Promise.all([
     fetchJson<BrechaLatestResponse>('/api/brecha/latest', {}, 600),
     fetchJson<BrechaHistoryResponse>('/api/brecha/history?days=365', {}, 600),
-    fetchJson<CurrentRatesResponse>('/api/rates/current', {}, 600)
+    fetchJson<CurrentRatesResponse>('/api/rates/current?v=live-20260722', {}, 600)
   ]);
 
   const latest = latestResult.data?.brecha ?? null;
