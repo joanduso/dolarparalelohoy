@@ -38,10 +38,15 @@ export async function DeclaredBlock() {
           </div>
         </div>
       ) : (
-        <p className="text-sm text-ink/60">
-          Aún no hay suficientes reportes válidos (mínimo 5 en 24h) para mostrar el precio
-          declarado.
-        </p>
+        <div className="flex flex-wrap items-center gap-5">
+          <div>
+            <p className="text-xs uppercase text-ink/50">Reportes válidos</p>
+            <p className="text-2xl font-semibold">{declared.sampleSize}</p>
+          </div>
+          <p className="text-sm text-ink/60">
+            Se necesitan al menos 5 reportes válidos en 24h para publicar la mediana de compra y venta.
+          </p>
+        </div>
       )}
       <div className="flex flex-wrap gap-4 text-sm">
         <Link href="/faq" className="underline underline-offset-4">

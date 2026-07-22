@@ -8,6 +8,7 @@ import { MiniTable } from '@/app/(site)/_components/MiniTable';
 import { AdSlot } from '@/app/(site)/_components/AdSlot';
 import { Skeleton } from '@/app/(site)/_components/Skeleton';
 import { DeclareForm } from '@/app/(site)/_components/DeclareForm';
+import { DeclaredBlock } from '@/app/(site)/_components/DeclaredBlock';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
 import { fetchJson } from '@/lib/serverFetch';
 import { formatDateTime } from '@/lib/format';
@@ -275,6 +276,8 @@ export default async function HomePage() {
             />
           </div>
         </div>
+
+          <DeclaredBlock />
       </section>
 
       <section className="section-shell grid gap-8">
