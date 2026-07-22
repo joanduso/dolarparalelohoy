@@ -7,10 +7,12 @@ export async function DeclaredBlock() {
   const show = declared.sampleSize >= 5 && declared.sell !== null;
 
   return (
-    <div className="card p-5 flex flex-col gap-3">
-      <div className="flex items-center justify-between">
+    <div className="card p-5 flex flex-col gap-4 overflow-hidden">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <h3 className="font-serif text-xl">Dólar declarado (24h)</h3>
-        <span className="text-xs text-ink/60">Indicador secundario</span>
+        <span className="shrink-0 rounded-full bg-black/5 px-3 py-1 text-xs text-ink/60">
+          Indicador secundario
+        </span>
       </div>
       <p className="text-sm text-ink/70">
         Reportes voluntarios de usuarios sobre operaciones reales. Se valida contra el precio base

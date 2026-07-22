@@ -9,6 +9,7 @@ import { AdSlot } from '@/app/(site)/_components/AdSlot';
 import { Skeleton } from '@/app/(site)/_components/Skeleton';
 import { DeclareForm } from '@/app/(site)/_components/DeclareForm';
 import { DeclaredBlock } from '@/app/(site)/_components/DeclaredBlock';
+import { PlatformCards } from '@/app/(site)/_components/PlatformCards';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
 import { fetchJson } from '@/lib/serverFetch';
 import { formatDateTime } from '@/lib/format';
@@ -275,9 +276,8 @@ export default async function HomePage() {
               error={bcbResult.ok ? null : bcbResult.error ?? 'fuente_no_disponible'}
             />
           </div>
-        </div>
-
           <DeclaredBlock />
+        </div>
       </section>
 
       <section className="section-shell grid gap-8">
@@ -288,6 +288,8 @@ export default async function HomePage() {
         ) : null}
 
         <AdSlot label="Debajo del hero" />
+
+        <PlatformCards />
 
         <ChartCard data={chartData} />
 
