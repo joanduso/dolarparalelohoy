@@ -2,9 +2,9 @@ import type { Sample, PriceSource } from '../types';
 
 const BINANCE_P2P_URL = process.env.BINANCE_P2P_URL
   ?? 'https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search';
-const BINANCE_ENABLED = (
-  process.env.BINANCE_P2P_ENABLED ?? process.env.ENABLE_BINANCE_P2P
-) === 'true';
+const BINANCE_SETTING = process.env.BINANCE_P2P_ENABLED
+  ?? process.env.ENABLE_BINANCE_P2P;
+const BINANCE_ENABLED = BINANCE_SETTING !== 'false';
 const TOP_N = Number(process.env.BINANCE_P2P_TOP_N ?? 20);
 const MIN_USD = Number(process.env.BINANCE_P2P_MIN_USD ?? 100);
 const MAX_USD = Number(process.env.BINANCE_P2P_MAX_USD ?? 1000);

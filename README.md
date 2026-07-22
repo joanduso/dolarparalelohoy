@@ -72,7 +72,7 @@ Configura estas variables en Vercel para Production, Preview y Development.
 - `SOURCE_BASE_URL`: base URL para adaptador real
 - `SOURCE_ROBOTS_URL`: URL de robots.txt del proveedor
 - `SOURCE_TERMS_URL`: URL de terminos del proveedor
-- `BINANCE_P2P_ENABLED`: activar Binance P2P (usa `true`; requerido)
+- `BINANCE_P2P_ENABLED`: Binance P2P está activo por defecto; usa `false` para desactivarlo
 - `ENABLE_BINANCE_P2P`: nombre legado, todavia compatible
 - `BINANCE_P2P_URL`: endpoint P2P configurado por el usuario
 - `BINANCE_ROBOTS_URL`: robots.txt de Binance
