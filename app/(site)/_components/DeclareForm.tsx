@@ -7,9 +7,6 @@ type DeclareFormProps = {
   defaultKind?: 'PARALELO' | 'OFICIAL';
 };
 
-const MIN_VALUE = 3;
-const MAX_VALUE = 30;
-
 export function DeclareForm({ triggerLabel = 'Reportar precio', defaultKind = 'PARALELO' }: DeclareFormProps) {
   const [status, setStatus] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -31,12 +28,6 @@ export function DeclareForm({ triggerLabel = 'Reportar precio', defaultKind = 'P
       return;
     }
 
-    if (value < MIN_VALUE || value > MAX_VALUE) {
-      setLoading(false);
-      setError(`El valor debe estar entre ${MIN_VALUE} y ${MAX_VALUE} Bs.`);
-      return;
-    }
-
     const payload = {
       kind: form.get('kind'),
       side: form.get('side'),
@@ -46,7 +37,7 @@ export function DeclareForm({ triggerLabel = 'Reportar precio', defaultKind = 'P
     };
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10_000);
+    const timeoutId = setTimeout(() => controller.abort(), 20_000);
 
     try {
       const res = await fetch('/api/declared-rates', {
@@ -67,6 +58,20 @@ export function DeclareForm({ triggerLabel = 'Reportar precio', defaultKind = 'P
       }
 
       if (!res.ok) {
+        if (data?.error === 'deviation_too_high') {
+          const minimum = Number(data?.details?.minimum).toFixed(2).replace('.', ',');
+          const maximum = Number(data?.details?.maximum).toFixed(2).replace('.', ',');
+          setError(`No se registró: el precio está fuera del rango actual de Bs ${minimum} a Bs ${maximum}.`);
+          return;
+        }
+        if (data?.error === 'rate_limited') {
+          setError('Ya enviaste un reporte recientemente. Intenta más tarde.');
+          return;
+        }
+        if (data?.error === 'storage_unavailable') {
+          setError('Los reportes están temporalmente fuera de servicio. Tu precio no fue registrado.');
+          return;
+        }
         throw new Error(data?.error || `HTTP ${res.status}`);
       }
 
@@ -83,12 +88,8 @@ export function DeclareForm({ triggerLabel = 'Reportar precio', defaultKind = 'P
       const name = err && typeof err === 'object' && 'name' in err ? String((err as { name?: string }).name) : '';
       if (name === 'AbortError' || message.includes('AbortError')) {
         setError('Tiempo de espera agotado. Intenta nuevamente.');
-      } else if (message === 'rate_limited') {
-        setError('Ya enviaste un reporte recientemente. Intenta mas tarde.');
-      } else if (message === 'deviation_too_high') {
-        setError('El valor está fuera del 15% del precio base.');
       } else {
-        setError('No se pudo enviar el reporte. Intenta mas tarde.');
+        setError('No se pudo enviar el reporte. Intenta más tarde.');
       }
     } finally {
       clearTimeout(timeoutId);
@@ -186,9 +187,7 @@ export function DeclareForm({ triggerLabel = 'Reportar precio', defaultKind = 'P
                 >
                   {loading ? 'Enviando...' : 'Enviar reporte'}
                 </button>
-                <span className="text-xs text-ink/60">
-                  Rango esperado: {MIN_VALUE} a {MAX_VALUE} Bs.
-                </span>
+                <span className="text-xs text-ink/60">Validaremos el precio con la cotización actual.</span>
               </div>
 
               {status ? <p className="text-sm text-emerald-700">{status}</p> : null}
