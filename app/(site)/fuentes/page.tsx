@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { JsonLd } from '@/app/(site)/_components/JsonLd';
+import { Breadcrumbs } from '@/app/(site)/_components/Breadcrumbs';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
 
 export const metadata: Metadata = {
@@ -29,6 +30,7 @@ export default function FuentesPage() {
   return (
     <main className="section-shell pb-16">
       <JsonLd data={jsonLd} />
+      <Breadcrumbs items={[{ name: 'Fuentes', href: '/fuentes' }]} />
       <article className="grid gap-8 max-w-4xl">
         <header className="grid gap-3">
           <p className="kicker">Transparencia de datos</p>

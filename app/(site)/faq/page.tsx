@@ -1,5 +1,6 @@
 ﻿import { JsonLd } from '@/app/(site)/_components/JsonLd';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
+import { Breadcrumbs } from '@/app/(site)/_components/Breadcrumbs';
 import type { Metadata } from 'next';
 
 export const revalidate = 86400;
@@ -87,6 +88,7 @@ export default function FaqPage() {
     <main className="section-shell pb-16">
       <JsonLd data={jsonLd} />
       <JsonLd data={faqJsonLd} />
+      <Breadcrumbs items={[{ name: 'Metodología y preguntas frecuentes', href: '/faq' }]} />
       <section className="grid gap-8">
         <div className="grid gap-3">
           <p className="kicker">Metodología y transparencia</p>

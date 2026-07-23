@@ -1,4 +1,6 @@
 import { JsonLd } from '@/app/(site)/_components/JsonLd';
+import { Breadcrumbs } from '@/app/(site)/_components/Breadcrumbs';
+import { SeoFaq, type SeoFaqItem } from '@/app/(site)/_components/SeoFaq';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
 import { fetchJson } from '@/lib/serverFetch';
 import { formatCurrency, formatDate } from '@/lib/format';
@@ -47,33 +49,21 @@ export default async function HistoricoParaleloPage() {
     inLanguage: siteConfig.language
   };
 
-  const faqJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: '¿Qué periodo cubre el histórico?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Mostramos hasta 12 meses de promedios diarios para comparar tendencias.'
-        }
-      },
-      {
-        '@type': 'Question',
-        name: '¿Cada cuánto se actualiza?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Los datos se refrescan automáticamente cada 10 minutos al expirar el cache.'
-        }
-      }
-    ]
-  };
+  const faqItems: SeoFaqItem[] = [
+    {
+      question: '¿Qué periodo cubre el histórico?',
+      answer: 'Mostramos hasta 12 meses de promedios diarios para comparar la tendencia del dólar paralelo.'
+    },
+    {
+      question: '¿Cada cuánto se actualiza?',
+      answer: 'La cotización actual se refresca cada 10 minutos y el histórico consolida promedios diarios.'
+    }
+  ];
 
   return (
     <main className="section-shell pb-16">
       <JsonLd data={jsonLd} />
-      <JsonLd data={faqJsonLd} />
+      <Breadcrumbs items={[{ name: 'Histórico dólar paralelo', href: '/historico/paralelo' }]} />
       <section className="grid gap-6">
         <div className="grid gap-3">
           <p className="kicker">Histórico dólar paralelo Bolivia</p>
@@ -119,6 +109,7 @@ export default async function HistoricoParaleloPage() {
             </tbody>
           </table>
         </div>
+        <SeoFaq items={faqItems} />
       </section>
     </main>
   );

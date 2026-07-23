@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   metadataBase,
   title: {
     default: siteConfig.name,
-    template: `%s | ${siteConfig.name}`
+    template: `%s | ${siteConfig.shortName}`
   },
   description: siteConfig.description,
   applicationName: siteConfig.shortName,
@@ -78,7 +78,10 @@ export const metadata: Metadata = {
     icon: '/icon.png',
     shortcut: '/icon.png',
     apple: '/icon.png'
-  }
+  },
+  verification: process.env.GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.GOOGLE_SITE_VERIFICATION }
+    : undefined
 };
 
 export default function RootLayout({

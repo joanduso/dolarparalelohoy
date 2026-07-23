@@ -7,6 +7,8 @@ import { MiniTable } from '@/app/(site)/_components/MiniTable';
 import { DeclaredBlock } from '@/app/(site)/_components/DeclaredBlock';
 import { DeclareForm } from '@/app/(site)/_components/DeclareForm';
 import { Skeleton } from '@/app/(site)/_components/Skeleton';
+import { Breadcrumbs } from '@/app/(site)/_components/Breadcrumbs';
+import { SeoFaq, type SeoFaqItem } from '@/app/(site)/_components/SeoFaq';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
 import { fetchJson } from '@/lib/serverFetch';
 import { formatCurrency, formatDateTime } from '@/lib/format';
@@ -94,33 +96,21 @@ export default async function ParaleloPage() {
         ? 'border-amber-200 text-amber-800 bg-amber-50'
         : 'border-rose-200 text-rose-700 bg-rose-50';
 
-  const faqJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: '¿Cómo se calcula el dólar paralelo?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Se calcula con promedios diarios de fuentes públicas y P2P, filtrando valores atípicos.'
-        }
-      },
-      {
-        '@type': 'Question',
-        name: '¿Cada cuánto se actualiza?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Los datos se actualizan automáticamente cada 10 minutos cuando el cache expira.'
-        }
-      }
-    ]
-  };
+  const faqItems: SeoFaqItem[] = [
+    {
+      question: '¿Cómo se calcula el dólar paralelo?',
+      answer: 'Se calcula con promedios de fuentes públicas y mercados P2P, filtrando valores atípicos antes de publicar la referencia.'
+    },
+    {
+      question: '¿Cada cuánto se actualiza?',
+      answer: 'Los datos se actualizan automáticamente cada 10 minutos cuando las fuentes están disponibles.'
+    }
+  ];
 
   return (
     <main className="section-shell pb-16">
       <JsonLd data={jsonLd} />
-      <JsonLd data={faqJsonLd} />
+      <Breadcrumbs items={[{ name: 'Dólar paralelo', href: '/paralelo' }]} />
       <section className="grid gap-8">
         <div className="grid gap-3">
           <p className="kicker">Dólar paralelo hoy Bolivia</p>
@@ -205,6 +195,7 @@ export default async function ParaleloPage() {
             </Link>
           </div>
         </div>
+        <SeoFaq items={faqItems} />
       </section>
     </main>
   );

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { JsonLd } from '@/app/(site)/_components/JsonLd';
+import { Breadcrumbs } from '@/app/(site)/_components/Breadcrumbs';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
 import type { Metadata } from 'next';
 
@@ -35,6 +36,7 @@ export default function DevsPage() {
       <JsonLd data={jsonLd} />
 
       <section className="section-shell py-12 grid gap-8">
+        <Breadcrumbs items={[{ name: 'API para desarrolladores', href: '/devs' }]} />
         <div className="grid gap-4">
           <p className="kicker">Para desarrolladores</p>
           <h1 className="font-serif text-4xl sm:text-5xl leading-tight">

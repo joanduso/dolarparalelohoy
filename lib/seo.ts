@@ -14,7 +14,7 @@
 };
 
 export const pageTitles = {
-  home: 'Dólar paralelo y oficial en Bolivia hoy',
+  home: 'Dólar Paralelo Bolivia Hoy: Precio, Compra y Venta',
   paralelo: 'Dólar paralelo hoy en Bolivia',
   oficial: 'Dólar oficial hoy en Bolivia',
   brecha: 'Brecha dólar oficial vs paralelo Bolivia',
@@ -29,7 +29,7 @@ export const pageTitles = {
 
 export const pageDescriptions = {
   home:
-    'Consulta la cotización del dólar paralelo (blue) y oficial en Bolivia hoy, con brecha, histórico y fuentes verificadas.',
+    'Consulta el precio del dólar paralelo en Bolivia hoy: compra, venta, comparación USDT/BOB, dólar oficial, brecha e histórico actualizado.',
   paralelo:
     'Precio del dólar paralelo hoy en Bolivia. Compra, venta, variación diaria, fuentes y contexto.',
   oficial:
