@@ -17,29 +17,31 @@ export function formatNumber(value?: number, fractionDigits = 2) {
   }).format(value);
 }
 
-export function formatDate(date: Date) {
-  if (Number.isNaN(date.getTime())) return '—';
+export function formatDate(date: Date | string | number) {
+  const parsed = date instanceof Date ? date : new Date(date);
+  if (Number.isNaN(parsed.getTime())) return '—';
   return new Intl.DateTimeFormat('es-BO', {
     timeZone: BOLIVIA_TIME_ZONE,
     day: 'numeric',
     month: 'long',
     year: 'numeric'
-  }).format(date);
+  }).format(parsed);
 }
 
-export function formatDateTime(date: Date) {
-  if (Number.isNaN(date.getTime())) return '—';
+export function formatDateTime(date: Date | string | number) {
+  const parsed = date instanceof Date ? date : new Date(date);
+  if (Number.isNaN(parsed.getTime())) return '—';
   const datePart = new Intl.DateTimeFormat('es-BO', {
     timeZone: BOLIVIA_TIME_ZONE,
     day: 'numeric',
     month: 'long',
     year: 'numeric'
-  }).format(date);
+  }).format(parsed);
   const timePart = new Intl.DateTimeFormat('es-BO', {
     timeZone: BOLIVIA_TIME_ZONE,
     hour: '2-digit',
     minute: '2-digit',
     hour12: false
-  }).format(date);
+  }).format(parsed);
   return `${datePart}, ${timePart}`;
 }
