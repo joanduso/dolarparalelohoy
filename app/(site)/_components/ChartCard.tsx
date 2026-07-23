@@ -38,11 +38,40 @@ export function ChartCard({ data }: { data: ChartPayload }) {
   const selected = data[series];
 
   const filtered = useMemo(() => {
-    if (range === 0) return selected;
+    const uniqueByDay = new Map<string, SeriesPoint>();
+    [...selected]
+      .filter((point) => Number.isFinite(point.value) && !Number.isNaN(new Date(point.date).getTime()))
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      .forEach((point) => uniqueByDay.set(point.date.slice(0, 10), point));
+
+    const normalized = Array.from(uniqueByDay.values());
+    if (range === 0) return normalized;
     const from = new Date();
     from.setDate(from.getDate() - range);
-    return selected.filter((point) => new Date(point.date) >= from);
+    return normalized.filter((point) => new Date(point.date) >= from);
   }, [selected, range]);
+
+  const yBounds = useMemo(() => {
+    if (filtered.length === 0) return undefined;
+    const values = filtered.map((point) => point.value);
+    const lowest = Math.min(...values);
+    const highest = Math.max(...values);
+    const spread = highest - lowest;
+    const minimumPadding = series === 'brecha' ? 1 : 0.25;
+    const padding = Math.max(spread * 0.15, minimumPadding);
+
+    return {
+      min: series === 'brecha' ? lowest - padding : Math.max(0, lowest - padding),
+      max: highest + padding
+    };
+  }, [filtered, series]);
+
+  const coverage = useMemo(() => {
+    if (filtered.length === 0) return null;
+    const first = new Date(filtered[0].date);
+    const last = new Date(filtered[filtered.length - 1].date);
+    return `${filtered.length} días · ${format(first, 'd MMM yyyy', { locale: es })} – ${format(last, 'd MMM yyyy', { locale: es })}`;
+  }, [filtered]);
 
   const chartData = useMemo(() => {
     return {
@@ -91,7 +120,10 @@ export function ChartCard({ data }: { data: ChartPayload }) {
           ))}
         </div>
       </div>
-      {filtered.length === 0 ? (
+      {coverage ? (
+        <p className="text-xs text-ink/50">Cobertura visible: {coverage}</p>
+      ) : null}
+      {filtered.length < 2 ? (
         <p className="text-sm text-ink/60">Sin datos suficientes para el rango seleccionado.</p>
       ) : (
         <Line
@@ -101,7 +133,14 @@ export function ChartCard({ data }: { data: ChartPayload }) {
             plugins: { legend: { display: false } },
             scales: {
               x: { display: true, ticks: { maxTicksLimit: 8 } },
-              y: { display: true }
+              y: {
+                display: true,
+                min: yBounds?.min,
+                max: yBounds?.max,
+                ticks: {
+                  callback: (value) => series === 'brecha' ? `${value}%` : `Bs ${value}`
+                }
+              }
             }
           }}
         />

@@ -107,7 +107,7 @@ export default async function HomePage() {
     p2pIndex
   ] = await Promise.all([
     fetchJson<CurrentRatesResponse>('/api/rates/current?v=live-20260722', {}, 600),
-    fetchJson<HistoryResponse<DailyHistoryRow>>('/api/rates/history?kind=PARALELO&days=900&v=public-history-20260722', {}, 600),
+    fetchJson<HistoryResponse<DailyHistoryRow>>('/api/rates/history?kind=PARALELO&days=900&v=merged-history-20260722', {}, 600),
     fetchJson<HistoryResponse<DailyHistoryRow>>('/api/rates/history?kind=OFICIAL&days=365&v=daily-20260722', {}, 600),
     fetchJson<HistoryResponse<BrechaHistoryRow>>('/api/brecha/history?days=365', {}, 600),
     fetchJson<BrechaLatestResponse>('/api/brecha/latest', {}, 600),
