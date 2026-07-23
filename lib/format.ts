@@ -18,6 +18,7 @@ export function formatNumber(value?: number, fractionDigits = 2) {
 }
 
 export function formatDate(date: Date) {
+  if (Number.isNaN(date.getTime())) return '—';
   return new Intl.DateTimeFormat('es-BO', {
     timeZone: BOLIVIA_TIME_ZONE,
     day: 'numeric',
@@ -27,6 +28,7 @@ export function formatDate(date: Date) {
 }
 
 export function formatDateTime(date: Date) {
+  if (Number.isNaN(date.getTime())) return '—';
   const datePart = new Intl.DateTimeFormat('es-BO', {
     timeZone: BOLIVIA_TIME_ZONE,
     day: 'numeric',
