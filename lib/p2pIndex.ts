@@ -6,6 +6,13 @@ export type P2PIndex = {
   sourceCount: number;
 };
 
+export type ParallelQuote = {
+  buy: number;
+  sell: number;
+  updatedAt: string;
+  sourceCount: number;
+};
+
 export async function fetchP2PIndex(): Promise<P2PIndex | null> {
   try {
     const response = await fetch('https://paralelo.bo/api/v1/rate', {
@@ -30,4 +37,16 @@ export async function fetchP2PIndex(): Promise<P2PIndex | null> {
     console.warn('[p2p-index] unavailable', String(error));
     return null;
   }
+}
+
+export async function getParallelQuote(): Promise<ParallelQuote | null> {
+  const index = await fetchP2PIndex();
+  if (!index) return null;
+
+  return {
+    buy: index.buy,
+    sell: index.sell,
+    updatedAt: index.timestamp,
+    sourceCount: index.sourceCount
+  };
 }

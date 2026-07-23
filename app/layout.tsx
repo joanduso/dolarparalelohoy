@@ -141,6 +141,12 @@ export default function RootLayout({
                 <Link href="/brecha" className="underline underline-offset-4">
                   Brecha
                 </Link>
+                <Link href="/usdt-bob" className="underline underline-offset-4">
+                  Conversor USDT/BOB
+                </Link>
+                <Link href="/exchanges" className="underline underline-offset-4">
+                  Comparar exchanges
+                </Link>
                 <Link href="/faq" className="underline underline-offset-4">
                   Metodología
                 </Link>
