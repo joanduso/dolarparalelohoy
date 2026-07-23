@@ -4,6 +4,8 @@ import { JsonLd } from '@/app/(site)/_components/JsonLd';
 import { AdSlot } from '@/app/(site)/_components/AdSlot';
 import { MiniTable } from '@/app/(site)/_components/MiniTable';
 import { Skeleton } from '@/app/(site)/_components/Skeleton';
+import { Breadcrumbs } from '@/app/(site)/_components/Breadcrumbs';
+import { SeoFaq, type SeoFaqItem } from '@/app/(site)/_components/SeoFaq';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
 import { fetchJson } from '@/lib/serverFetch';
 import { formatCurrency, formatDateTime } from '@/lib/format';
@@ -90,33 +92,21 @@ export default async function OficialPage() {
         ? 'border-amber-200 text-amber-800 bg-amber-50'
         : 'border-rose-200 text-rose-700 bg-rose-50';
 
-  const faqJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: '¿De dónde sale el dólar oficial?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Se obtiene de fuentes institucionales y referencias oficiales publicadas en Bolivia.'
-        }
-      },
-      {
-        '@type': 'Question',
-        name: '¿Cada cuánto se actualiza?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Los datos se actualizan automáticamente cada 10 minutos cuando el cache expira.'
-        }
-      }
-    ]
-  };
+  const faqItems: SeoFaqItem[] = [
+    {
+      question: '¿De dónde sale el dólar oficial?',
+      answer: 'Se obtiene de fuentes institucionales y referencias oficiales publicadas en Bolivia, incluyendo el Banco Central de Bolivia.'
+    },
+    {
+      question: '¿Cada cuánto se actualiza?',
+      answer: 'Los datos se actualizan automáticamente cada 10 minutos cuando las fuentes están disponibles.'
+    }
+  ];
 
   return (
     <main className="section-shell pb-16">
       <JsonLd data={jsonLd} />
-      <JsonLd data={faqJsonLd} />
+      <Breadcrumbs items={[{ name: 'Dólar oficial', href: '/oficial' }]} />
       <section className="grid gap-8">
         <div className="grid gap-3">
           <p className="kicker">Dólar oficial hoy Bolivia</p>
@@ -194,6 +184,7 @@ export default async function OficialPage() {
             </Link>
           </div>
         </div>
+        <SeoFaq items={faqItems} />
       </section>
     </main>
   );

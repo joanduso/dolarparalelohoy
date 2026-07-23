@@ -75,7 +75,7 @@ type BcbResponse = {
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: pageTitles.home,
+    title: { absolute: pageTitles.home },
     description: pageDescriptions.home,
     alternates: { canonical: '/' },
     openGraph: {
@@ -290,6 +290,46 @@ export default async function HomePage() {
         <AdSlot label="Debajo del hero" />
 
         <PlatformCards />
+
+        <article className="card p-6 grid gap-4">
+          <h2 className="font-serif text-2xl">
+            Cómo interpretar el precio del dólar paralelo en Bolivia
+          </h2>
+          <p className="text-ink/70">
+            El dólar paralelo es una referencia del precio al que se intercambian dólares o activos
+            digitales fuera del canal oficial. En Bolivia, una parte importante de esa referencia
+            se observa en mercados P2P de USDT/BOB. Por eso comparamos precios de compra y venta,
+            descartamos valores extremos y mostramos cuándo fue actualizado cada dato.
+          </p>
+          <p className="text-ink/70">
+            La compra indica cuánto ofrecen por cada dólar o unidad equivalente; la venta indica
+            cuánto cuesta adquirirla. El precio final puede cambiar según el monto, medio de pago,
+            comisión y plataforma. Antes de operar, compara el{' '}
+            <Link href="/paralelo" className="underline underline-offset-4">
+              dólar paralelo de hoy
+            </Link>{' '}
+            con el{' '}
+            <Link href="/oficial" className="underline underline-offset-4">
+              dólar oficial
+            </Link>{' '}
+            y revisa la{' '}
+            <Link href="/brecha" className="underline underline-offset-4">
+              brecha cambiaria
+            </Link>
+            .
+          </p>
+          <p className="text-ink/70">
+            Para entender la tendencia y no depender de una sola lectura, consulta el{' '}
+            <Link href="/historico/paralelo" className="underline underline-offset-4">
+              histórico del dólar paralelo
+            </Link>{' '}
+            y nuestra página de{' '}
+            <Link href="/fuentes" className="underline underline-offset-4">
+              fuentes y metodología
+            </Link>
+            . Toda la información es referencial y no constituye asesoramiento financiero.
+          </p>
+        </article>
 
         <ChartCard data={chartData} />
 

@@ -3,6 +3,8 @@ import { ChartCard } from '@/app/(site)/_components/ChartCard';
 import { JsonLd } from '@/app/(site)/_components/JsonLd';
 import { AdSlot } from '@/app/(site)/_components/AdSlot';
 import { Skeleton } from '@/app/(site)/_components/Skeleton';
+import { Breadcrumbs } from '@/app/(site)/_components/Breadcrumbs';
+import { SeoFaq, type SeoFaqItem } from '@/app/(site)/_components/SeoFaq';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
 import { fetchJson } from '@/lib/serverFetch';
 import { formatCurrency, formatNumber } from '@/lib/format';
@@ -88,33 +90,21 @@ export default async function BrechaPage() {
         ? 'border-amber-200 text-amber-800 bg-amber-50'
         : 'border-rose-200 text-rose-700 bg-rose-50';
 
-  const faqJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: '¿Qué es la brecha cambiaria?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Es la diferencia porcentual entre el dólar oficial y el paralelo.'
-        }
-      },
-      {
-        '@type': 'Question',
-        name: '¿Cada cuánto se actualiza?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Los datos se actualizan automáticamente cada 10 minutos cuando el cache expira.'
-        }
-      }
-    ]
-  };
+  const faqItems: SeoFaqItem[] = [
+    {
+      question: '¿Qué es la brecha cambiaria?',
+      answer: 'Es la diferencia porcentual entre el dólar oficial y el paralelo; permite comparar la distancia entre ambas referencias.'
+    },
+    {
+      question: '¿Cada cuánto se actualiza?',
+      answer: 'Los datos se actualizan automáticamente cada 10 minutos cuando las fuentes están disponibles.'
+    }
+  ];
 
   return (
     <main className="section-shell pb-16">
       <JsonLd data={jsonLd} />
-      <JsonLd data={faqJsonLd} />
+      <Breadcrumbs items={[{ name: 'Brecha cambiaria', href: '/brecha' }]} />
       <section className="grid gap-8">
         <div className="grid gap-3">
           <p className="kicker">Brecha dólar oficial vs paralelo</p>
@@ -178,6 +168,7 @@ export default async function BrechaPage() {
             Leer metodología y advertencias
           </Link>
         </div>
+        <SeoFaq items={faqItems} />
       </section>
     </main>
   );
