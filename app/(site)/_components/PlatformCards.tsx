@@ -61,12 +61,13 @@ const platforms = [
     key: 'binance' as PlatformKey,
     name: 'Binance',
     domain: 'binance.com',
-    href: 'https://p2p.binance.com/',
+    href: 'https://web3.binance.com/referral?ref=WB11QEW6',
     mark: 'B',
     color: 'bg-yellow-400 text-black',
     type: 'Exchange · P2P BOB',
     detail: 'Fuente principal de nuestra cotización por liquidez.',
-    featured: false
+    featured: false,
+    affiliate: true
   }
 ];
 
@@ -149,7 +150,7 @@ export async function PlatformCards() {
             <a
               href={platform.href}
               target="_blank"
-              rel="noreferrer"
+              rel={platform.affiliate ? 'sponsored noreferrer' : 'noreferrer'}
               className="rounded-full border border-ink/15 px-4 py-2 text-center text-sm font-medium hover:bg-ink hover:text-white"
             >
               Consultar cotización
