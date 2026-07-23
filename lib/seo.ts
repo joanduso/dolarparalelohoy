@@ -20,6 +20,9 @@ export const pageTitles = {
   brecha: 'Brecha dólar oficial vs paralelo Bolivia',
   historicoParalelo: 'Histórico dólar paralelo Bolivia',
   historicoOficial: 'Histórico dólar oficial Bolivia',
+  usdtBob: 'USDT a BOB hoy: conversor y cotización P2P Bolivia',
+  dolarBlue: 'Dólar blue Bolivia hoy: precio y diferencia con el oficial',
+  exchanges: 'Comparador de exchanges P2P Bolivia',
   faq: 'Metodología y preguntas frecuentes',
   devs: 'API pública para desarrolladores',
   fuentes: 'Fuentes del dólar en Bolivia',
@@ -40,6 +43,12 @@ export const pageDescriptions = {
     'Serie histórica del dólar paralelo en Bolivia con datos diarios y metodología transparente.',
   historicoOficial:
     'Serie histórica del dólar oficial en Bolivia con datos diarios y metodología transparente.',
+  usdtBob:
+    'Conversor USDT a BOB y cotización P2P en Bolivia hoy. Compara compra, venta y plataformas con datos actualizados.',
+  dolarBlue:
+    'Precio del dólar blue en Bolivia hoy. Entiende la diferencia entre dólar paralelo, USDT/BOB y tipo de cambio oficial.',
+  exchanges:
+    'Compara cotizaciones P2P de exchanges y billeteras disponibles para Bolivia: compra, venta, actualización y condiciones.',
   faq:
     'Preguntas frecuentes, metodología, validación y avisos legales sobre el dólar en Bolivia.',
   devs:

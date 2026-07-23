@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { fetchPlatformRates, type PlatformKey } from '@/lib/platformRates';
 
 const platforms = [
@@ -157,6 +158,9 @@ export async function PlatformCards() {
           );
         })}
       </div>
+      <Link href="/exchanges" className="w-fit text-sm underline underline-offset-4">
+        Ver comparador completo de exchanges P2P
+      </Link>
       <p className="text-xs text-ink/50">
         No es una clasificación financiera ni una garantía. Verifica tasa, comisión, límites,
         identidad del receptor y condiciones de cada plataforma antes de operar. Datos públicos de{' '}
