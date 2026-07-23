@@ -125,8 +125,11 @@ export async function GET(request: Request) {
     sources_count: row.sampleSizeSell ?? 0
   }));
 
+  // The local database is intentionally sparse (it stores recent snapshots).
+  // Always use the licensed public daily series as the base for the parallel
+  // chart, then let local and live values override matching calendar days.
   const publicHistory =
-    kindParam === 'PARALELO' && storedData.length === 0
+    kindParam === 'PARALELO'
       ? await getPublicParallelHistory(from, to)
       : [];
 
@@ -153,6 +156,11 @@ export async function GET(request: Request) {
     kind: kindParam,
     count: data.length,
     data,
-    source: publicHistory.length > 0 ? 'paralelo.bo (CC-BY-4.0)' : 'local'
+    source:
+      publicHistory.length > 0 && storedData.length > 0
+        ? 'paralelo.bo (CC-BY-4.0) + local'
+        : publicHistory.length > 0
+          ? 'paralelo.bo (CC-BY-4.0)'
+          : 'local'
   }, { headers: rateHeaders });
 }
