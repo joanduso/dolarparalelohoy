@@ -1,5 +1,4 @@
-﻿import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
+﻿const BOLIVIA_TIME_ZONE = 'America/La_Paz';
 
 export function formatCurrency(value?: number) {
   if (value === undefined || Number.isNaN(value)) return '—';
@@ -19,9 +18,26 @@ export function formatNumber(value?: number, fractionDigits = 2) {
 }
 
 export function formatDate(date: Date) {
-  return format(date, "d 'de' MMMM 'de' yyyy", { locale: es });
+  return new Intl.DateTimeFormat('es-BO', {
+    timeZone: BOLIVIA_TIME_ZONE,
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  }).format(date);
 }
 
 export function formatDateTime(date: Date) {
-  return format(date, "d 'de' MMMM 'de' yyyy, HH:mm", { locale: es });
+  const datePart = new Intl.DateTimeFormat('es-BO', {
+    timeZone: BOLIVIA_TIME_ZONE,
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  }).format(date);
+  const timePart = new Intl.DateTimeFormat('es-BO', {
+    timeZone: BOLIVIA_TIME_ZONE,
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  }).format(date);
+  return `${datePart}, ${timePart}`;
 }

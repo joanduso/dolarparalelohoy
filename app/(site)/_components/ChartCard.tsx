@@ -73,6 +73,23 @@ export function ChartCard({ data }: { data: ChartPayload }) {
     return `${filtered.length} días · ${format(first, 'd MMM yyyy', { locale: es })} – ${format(last, 'd MMM yyyy', { locale: es })}`;
   }, [filtered]);
 
+  const handleDownloadCsv = () => {
+    const header = 'Fecha,Valor (BOB)';
+    const rows = filtered.map(
+      (point) => `${format(new Date(point.date), 'yyyy-MM-dd')},${point.value}`
+    );
+    const csvContent = [header, ...rows].join('\r\n');
+    const blob = new Blob(['﻿' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `tendencia-${series}-${range}d.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const chartData = useMemo(() => {
     return {
       labels: filtered.map((point) =>
@@ -119,6 +136,13 @@ export function ChartCard({ data }: { data: ChartPayload }) {
             </button>
           ))}
         </div>
+        <button
+          onClick={handleDownloadCsv}
+          disabled={filtered.length === 0}
+          className="px-3 py-1 rounded-full text-xs uppercase tracking-wide bg-black/5 hover:bg-black/10 disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          Descargar CSV
+        </button>
       </div>
       {coverage ? (
         <p className="text-xs text-ink/50">Cobertura visible: {coverage}</p>
