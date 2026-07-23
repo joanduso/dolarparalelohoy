@@ -1,5 +1,8 @@
+import { fetchPlatformRates, type PlatformKey } from '@/lib/platformRates';
+
 const platforms = [
   {
+    key: 'eldorado' as PlatformKey,
     name: 'El Dorado',
     domain: 'eldorado.io',
     href: 'https://eldorado.io/',
@@ -10,6 +13,7 @@ const platforms = [
     featured: true
   },
   {
+    key: 'takenos' as PlatformKey,
     name: 'Takenos',
     domain: 'takenos.com',
     href: 'https://takenos.com/',
@@ -20,6 +24,7 @@ const platforms = [
     featured: true
   },
   {
+    key: 'airtm' as PlatformKey,
     name: 'Airtm',
     domain: 'airtm.com',
     href: 'https://www.airtm.com/',
@@ -30,6 +35,7 @@ const platforms = [
     featured: true
   },
   {
+    key: 'bybit' as PlatformKey,
     name: 'Bybit',
     domain: 'bybit.com',
     href: 'https://www.bybit.com/fiat/trade/otc/',
@@ -40,6 +46,7 @@ const platforms = [
     featured: false
   },
   {
+    key: 'meru' as PlatformKey,
     name: 'Meru',
     domain: 'meru.com',
     href: 'https://meru.com/',
@@ -50,6 +57,7 @@ const platforms = [
     featured: false
   },
   {
+    key: 'binance' as PlatformKey,
     name: 'Binance',
     domain: 'binance.com',
     href: 'https://p2p.binance.com/',
@@ -61,7 +69,20 @@ const platforms = [
   }
 ];
 
-export function PlatformCards() {
+const priceFormatter = new Intl.NumberFormat('es-BO', {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2
+});
+
+const timeFormatter = new Intl.DateTimeFormat('es-BO', {
+  hour: '2-digit',
+  minute: '2-digit',
+  timeZone: 'America/La_Paz'
+});
+
+export async function PlatformCards() {
+  const rates = await fetchPlatformRates();
+
   return (
     <section className="grid gap-5">
       <div className="flex flex-wrap items-end justify-between gap-3">
@@ -76,13 +97,15 @@ export function PlatformCards() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {platforms.map((platform) => (
-          <article
-            key={platform.name}
-            className={`card relative overflow-hidden p-5 grid gap-4 ${
-              platform.featured ? 'ring-1 ring-sun/70' : ''
-            }`}
-          >
+        {platforms.map((platform) => {
+          const rate = rates[platform.key];
+          return (
+            <article
+              key={platform.name}
+              className={`card relative overflow-hidden p-5 grid gap-4 ${
+                platform.featured ? 'ring-1 ring-sun/70' : ''
+              }`}
+            >
             {platform.featured ? (
               <span className="absolute right-4 top-4 rounded-full bg-sun px-2 py-1 text-[10px] font-semibold uppercase tracking-wide">
                 Relevante
@@ -98,9 +121,29 @@ export function PlatformCards() {
               </div>
             </div>
             <div className="rounded-xl border border-black/10 bg-sand/30 p-4">
-              <p className="text-xs uppercase tracking-wide text-ink/50">Modalidad</p>
-              <p className="mt-1 font-semibold">{platform.type}</p>
-              <p className="mt-2 text-sm text-ink/65">{platform.detail}</p>
+              {rate ? (
+                <>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-xs uppercase tracking-wide text-ink/50">Compra</p>
+                      <p className="mt-1 text-xl font-semibold">Bs {priceFormatter.format(rate.buy)}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase tracking-wide text-ink/50">Venta</p>
+                      <p className="mt-1 text-xl font-semibold">Bs {priceFormatter.format(rate.sell)}</p>
+                    </div>
+                  </div>
+                  <p className="mt-3 text-xs text-ink/50">
+                    Actualizado {timeFormatter.format(new Date(rate.updatedAt))} · {platform.type}
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="text-xs uppercase tracking-wide text-ink/50">Cotización</p>
+                  <p className="mt-1 font-semibold">Disponible en la aplicación</p>
+                  <p className="mt-2 text-sm text-ink/65">{platform.detail}</p>
+                </>
+              )}
             </div>
             <a
               href={platform.href}
@@ -110,12 +153,22 @@ export function PlatformCards() {
             >
               Consultar cotización
             </a>
-          </article>
-        ))}
+            </article>
+          );
+        })}
       </div>
       <p className="text-xs text-ink/50">
         No es una clasificación financiera ni una garantía. Verifica tasa, comisión, límites,
-        identidad del receptor y condiciones de cada plataforma antes de operar.
+        identidad del receptor y condiciones de cada plataforma antes de operar. Datos públicos de{' '}
+        <a
+          href="https://www.dolarbluebolivia.click/devs/"
+          target="_blank"
+          rel="noreferrer"
+          className="underline underline-offset-2"
+        >
+          Dólar Blue Bolivia
+        </a>{' '}
+        y Binance P2P; Meru muestra su tasa dinámica únicamente dentro de su aplicación.
       </p>
     </section>
   );
