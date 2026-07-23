@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Script from 'next/script';
 import { Alegreya, Commissioner } from 'next/font/google';
 import './globals.css';
 import { siteConfig } from '@/lib/seo';
 import { StickyAd } from '@/app/(site)/_components/StickyAd';
 import { Logo } from '@/components/Logo';
+
+const GA_MEASUREMENT_ID = 'G-H4XPR5K4NT';
 
 const serif = Alegreya({
   subsets: ['latin'],
@@ -115,6 +118,18 @@ export default function RootLayout({
     <html lang="es" className={`${serif.variable} ${sans.variable}`}>
       <head>
         <meta charSet="utf-8" />
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="ga-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}');
+          `}
+        </Script>
       </head>
       <body className="font-sans">
         <script
