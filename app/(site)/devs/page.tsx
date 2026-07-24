@@ -60,14 +60,55 @@ export default function DevsPage() {
               <span className="text-ink">Authorization: Bearer &lt;API_KEY&gt;</span>.
             </p>
             <p>
-              <strong>Rate limit:</strong> 30 req/min por IP en endpoints de histórico y
-              estadísticas. Con API key sube a 120 req/min. Se devuelven headers
-              X-RateLimit-Limit, X-RateLimit-Remaining y X-RateLimit-Reset.
+              <strong>Rate limit:</strong> depende del plan (ver tabla abajo). Se devuelven
+              headers X-RateLimit-Limit, X-RateLimit-Remaining y X-RateLimit-Reset en cada
+              respuesta.
             </p>
           </div>
           <pre className="rounded-xl bg-ink text-sand text-xs sm:text-sm p-4 overflow-x-auto">
 {`curl "${baseUrl}/rates/current"`}
           </pre>
+        </div>
+
+        <div className="card p-6 grid gap-4">
+          <h2 className="font-serif text-2xl">Planes</h2>
+          <p className="text-sm text-ink/70">
+            Sin API key tienes acceso de solo lectura con límites básicos. Los planes Free y Pro
+            suben el límite de peticiones y el rango de histórico disponible; están en fase de
+            diseño y todavía no se emiten claves de forma automática.
+          </p>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm text-left">
+              <thead>
+                <tr className="text-ink/50 uppercase text-xs tracking-wide">
+                  <th className="py-2 pr-4">Plan</th>
+                  <th className="py-2 pr-4">/rates/current</th>
+                  <th className="py-2 pr-4">/rates/history y /rates/statistics</th>
+                  <th className="py-2 pr-4">Histórico máximo</th>
+                </tr>
+              </thead>
+              <tbody className="text-ink/80">
+                <tr className="border-t border-black/5">
+                  <td className="py-2 pr-4 font-medium">Anónimo</td>
+                  <td className="py-2 pr-4">60 req/min</td>
+                  <td className="py-2 pr-4">30 req/min</td>
+                  <td className="py-2 pr-4">90 días</td>
+                </tr>
+                <tr className="border-t border-black/5">
+                  <td className="py-2 pr-4 font-medium">Free (con API key)</td>
+                  <td className="py-2 pr-4">120 req/min</td>
+                  <td className="py-2 pr-4">90 req/min</td>
+                  <td className="py-2 pr-4">1 año</td>
+                </tr>
+                <tr className="border-t border-black/5">
+                  <td className="py-2 pr-4 font-medium">Pro</td>
+                  <td className="py-2 pr-4">600 req/min</td>
+                  <td className="py-2 pr-4">400 req/min</td>
+                  <td className="py-2 pr-4">5 años (todo el histórico)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <div className="grid gap-6">

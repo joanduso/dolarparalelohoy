@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import { getApiKeyAuth } from '@/lib/auth/apiKey';
+import { limitFor } from '@/lib/apiTiers';
 import { rateLimit } from '@/lib/rateLimit';
 import { parsePeriodParam } from '@/lib/engine/query';
 import { prisma } from '@/lib/db';
@@ -16,7 +17,7 @@ export async function GET(request: Request) {
   const ip = forwarded.split(',')[0].trim();
 
   const auth = getApiKeyAuth();
-  const limit = auth.ok ? 120 : 30;
+  const limit = limitFor('stats', auth.tier);
   const limiter = rateLimit(`stats:${auth.key ?? ip}`, limit, 60_000);
 
   const rateHeaders = {

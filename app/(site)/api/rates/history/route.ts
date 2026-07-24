@@ -2,6 +2,7 @@
 import { headers } from 'next/headers';
 import { rateLimit } from '@/lib/rateLimit';
 import { getApiKeyAuth } from '@/lib/auth/apiKey';
+import { limitFor, HISTORY_MAX_DAYS } from '@/lib/apiTiers';
 import { getHistory, type RateHistoryRow } from '@/lib/engine/store';
 import { computeLatest } from '@/lib/engine/priceEngine';
 import { prisma } from '@/lib/db';
@@ -67,7 +68,7 @@ export async function GET(request: Request) {
   const forwarded = headerList.get('x-forwarded-for') ?? 'anonymous';
   const ip = forwarded.split(',')[0].trim();
   const auth = getApiKeyAuth();
-  const limit = auth.ok ? 120 : 30;
+  const limit = limitFor('history', auth.tier);
   const limiter = rateLimit(`history:${auth.key ?? ip}`, limit, 60_000);
   const rateHeaders = {
     'X-RateLimit-Limit': String(limiter.limit),
@@ -99,9 +100,10 @@ export async function GET(request: Request) {
   }
 
   let { from, to, interval } = parsed.value;
+  const maxDays = HISTORY_MAX_DAYS[auth.tier];
   const daysParam = Number(url.searchParams.get('days'));
-  if (Number.isFinite(daysParam) && daysParam > 0 && daysParam <= 1000) {
-    from = new Date(to.getTime() - daysParam * 24 * 60 * 60 * 1000);
+  if (Number.isFinite(daysParam) && daysParam > 0) {
+    from = new Date(to.getTime() - Math.min(daysParam, maxDays) * 24 * 60 * 60 * 1000);
   }
 
   let rows: RateHistoryRow[] = [];

@@ -2,6 +2,7 @@
 import { headers } from 'next/headers';
 import { rateLimit } from '@/lib/rateLimit';
 import { getApiKeyAuth } from '@/lib/auth/apiKey';
+import { limitFor } from '@/lib/apiTiers';
 import { computeLatest } from '@/lib/engine/priceEngine';
 import { prisma } from '@/lib/db';
 import { getLatestRun } from '@/lib/engine/store';
@@ -37,7 +38,7 @@ export async function GET() {
   const forwarded = headerList.get('x-forwarded-for') ?? 'anonymous';
   const ip = forwarded.split(',')[0].trim();
   const auth = getApiKeyAuth();
-  const limit = auth.ok ? 120 : 60;
+  const limit = limitFor('latest', auth.tier);
   const limiter = rateLimit(`latest:${auth.key ?? ip}`, limit, 60_000);
   const rateHeaders = {
     'X-RateLimit-Limit': String(limiter.limit),
