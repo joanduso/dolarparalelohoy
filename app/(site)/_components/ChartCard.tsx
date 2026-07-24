@@ -162,7 +162,10 @@ export function ChartCard({ data }: { data: ChartPayload }) {
                 min: yBounds?.min,
                 max: yBounds?.max,
                 ticks: {
-                  callback: (value) => series === 'brecha' ? `${value}%` : `Bs ${value}`
+                  callback: (value) => {
+                    const rounded = Number(value).toFixed(2);
+                    return series === 'brecha' ? `${rounded}%` : `Bs ${rounded}`;
+                  }
                 }
               }
             }
