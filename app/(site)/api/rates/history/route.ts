@@ -7,45 +7,15 @@ import { getHistory, type RateHistoryRow } from '@/lib/engine/store';
 import { computeLatest } from '@/lib/engine/priceEngine';
 import { prisma } from '@/lib/db';
 import { parseHistoryParams } from '@/lib/engine/query';
+import {
+  getPublicParallelHistory,
+  getPublicOficialHistory,
+  type HistoryDataRow
+} from '@/lib/sources/publicHistory';
 
 export const revalidate = 600;
 export const dynamic = 'force-dynamic';
 export const maxDuration = 30;
-
-type HistoryDataRow = {
-  date: string;
-  buy_avg: number;
-  sell_avg: number;
-  sources_count: number;
-};
-
-type PublicParallelHistory = {
-  points?: Array<{ t: string; v: number }>;
-};
-
-async function getPublicParallelHistory(from: Date, to: Date): Promise<HistoryDataRow[]> {
-  try {
-    const response = await fetch('https://paralelo.bo/api/v1/historical.json', {
-      next: { revalidate: 60 * 60 }
-    });
-    if (!response.ok) return [];
-    const payload = (await response.json()) as PublicParallelHistory;
-    return (payload.points ?? [])
-      .filter((point) => {
-        const timestamp = new Date(point.t).getTime();
-        return Number.isFinite(point.v) && point.v > 0 && timestamp >= from.getTime() && timestamp <= to.getTime();
-      })
-      .map((point) => ({
-        date: point.t,
-        buy_avg: point.v,
-        sell_avg: point.v,
-        sources_count: 1
-      }));
-  } catch (error) {
-    console.warn('[rates-history] public parallel history unavailable', String(error));
-    return [];
-  }
-}
 
 function dailyRows(rows: HistoryDataRow[]) {
   const byDay = new Map<string, HistoryDataRow>();
@@ -128,12 +98,12 @@ export async function GET(request: Request) {
   }));
 
   // The local database is intentionally sparse (it stores recent snapshots).
-  // Always use the licensed public daily series as the base for the parallel
-  // chart, then let local and live values override matching calendar days.
+  // Always use the licensed/public daily series as the base for the chart,
+  // then let local and live values override matching calendar days.
   const publicHistory =
     kindParam === 'PARALELO'
       ? await getPublicParallelHistory(from, to)
-      : [];
+      : await getPublicOficialHistory(from, to);
 
   const liveBuy = kindParam === 'OFICIAL' ? latest.officialBcb : latest.parallel.buy;
   const liveSell = kindParam === 'OFICIAL' ? latest.officialBcb : latest.parallel.sell;
@@ -158,11 +128,11 @@ export async function GET(request: Request) {
     kind: kindParam,
     count: data.length,
     data,
-    source:
-      publicHistory.length > 0 && storedData.length > 0
-        ? 'paralelo.bo (CC-BY-4.0) + local'
-        : publicHistory.length > 0
-          ? 'paralelo.bo (CC-BY-4.0)'
-          : 'local'
+    source: (() => {
+      const publicLabel = kindParam === 'PARALELO' ? 'paralelo.bo (CC-BY-4.0)' : 'bcb.gob.bo';
+      if (publicHistory.length > 0 && storedData.length > 0) return `${publicLabel} + local`;
+      if (publicHistory.length > 0) return publicLabel;
+      return 'local';
+    })()
   }, { headers: rateHeaders });
 }

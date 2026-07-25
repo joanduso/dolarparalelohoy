@@ -9,10 +9,15 @@ export async function ensureFreshRates(
   prisma: PrismaClient,
   maxAgeMs = 10 * 60_000
 ) {
-  const latest = await prisma.ratePoint.findFirst({
-    where: { source: BASE_SOURCE },
-    orderBy: { timestamp: 'desc' }
-  });
+  let latest;
+  try {
+    latest = await prisma.ratePoint.findFirst({
+      where: { source: BASE_SOURCE },
+      orderBy: { timestamp: 'desc' }
+    });
+  } catch (error) {
+    return { fresh: false, attempted: false, ageMs: Infinity, error: String(error) };
+  }
 
   const now = Date.now();
   const ageMs = latest ? now - latest.timestamp.getTime() : Infinity;

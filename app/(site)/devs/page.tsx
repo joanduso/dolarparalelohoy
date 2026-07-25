@@ -92,19 +92,19 @@ export default function DevsPage() {
                   <td className="py-2 pr-4 font-medium">Anónimo</td>
                   <td className="py-2 pr-4">60 req/min</td>
                   <td className="py-2 pr-4">30 req/min</td>
-                  <td className="py-2 pr-4">90 días</td>
+                  <td className="py-2 pr-4">1000 días</td>
                 </tr>
                 <tr className="border-t border-black/5">
                   <td className="py-2 pr-4 font-medium">Free (con API key)</td>
                   <td className="py-2 pr-4">120 req/min</td>
                   <td className="py-2 pr-4">90 req/min</td>
-                  <td className="py-2 pr-4">1 año</td>
+                  <td className="py-2 pr-4">2000 días</td>
                 </tr>
                 <tr className="border-t border-black/5">
                   <td className="py-2 pr-4 font-medium">Pro</td>
                   <td className="py-2 pr-4">600 req/min</td>
                   <td className="py-2 pr-4">400 req/min</td>
-                  <td className="py-2 pr-4">5 años (todo el histórico)</td>
+                  <td className="py-2 pr-4">4000 días (todo el histórico)</td>
                 </tr>
               </tbody>
             </table>
