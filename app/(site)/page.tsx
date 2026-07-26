@@ -9,9 +9,11 @@ import { Skeleton } from '@/app/(site)/_components/Skeleton';
 import { DeclareForm } from '@/app/(site)/_components/DeclareForm';
 import { DeclaredBlock } from '@/app/(site)/_components/DeclaredBlock';
 import { PlatformCards } from '@/app/(site)/_components/PlatformCards';
+import { TrendSummary } from '@/app/(site)/_components/TrendSummary';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
 import { fetchJson } from '@/lib/serverFetch';
 import { formatDateTime } from '@/lib/format';
+import { computeTrend } from '@/lib/trend';
 import type { Metadata } from 'next';
 import { fetchP2PIndex } from '@/lib/p2pIndex';
 
@@ -160,6 +162,8 @@ export default async function HomePage() {
       value: row.gap_pct
     }))
   };
+
+  const paraleloTrend30d = computeTrend(chartData.paralelo, 30);
 
   const lastUpdated = latest?.updatedAt ? new Date(latest.updatedAt) : null;
   const bcbData = bcbResult.ok ? bcbResult.data : null;
@@ -330,6 +334,8 @@ export default async function HomePage() {
             . Toda la información es referencial y no constituye asesoramiento financiero.
           </p>
         </article>
+
+        <TrendSummary label="El dólar paralelo" trend={paraleloTrend30d} />
 
         <ChartCard data={chartData} />
 

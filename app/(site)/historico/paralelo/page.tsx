@@ -1,9 +1,11 @@
 import { JsonLd } from '@/app/(site)/_components/JsonLd';
 import { Breadcrumbs } from '@/app/(site)/_components/Breadcrumbs';
 import { SeoFaq, type SeoFaqItem } from '@/app/(site)/_components/SeoFaq';
+import { TrendSummary } from '@/app/(site)/_components/TrendSummary';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
 import { fetchJson } from '@/lib/serverFetch';
 import { formatCurrency, formatDate } from '@/lib/format';
+import { computeTrend } from '@/lib/trend';
 import type { Metadata } from 'next';
 
 type DailyHistoryRow = {
@@ -39,6 +41,9 @@ export default async function HistoricoParaleloPage() {
 
   const history = historyResult.data?.data ?? [];
   const hasAnyData = history.length > 0;
+  const trendPoints = history.map((row) => ({ date: row.date, value: row.sell_avg }));
+  const trend30d = computeTrend(trendPoints, 30);
+  const trend365d = computeTrend(trendPoints, 365);
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -74,6 +79,10 @@ export default async function HistoricoParaleloPage() {
           </p>
         </div>
 
+        <div className="grid gap-2">
+          <TrendSummary label="El dólar paralelo" trend={trend30d} />
+          <TrendSummary label="El dólar paralelo" trend={trend365d} />
+        </div>
 
         {!hasAnyData ? (
           <div className="card p-4 text-sm text-ink/70">
