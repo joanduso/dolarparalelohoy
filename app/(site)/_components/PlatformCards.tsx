@@ -61,7 +61,7 @@ const platforms = [
     key: 'binance' as PlatformKey,
     name: 'Binance',
     domain: 'binance.com',
-    href: 'https://web3.binance.com/referral?ref=WB11QEW6',
+    href: 'https://www.binance.com/register?ref=CJ7ZK0QV',
     mark: 'B',
     color: 'bg-yellow-400 text-black',
     type: 'Exchange · P2P BOB',
