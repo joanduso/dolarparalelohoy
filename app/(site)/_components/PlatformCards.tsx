@@ -28,12 +28,13 @@ const platforms = [
     key: 'airtm' as PlatformKey,
     name: 'Airtm',
     domain: 'airtm.com',
-    href: 'https://www.airtm.com/',
+    href: 'https://app.airtm.com/ivt/joseandr2vnjrq3l',
     mark: 'A',
     color: 'bg-cyan-500 text-white',
     type: 'P2P · USDC/BOB',
     detail: 'P2P, retiro bancario y pagos QR en Bolivia.',
-    featured: true
+    featured: true,
+    affiliate: true
   },
   {
     key: 'bybit' as PlatformKey,
