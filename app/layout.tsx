@@ -8,6 +8,7 @@ import { StickyAd } from '@/app/(site)/_components/StickyAd';
 import { Logo } from '@/components/Logo';
 
 const GA_MEASUREMENT_ID = 'G-H4XPR5K4NT';
+const ADSENSE_CLIENT_ID = 'ca-pub-9113726729959425';
 
 const serif = Alegreya({
   subsets: ['latin'],
@@ -130,6 +131,12 @@ export default function RootLayout({
             gtag('config', '${GA_MEASUREMENT_ID}');
           `}
         </Script>
+        <Script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
       </head>
       <body className="font-sans">
         <script
