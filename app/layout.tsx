@@ -159,6 +159,9 @@ export default function RootLayout({
                 <Link href="/usdt-bob" className="underline underline-offset-4">
                   Conversor USDT/BOB
                 </Link>
+                <Link href="/dolar-blue-bolivia" className="underline underline-offset-4">
+                  Dólar blue
+                </Link>
                 <Link href="/exchanges" className="underline underline-offset-4">
                   Comparar exchanges
                 </Link>
@@ -188,6 +191,15 @@ export default function RootLayout({
                 </Link>
                 <Link href="/historico/oficial" className="underline underline-offset-4">
                   Histórico dólar oficial
+                </Link>
+                <Link href="/usdt-bob" className="underline underline-offset-4">
+                  Conversor USDT/BOB
+                </Link>
+                <Link href="/dolar-blue-bolivia" className="underline underline-offset-4">
+                  Dólar blue Bolivia
+                </Link>
+                <Link href="/exchanges" className="underline underline-offset-4">
+                  Comparar exchanges
                 </Link>
                 <Link href="/fuentes" className="underline underline-offset-4">
                   Fuentes

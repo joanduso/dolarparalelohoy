@@ -86,8 +86,9 @@ export default async function DolarBlueBoliviaPage() {
           </p>
           <p>
             Para seguir el valor con detalle consulta el <Link href="/paralelo" className="underline underline-offset-4">dólar paralelo de hoy</Link>, el{' '}
-            <Link href="/usdt-bob" className="underline underline-offset-4">conversor USDT a BOB</Link> y el{' '}
-            <Link href="/historico/paralelo" className="underline underline-offset-4">histórico diario</Link>.
+            <Link href="/usdt-bob" className="underline underline-offset-4">conversor USDT a BOB</Link>, el{' '}
+            <Link href="/historico/paralelo" className="underline underline-offset-4">histórico diario</Link> y el{' '}
+            <Link href="/exchanges" className="underline underline-offset-4">comparador de exchanges P2P</Link>.
           </p>
         </article>
 

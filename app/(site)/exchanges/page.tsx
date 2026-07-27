@@ -65,7 +65,8 @@ export default function ExchangesPage() {
           </p>
           <p>
             Usa el <Link href="/usdt-bob" className="underline underline-offset-4">conversor USDT/BOB</Link> para una estimación y contrasta el resultado con el{' '}
-            <Link href="/paralelo" className="underline underline-offset-4">índice paralelo</Link> y las{' '}
+            <Link href="/paralelo" className="underline underline-offset-4">índice paralelo</Link>, el{' '}
+            <Link href="/dolar-blue-bolivia" className="underline underline-offset-4">dólar blue en Bolivia</Link> y las{' '}
             <Link href="/fuentes" className="underline underline-offset-4">fuentes</Link>.
           </p>
         </article>
