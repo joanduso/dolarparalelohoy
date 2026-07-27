@@ -19,6 +19,18 @@ deployment's ID once, then poll that single deployment.
 
 (For other repos, look these up once via `list_projects` / `.vercel/project.json` and reuse them the same way.)
 
+## Before pushing: `tsc --noEmit` is not enough
+
+`npx tsc --noEmit` only catches type errors — it does not run ESLint.
+Vercel's build (`npm run vercel-build` → `next build`) runs lint as part
+of the build and fails the whole deploy on lint errors that `tsc` never
+sees (e.g. `react/no-unescaped-entities` from a literal `"` in JSX text,
+unused vars if the project enables that rule). Run `npx next lint` too
+before pushing, not just `tsc --noEmit` — this has caused an avoidable
+`ERROR` deployment before. Note `next lint` may rewrite `tsconfig.json`
+(adding `.next/types` plugin config) as a side effect; `git checkout --
+tsconfig.json next-env.d.ts` afterward if you don't intend to commit that.
+
 ## Procedure
 
 1. **Push, then get the new deployment's ID — once.**
