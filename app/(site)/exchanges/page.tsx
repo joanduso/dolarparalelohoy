@@ -80,7 +80,8 @@ export default function ExchangesPage() {
             El precio que ves en un anuncio no siempre es el precio final: negociar el monto, elegir un anunciante con más operaciones completadas y mejor porcentaje de confianza, y confirmar el medio de pago exacto antes de iniciar puede evitar demoras o cancelaciones. Montos grandes suelen tener mejor tasa que montos pequeños, pero también menos anuncios disponibles.
           </p>
           <p>
-            Antes de operar por primera vez en cualquier plataforma, revisa su límite de retiro, el tiempo típico de verificación de identidad (KYC) y si permite operar sin haberla completado. Desconfía de cualquier anuncio que pida pagar fuera del chat de la plataforma o que presione a confirmar antes de recibir el pago.
+            Antes de operar por primera vez en cualquier plataforma, revisa su límite de retiro, el tiempo típico de verificación de identidad (KYC) y si permite operar sin haberla completado. Desconfía de cualquier anuncio que pida pagar fuera del chat de la plataforma o que presione a confirmar antes de recibir el pago. Para el proceso completo paso a paso, revisa la{' '}
+            <Link href="/comprar-usdt-bolivia" className="underline underline-offset-4">guía para comprar USDT en Bolivia</Link>.
           </p>
         </article>
 

@@ -127,6 +127,7 @@ export default async function UsdtBobPage() {
           <h2 className="font-serif text-2xl">Compara antes de operar</h2>
           <p className="text-ink/70">Las tasas pueden variar entre plataformas y billeteras. Consulta la cotización y condiciones de cada una.</p>
           <Link href="/exchanges" className="underline underline-offset-4 text-sm">Ver comparador de exchanges P2P en Bolivia</Link>
+          <Link href="/comprar-usdt-bolivia" className="underline underline-offset-4 text-sm">Guía paso a paso: cómo comprar USDT en Bolivia</Link>
         </div>
 
         <SeoFaq items={faqItems} />

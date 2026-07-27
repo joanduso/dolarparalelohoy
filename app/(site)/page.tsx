@@ -366,6 +366,12 @@ export default async function HomePage() {
             <Link href="/historico/oficial" className="underline underline-offset-4">
               Histórico oficial
             </Link>
+            <Link href="/comprar-usdt-bolivia" className="underline underline-offset-4">
+              Cómo comprar USDT
+            </Link>
+            <Link href="/que-es-dolar-blue-bolivia" className="underline underline-offset-4">
+              Qué es el dólar blue
+            </Link>
           </div>
         </div>
 

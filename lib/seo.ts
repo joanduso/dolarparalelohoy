@@ -23,6 +23,8 @@ export const siteRoutes = [
   '/exchanges',
   '/historico/paralelo',
   '/historico/oficial',
+  '/comprar-usdt-bolivia',
+  '/que-es-dolar-blue-bolivia',
   '/faq',
   '/fuentes',
   '/terminos',
@@ -40,6 +42,8 @@ export const pageTitles = {
   usdtBob: 'USDT a BOB hoy: conversor y cotización P2P Bolivia',
   dolarBlue: 'Dólar blue Bolivia hoy: precio y diferencia con el oficial',
   exchanges: 'Comparador de exchanges P2P Bolivia',
+  comprarUsdt: 'Cómo comprar USDT en Bolivia 2026: guía completa paso a paso',
+  queEsDolarBlue: 'Qué es el dólar blue y cómo funciona en Bolivia',
   faq: 'Metodología y preguntas frecuentes',
   devs: 'API pública para desarrolladores',
   fuentes: 'Fuentes del dólar en Bolivia',
@@ -66,6 +70,10 @@ export const pageDescriptions = {
     'Precio del dólar blue en Bolivia hoy. Entiende la diferencia entre dólar paralelo, USDT/BOB y tipo de cambio oficial.',
   exchanges:
     'Compara cotizaciones P2P de exchanges y billeteras disponibles para Bolivia: compra, venta, actualización y condiciones.',
+  comprarUsdt:
+    'Guía paso a paso para comprar USDT en Bolivia: elegir plataforma, crear cuenta, verificar identidad, encontrar un anuncio P2P seguro y evitar errores comunes.',
+  queEsDolarBlue:
+    'Qué es el dólar blue, de dónde viene el término y por qué se usa en Bolivia para describir el mercado paralelo de divisas y el precio de USDT en plataformas P2P.',
   faq:
     'Preguntas frecuentes sobre el dólar en Bolivia: metodología de cálculo, validación de fuentes, actualización de datos y avisos legales del sitio.',
   devs:

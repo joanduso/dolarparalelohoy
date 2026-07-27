@@ -208,6 +208,12 @@ export default function RootLayout({
                 <Link href="/exchanges" className="underline underline-offset-4">
                   Comparar exchanges
                 </Link>
+                <Link href="/comprar-usdt-bolivia" className="underline underline-offset-4">
+                  Cómo comprar USDT
+                </Link>
+                <Link href="/que-es-dolar-blue-bolivia" className="underline underline-offset-4">
+                  Qué es el dólar blue
+                </Link>
                 <Link href="/fuentes" className="underline underline-offset-4">
                   Fuentes
                 </Link>
