@@ -6,6 +6,11 @@ type P2PCalculatorProps = {
   buy: number | null;
   sell: number | null;
   assetLabel?: string;
+  /** True when there's no real bid/ask spread to offer (e.g. an official
+   * single-value rate, or a synthetic cross-rate) — hides the buy/sell
+   * toggle instead of implying a spread we don't actually have. */
+  singleRate?: boolean;
+  rateNote?: string;
 };
 
 const amountFormatter = new Intl.NumberFormat('es-BO', {
@@ -16,13 +21,15 @@ const amountFormatter = new Intl.NumberFormat('es-BO', {
 export function P2PCalculator({
   buy,
   sell,
-  assetLabel = 'USD / USDT'
+  assetLabel = 'USD / USDT',
+  singleRate = false,
+  rateNote
 }: P2PCalculatorProps) {
   const [amount, setAmount] = useState('100');
   const [operation, setOperation] = useState<'buy' | 'sell'>('buy');
 
   const numericAmount = Number(amount.replace(',', '.'));
-  const rate = operation === 'buy' ? sell ?? 0 : buy ?? 0;
+  const rate = singleRate ? buy ?? 0 : operation === 'buy' ? sell ?? 0 : buy ?? 0;
   const result = useMemo(
     () => Number.isFinite(numericAmount) && numericAmount > 0 && rate > 0 ? numericAmount * rate : null,
     [numericAmount, rate]
@@ -31,12 +38,16 @@ export function P2PCalculator({
   if (buy === null || sell === null) {
     return (
       <div className="card p-5 text-sm text-ink/70">
-        La calculadora estará disponible cuando vuelva la cotización P2P.
+        La calculadora estará disponible cuando vuelva la cotización.
       </div>
     );
   }
 
-  const operationLabel = operation === 'buy' ? `Comprar ${assetLabel}` : `Vender ${assetLabel}`;
+  const operationLabel = singleRate
+    ? `${assetLabel} a bolivianos`
+    : operation === 'buy'
+      ? `Comprar ${assetLabel}`
+      : `Vender ${assetLabel}`;
 
   return (
     <section className="card p-6 grid gap-5" aria-labelledby="calculadora-p2p">
@@ -44,31 +55,32 @@ export function P2PCalculator({
         <p className="kicker">Herramienta rápida</p>
         <h2 id="calculadora-p2p" className="font-serif text-2xl">Calculadora {assetLabel} a bolivianos</h2>
         <p className="text-sm text-ink/65">
-          Estimación referencial con la cotización P2P actual. La tasa final puede variar por monto,
-          método de pago y comisión.
+          {rateNote ?? 'Estimación referencial con la cotización P2P actual. La tasa final puede variar por monto, método de pago y comisión.'}
         </p>
       </div>
 
-      <div className="flex flex-wrap gap-2" aria-label="Tipo de operación">
-        <button
-          type="button"
-          onClick={() => setOperation('buy')}
-          className={`rounded-full px-4 py-2 text-sm font-medium ${
-            operation === 'buy' ? 'bg-ink text-white' : 'bg-black/5 text-ink'
-          }`}
-        >
-          Quiero comprar
-        </button>
-        <button
-          type="button"
-          onClick={() => setOperation('sell')}
-          className={`rounded-full px-4 py-2 text-sm font-medium ${
-            operation === 'sell' ? 'bg-ink text-white' : 'bg-black/5 text-ink'
-          }`}
-        >
-          Quiero vender
-        </button>
-      </div>
+      {!singleRate ? (
+        <div className="flex flex-wrap gap-2" aria-label="Tipo de operación">
+          <button
+            type="button"
+            onClick={() => setOperation('buy')}
+            className={`rounded-full px-4 py-2 text-sm font-medium ${
+              operation === 'buy' ? 'bg-ink text-white' : 'bg-black/5 text-ink'
+            }`}
+          >
+            Quiero comprar
+          </button>
+          <button
+            type="button"
+            onClick={() => setOperation('sell')}
+            className={`rounded-full px-4 py-2 text-sm font-medium ${
+              operation === 'sell' ? 'bg-ink text-white' : 'bg-black/5 text-ink'
+            }`}
+          >
+            Quiero vender
+          </button>
+        </div>
+      ) : null}
 
       <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
         <label className="grid gap-2 text-sm font-medium text-ink">

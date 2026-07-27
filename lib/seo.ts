@@ -21,6 +21,8 @@ export const siteRoutes = [
   '/oficial',
   '/brecha',
   '/usdt-bob',
+  '/eur-bob',
+  '/btc-bob',
   '/dolar-blue-bolivia',
   '/exchanges',
   '/historico/paralelo',
@@ -44,6 +46,8 @@ export const pageTitles = {
   historicoParalelo: 'Histórico dólar paralelo Bolivia',
   historicoOficial: 'Histórico dólar oficial Bolivia',
   usdtBob: 'USDT a BOB hoy: conversor y cotización P2P Bolivia',
+  eurBob: 'Euro a bolivianos hoy: tipo de cambio oficial BCB',
+  btcBob: 'Bitcoin a bolivianos hoy: precio BTC en Bs',
   dolarBlue: 'Dólar blue Bolivia hoy: precio y diferencia con el oficial',
   exchanges: 'Comparador de exchanges P2P Bolivia',
   comprarUsdt: 'Cómo comprar USDT en Bolivia 2026: guía completa paso a paso',
@@ -70,6 +74,10 @@ export const pageDescriptions = {
     'Serie histórica del dólar oficial en Bolivia con datos diarios publicados por el BCB, tendencia reciente, metodología transparente y fuentes verificables.',
   usdtBob:
     'Conversor USDT a BOB y cotización P2P en Bolivia hoy. Compara compra, venta y plataformas con datos actualizados.',
+  eurBob:
+    'Tipo de cambio del euro a bolivianos hoy, publicado por el Banco Central de Bolivia (BCB). Calculadora para convertir cualquier monto en segundos.',
+  btcBob:
+    'Precio de referencia de Bitcoin en bolivianos hoy, calculado a partir del precio de BTC en dólares y nuestro índice del dólar paralelo en Bolivia.',
   dolarBlue:
     'Precio del dólar blue en Bolivia hoy. Entiende la diferencia entre dólar paralelo, USDT/BOB y tipo de cambio oficial.',
   exchanges:

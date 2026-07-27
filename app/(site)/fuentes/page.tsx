@@ -66,6 +66,30 @@ export default function FuentesPage() {
           </p>
         </section>
 
+        <section id="licencia-de-uso-de-datos" className="card p-6 grid gap-3">
+          <h2 className="font-serif text-2xl">Licencia de uso de datos</h2>
+          <p className="text-ink/70">
+            Los datos que agregamos (cotización actual, histórico diario y brecha cambiaria) pueden
+            citarse y reutilizarse libremente con atribución a <strong>Dólar Paralelo Hoy Bolivia</strong>{' '}
+            y un enlace a <Link href="/" className="underline underline-offset-4">dolarparalelohoy.com</Link>,
+            bajo los mismos términos de{' '}
+            <a
+              className="underline underline-offset-4"
+              href="https://creativecommons.org/licenses/by/4.0/deed.es"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Creative Commons BY 4.0
+            </a>. Esto aplica a los datos que nosotros calculamos y publicamos; las fuentes
+            primarias que citamos (BCB, paralelo.bo, Binance P2P) mantienen sus propios términos.
+          </p>
+          <p className="text-ink/70">
+            Para integrar estos datos en un producto, agente o asistente, usa la{' '}
+            <Link className="underline underline-offset-4" href="/devs">API pública documentada</Link>{' '}
+            en vez de scrapear el sitio: es más estable y no cambia sin aviso.
+          </p>
+        </section>
+
         <section className="card p-6 grid gap-3">
           <h2 className="font-serif text-2xl">Reportes de usuarios</h2>
           <p className="text-ink/70">

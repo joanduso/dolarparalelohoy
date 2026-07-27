@@ -372,6 +372,12 @@ export default async function HomePage() {
             <Link href="/que-es-dolar-blue-bolivia" className="underline underline-offset-4">
               Qué es el dólar blue
             </Link>
+            <Link href="/eur-bob" className="underline underline-offset-4">
+              Euro a bolivianos
+            </Link>
+            <Link href="/btc-bob" className="underline underline-offset-4">
+              Bitcoin a bolivianos
+            </Link>
           </div>
         </div>
 

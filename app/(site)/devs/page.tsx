@@ -47,6 +47,12 @@ export default function DevsPage() {
             estadísticas del dólar paralelo y oficial en Bolivia. Respuestas en JSON, sin
             autenticación obligatoria.
           </p>
+          <p className="text-sm text-ink/60 max-w-3xl">
+            Metodología completa en <Link href="/faq" className="underline underline-offset-4">preguntas frecuentes</Link>,
+            fuentes y <Link href="/fuentes#licencia-de-uso-de-datos" className="underline underline-offset-4">licencia de uso de datos</Link>{' '}
+            en <Link href="/fuentes" className="underline underline-offset-4">fuentes</Link>. Los datos se
+            actualizan cada 10 minutos; el histórico consolida promedios diarios.
+          </p>
         </div>
 
         <div className="card p-6 grid gap-4">

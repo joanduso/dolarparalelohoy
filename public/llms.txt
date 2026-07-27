@@ -1,0 +1,33 @@
+# Dólar Paralelo Hoy Bolivia
+
+> Cotización diaria del dólar paralelo y oficial en Bolivia, agregada de múltiples fuentes públicas con metodología transparente. Incluye histórico desde agosto de 2024, brecha cambiaria, y una API pública de solo lectura.
+
+Este sitio publica datos de tipo de cambio para Bolivia (USD, USDT, EUR, BTC frente al boliviano). Los datos que calculamos y publicamos pueden citarse y reutilizarse con atribución bajo Creative Commons BY 4.0 — ver /fuentes#licencia-de-uso-de-datos. Preferimos que agentes y asistentes usen la API pública en vez de scrapear el HTML: es estable y no cambia sin aviso.
+
+## Datos y metodología
+
+- [Fuentes y licencia de uso de datos](https://dolarparalelohoy.com/fuentes): de dónde sale cada cotización, cómo se valida, y los términos de reuso de los datos que publicamos.
+- [Metodología y preguntas frecuentes](https://dolarparalelohoy.com/faq): cómo se calcula el índice paralelo, la brecha cambiaria, y el precio declarado por usuarios.
+- [API pública para desarrolladores](https://dolarparalelohoy.com/devs): documentación completa de endpoints, límites por plan, y ejemplos de uso.
+
+## Cotizaciones actuales
+
+- [Dólar paralelo hoy](https://dolarparalelohoy.com/paralelo)
+- [Dólar oficial hoy](https://dolarparalelohoy.com/oficial)
+- [Brecha cambiaria](https://dolarparalelohoy.com/brecha)
+- [USDT a BOB](https://dolarparalelohoy.com/usdt-bob)
+- [Euro a bolivianos](https://dolarparalelohoy.com/eur-bob)
+- [Bitcoin a bolivianos](https://dolarparalelohoy.com/btc-bob)
+- [Comparador de exchanges P2P](https://dolarparalelohoy.com/exchanges)
+
+## Histórico
+
+- [Histórico dólar paralelo](https://dolarparalelohoy.com/historico/paralelo) (también por período: /7d, /30d, /90d, /1a, /todo)
+- [Histórico dólar oficial](https://dolarparalelohoy.com/historico/oficial) (mismos períodos)
+
+## API (sin scraping)
+
+- Cotización actual: `GET https://dolarparalelohoy.com/api/rates/current`
+- Histórico: `GET https://dolarparalelohoy.com/api/rates/history?kind=PARALELO|OFICIAL&days=N`
+- Brecha: `GET https://dolarparalelohoy.com/api/brecha/latest` y `/api/brecha/history`
+- Documentación completa, límites y planes: https://dolarparalelohoy.com/devs
