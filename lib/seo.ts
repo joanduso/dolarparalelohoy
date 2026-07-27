@@ -13,6 +13,23 @@
   language: 'es'
 };
 
+export const siteRoutes = [
+  '',
+  '/paralelo',
+  '/oficial',
+  '/brecha',
+  '/usdt-bob',
+  '/dolar-blue-bolivia',
+  '/exchanges',
+  '/historico/paralelo',
+  '/historico/oficial',
+  '/faq',
+  '/fuentes',
+  '/terminos',
+  '/privacidad',
+  '/devs'
+];
+
 export const pageTitles = {
   home: 'Dólar Paralelo Bolivia Hoy: Precio, Compra y Venta',
   paralelo: 'Dólar paralelo hoy en Bolivia',
