@@ -110,7 +110,7 @@ export async function PlatformCards() {
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {platforms.map((platform) => {
           const rate = rates[platform.key];
-          const spreadPct = rate && rate.buy > 0 ? ((rate.sell - rate.buy) / rate.buy) * 100 : null;
+          const spreadPct = rate && rate.buy > 0 ? Math.abs((rate.sell - rate.buy) / rate.buy) * 100 : null;
           return (
             <article
               key={platform.name}
