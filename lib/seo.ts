@@ -1,4 +1,6 @@
-﻿export const siteConfig = {
+﻿import { HISTORY_PERIODS } from '@/lib/historyPeriods';
+
+export const siteConfig = {
   name: 'Dólar Paralelo Hoy Bolivia',
   shortName: 'Dólar Paralelo Hoy',
   alternateName: 'Dólar Paralelo Bolivia',
@@ -23,6 +25,8 @@ export const siteRoutes = [
   '/exchanges',
   '/historico/paralelo',
   '/historico/oficial',
+  ...HISTORY_PERIODS.map((period) => `/historico/paralelo/${period.slug}`),
+  ...HISTORY_PERIODS.map((period) => `/historico/oficial/${period.slug}`),
   '/comprar-usdt-bolivia',
   '/que-es-dolar-blue-bolivia',
   '/faq',

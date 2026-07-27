@@ -11,6 +11,7 @@ const platforms = [
     color: 'bg-yellow-300 text-black',
     type: 'P2P · USDT/BOB',
     detail: 'Transferencia bancaria y pagos QR en Bolivia.',
+    feeNote: 'Comisión variable según método de pago',
     featured: true
   },
   {
@@ -22,6 +23,7 @@ const platforms = [
     color: 'bg-violet-600 text-white',
     type: 'Billetera · USD digital',
     detail: 'Recibe BOB y paga QR con conversión automática.',
+    feeNote: 'Comisión variable según operación',
     featured: true,
     affiliate: true
   },
@@ -34,6 +36,7 @@ const platforms = [
     color: 'bg-cyan-500 text-white',
     type: 'P2P · USDC/BOB',
     detail: 'P2P, retiro bancario y pagos QR en Bolivia.',
+    feeNote: 'Comisión variable según método de retiro',
     featured: true,
     affiliate: true
   },
@@ -46,6 +49,7 @@ const platforms = [
     color: 'bg-amber-400 text-black',
     type: 'Exchange · P2P BOB',
     detail: 'Mercado de anuncios para comprar y vender USDT.',
+    feeNote: 'Sin comisión P2P; el costo está en el spread del anuncio',
     featured: false,
     affiliate: true
   },
@@ -58,6 +62,7 @@ const platforms = [
     color: 'bg-blue-600 text-white',
     type: 'Billetera · QR Bolivia',
     detail: 'Cuenta digital con depósitos mediante QR boliviano.',
+    feeNote: 'Comisión variable según operación',
     featured: false
   },
   {
@@ -69,6 +74,7 @@ const platforms = [
     color: 'bg-yellow-400 text-black',
     type: 'Exchange · P2P BOB',
     detail: 'Fuente principal de nuestra cotización por liquidez.',
+    feeNote: 'Sin comisión P2P; el costo está en el spread del anuncio',
     featured: false,
     affiliate: true
   }
@@ -104,6 +110,7 @@ export async function PlatformCards() {
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {platforms.map((platform) => {
           const rate = rates[platform.key];
+          const spreadPct = rate && rate.buy > 0 ? ((rate.sell - rate.buy) / rate.buy) * 100 : null;
           return (
             <article
               key={platform.name}
@@ -138,9 +145,12 @@ export async function PlatformCards() {
                       <p className="mt-1 text-xl font-semibold">Bs {priceFormatter.format(rate.sell)}</p>
                     </div>
                   </div>
-                  <p className="mt-3 text-xs text-ink/50">
-                    Actualizado {timeFormatter.format(new Date(rate.updatedAt))} · {platform.type}
-                  </p>
+                  <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink/50">
+                    <span>Actualizado {timeFormatter.format(new Date(rate.updatedAt))} · {platform.type}</span>
+                    {spreadPct !== null ? (
+                      <span className="font-semibold text-ink/70">Spread {spreadPct.toFixed(2)}%</span>
+                    ) : null}
+                  </div>
                 </>
               ) : (
                 <>
@@ -149,6 +159,7 @@ export async function PlatformCards() {
                   <p className="mt-2 text-sm text-ink/65">{platform.detail}</p>
                 </>
               )}
+              <p className="mt-2 text-xs text-ink/45">{platform.feeNote}</p>
             </div>
             <a
               href={platform.href}
@@ -166,8 +177,11 @@ export async function PlatformCards() {
         Ver comparador completo de exchanges P2P
       </Link>
       <p className="text-xs text-ink/50">
-        No es una clasificación financiera ni una garantía. Verifica tasa, comisión, límites,
-        identidad del receptor y condiciones de cada plataforma antes de operar. Datos públicos de{' '}
+        El spread mostrado es la diferencia entre compra y venta calculada con nuestros propios datos
+        de cada plataforma; no incluye comisiones adicionales que la plataforma pueda cobrar por
+        método de pago o retiro. No es una clasificación financiera ni una garantía. Verifica tasa,
+        comisión, límites, identidad del receptor y condiciones de cada plataforma antes de operar.
+        Datos públicos de{' '}
         <a
           href="https://www.dolarbluebolivia.click/devs/"
           target="_blank"

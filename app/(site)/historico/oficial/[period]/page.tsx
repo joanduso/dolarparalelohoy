@@ -1,10 +1,13 @@
+import { notFound } from 'next/navigation';
 import { JsonLd } from '@/app/(site)/_components/JsonLd';
 import { Breadcrumbs } from '@/app/(site)/_components/Breadcrumbs';
 import { SeoFaq, type SeoFaqItem } from '@/app/(site)/_components/SeoFaq';
-import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
+import { TrendSummary } from '@/app/(site)/_components/TrendSummary';
+import { siteConfig } from '@/lib/seo';
 import { fetchJson } from '@/lib/serverFetch';
 import { formatCurrency, formatDate } from '@/lib/format';
-import { HISTORY_PERIODS } from '@/lib/historyPeriods';
+import { computeTrend } from '@/lib/trend';
+import { HISTORY_PERIODS, getHistoryPeriod } from '@/lib/historyPeriods';
 import type { Metadata } from 'next';
 
 type DailyHistoryRow = {
@@ -18,35 +21,54 @@ type HistoryResponse = {
   data: DailyHistoryRow[];
 };
 
-export async function generateMetadata(): Promise<Metadata> {
+export function generateStaticParams() {
+  return HISTORY_PERIODS.map((period) => ({ period: period.slug }));
+}
+
+export async function generateMetadata({
+  params
+}: {
+  params: { period: string };
+}): Promise<Metadata> {
+  const period = getHistoryPeriod(params.period);
+  if (!period) return {};
+
+  const title = `Histórico dólar oficial Bolivia: ${period.shortLabel}`;
+  const description = `Serie histórica del dólar oficial en Bolivia durante ${period.label}, publicada por el BCB: promedios diarios, tendencia y metodología transparente.`;
+
   return {
-    title: pageTitles.historicoOficial,
-    description: pageDescriptions.historicoOficial,
-    alternates: { canonical: '/historico/oficial' },
-    openGraph: {
-      title: pageTitles.historicoOficial,
-      description: pageDescriptions.historicoOficial,
-      locale: siteConfig.locale
-    }
+    title,
+    description,
+    alternates: { canonical: `/historico/oficial/${period.slug}` },
+    openGraph: { title, description, locale: siteConfig.locale }
   };
 }
 
-export default async function HistoricoOficialPage() {
+export default async function HistoricoOficialPeriodPage({
+  params
+}: {
+  params: { period: string };
+}) {
+  const period = getHistoryPeriod(params.period);
+  if (!period) notFound();
+
   const historyResult = await fetchJson<HistoryResponse>(
-    '/api/rates/history?kind=OFICIAL&days=365',
+    `/api/rates/history?kind=OFICIAL&days=${period.days}`,
     {},
     600
   );
 
   const history = historyResult.data?.data ?? [];
   const hasAnyData = history.length > 0;
+  const trendPoints = history.map((row) => ({ date: row.date, value: row.sell_avg }));
+  const trend = computeTrend(trendPoints, period.days);
 
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Dataset',
-    name: pageTitles.historicoOficial,
-    description: pageDescriptions.historicoOficial,
-    url: `${siteConfig.url}/historico/oficial`,
+    name: `Histórico dólar oficial Bolivia — ${period.shortLabel}`,
+    description: `Serie histórica del dólar oficial en Bolivia durante ${period.label}.`,
+    url: `${siteConfig.url}/historico/oficial/${period.slug}`,
     inLanguage: siteConfig.language,
     creator: { '@id': `${siteConfig.url}/#organization` },
     license: `${siteConfig.url}/terminos`
@@ -54,8 +76,8 @@ export default async function HistoricoOficialPage() {
 
   const faqItems: SeoFaqItem[] = [
     {
-      question: '¿Qué periodo cubre el histórico?',
-      answer: 'Mostramos hasta 12 meses de promedios diarios para comparar la evolución del dólar oficial.'
+      question: `¿Qué muestra este período de ${period.shortLabel.toLowerCase()}?`,
+      answer: `Promedios diarios del dólar oficial en Bolivia durante ${period.label}, publicados por el Banco Central de Bolivia (BCB).`
     },
     {
       question: '¿Cada cuánto se actualiza?',
@@ -66,31 +88,39 @@ export default async function HistoricoOficialPage() {
   return (
     <main className="section-shell pb-16">
       <JsonLd data={jsonLd} />
-      <Breadcrumbs items={[{ name: 'Histórico dólar oficial', href: '/historico/oficial' }]} />
+      <Breadcrumbs
+        items={[
+          { name: 'Histórico dólar oficial', href: '/historico/oficial' },
+          { name: period.shortLabel, href: `/historico/oficial/${period.slug}` }
+        ]}
+      />
       <section className="grid gap-6">
         <div className="grid gap-3">
           <p className="kicker">Histórico dólar oficial Bolivia</p>
-          <h1 className="font-serif text-3xl sm:text-4xl">Histórico dólar oficial Bolivia</h1>
+          <h1 className="font-serif text-3xl sm:text-4xl">
+            Dólar oficial Bolivia: {period.shortLabel.toLowerCase()}
+          </h1>
           <p className="text-ink/70 max-w-2xl">
-            Serie histórica con promedios diarios del dólar oficial. Datos agregados de múltiples
-            fuentes y filtrados por validación.
+            Serie histórica con promedios diarios del dólar oficial durante {period.label}. Datos
+            publicados por el BCB y agregados con metodología transparente.
           </p>
         </div>
 
-        <div className="card p-5 grid gap-3">
-          <p className="text-sm font-medium text-ink">Ver por período</p>
-          <div className="flex flex-wrap gap-2">
-            {HISTORY_PERIODS.map((period) => (
-              <a
-                key={period.slug}
-                href={`/historico/oficial/${period.slug}`}
-                className="px-3 py-1 rounded-full text-xs uppercase tracking-wide bg-black/5 hover:bg-black/10"
-              >
-                {period.shortLabel}
-              </a>
-            ))}
-          </div>
+        <div className="flex flex-wrap gap-2">
+          {HISTORY_PERIODS.map((option) => (
+            <a
+              key={option.slug}
+              href={`/historico/oficial/${option.slug}`}
+              className={`px-3 py-1 rounded-full text-xs uppercase tracking-wide ${
+                option.slug === period.slug ? 'bg-ink text-white' : 'bg-black/5'
+              }`}
+            >
+              {option.shortLabel}
+            </a>
+          ))}
         </div>
+
+        <TrendSummary label="El dólar oficial" trend={trend} />
 
         {!hasAnyData ? (
           <div className="card p-4 text-sm text-ink/70">
