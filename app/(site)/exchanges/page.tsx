@@ -71,6 +71,19 @@ export default function ExchangesPage() {
           </p>
         </article>
 
+        <article className="card p-6 grid gap-4 text-ink/70">
+          <h2 className="font-serif text-2xl text-ink">Cómo funciona una operación P2P</h2>
+          <p>
+            En un mercado P2P (persona a persona) no compras directamente a la plataforma: eliges un anuncio de otro usuario, acuerdan el monto y el medio de pago (transferencia bancaria, QR, billetera), y la plataforma retiene el USDT en garantía hasta que ambas partes confirman la operación. Esto reduce el riesgo de que alguien reciba el pago sin entregar la contraparte.
+          </p>
+          <p>
+            El precio que ves en un anuncio no siempre es el precio final: negociar el monto, elegir un anunciante con más operaciones completadas y mejor porcentaje de confianza, y confirmar el medio de pago exacto antes de iniciar puede evitar demoras o cancelaciones. Montos grandes suelen tener mejor tasa que montos pequeños, pero también menos anuncios disponibles.
+          </p>
+          <p>
+            Antes de operar por primera vez en cualquier plataforma, revisa su límite de retiro, el tiempo típico de verificación de identidad (KYC) y si permite operar sin haberla completado. Desconfía de cualquier anuncio que pida pagar fuera del chat de la plataforma o que presione a confirmar antes de recibir el pago.
+          </p>
+        </article>
+
         <SeoFaq items={faqItems} />
       </section>
     </main>

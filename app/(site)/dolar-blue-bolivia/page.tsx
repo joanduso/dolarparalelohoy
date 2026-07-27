@@ -92,6 +92,19 @@ export default async function DolarBlueBoliviaPage() {
           </p>
         </article>
 
+        <article className="card p-6 grid gap-4 text-ink/70">
+          <h2 className="font-serif text-2xl text-ink">¿Por qué se usa el término "dólar blue" en Bolivia?</h2>
+          <p>
+            "Dólar blue" es un término que se originó en Argentina para nombrar el mercado paralelo de divisas, y con la escasez de dólares que vivió Bolivia desde 2023 empezó a usarse aquí de forma coloquial para referirse al mismo fenómeno: gente y negocios buscando dólares fuera del sistema bancario porque la demanda superaba la oferta disponible al tipo de cambio oficial.
+          </p>
+          <p>
+            A diferencia de Argentina, Bolivia no tiene una cotización paralela centralizada o ampliamente publicada por medios tradicionales, así que la referencia más visible termina siendo el precio de USDT y otras stablecoins en mercados P2P, que es lo que este sitio agrega y publica.
+          </p>
+          <p>
+            En la práctica, hoy se usa esta referencia sobre todo para recibir remesas del exterior, cambiar ahorros en dólares físicos que no encuentran fácil salida bancaria, o para negocios que necesitan pagar a proveedores internacionales. No es una tasa fijada por ninguna autoridad, cambia con la oferta y demanda de cada momento, y puede variar de una plataforma a otra.
+          </p>
+        </article>
+
         <SeoFaq items={faqItems} />
       </section>
     </main>

@@ -110,6 +110,19 @@ export default async function UsdtBobPage() {
           </p>
         </article>
 
+        <article className="card p-6 grid gap-4 text-ink/70">
+          <h2 className="font-serif text-2xl text-ink">Qué es USDT y por qué se usa en Bolivia</h2>
+          <p>
+            USDT (Tether) es una stablecoin: un token cripto diseñado para mantener un valor de 1 a 1 con el dólar estadounidense, respaldado según su emisor por reservas en dólares y otros activos. A diferencia de bitcoin u otras criptomonedas, no busca subir o bajar de precio, sino replicar el dólar dentro de una red blockchain.
+          </p>
+          <p>
+            En Bolivia se volvió una referencia práctica porque permite mover valor en dólares sin pasar por el sistema bancario tradicional: alguien puede comprar USDT con bolivianos vía QR o transferencia, guardarlo o transferirlo, y luego venderlo por bolivianos cuando lo necesite. Es útil para remesas, pagos a proveedores en el exterior o simplemente para no mantener ahorros solo en bolivianos.
+          </p>
+          <p>
+            Tiene riesgos que vale conocer: depende de la solvencia y transparencia del emisor de la stablecoin, del cumplimiento de cada plataforma P2P con sus propios términos, y de la volatilidad de un mercado poco regulado en la región. No es equivalente a tener dólares físicos ni a un depósito bancario asegurado.
+          </p>
+        </article>
+
         <div className="card p-6 grid gap-3">
           <h2 className="font-serif text-2xl">Compara antes de operar</h2>
           <p className="text-ink/70">Las tasas pueden variar entre plataformas y billeteras. Consulta la cotización y condiciones de cada una.</p>
