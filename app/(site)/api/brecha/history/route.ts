@@ -49,10 +49,14 @@ export async function GET(request: Request) {
 
   // Local rows come from live intraday snapshots and take precedence over
   // the reconstructed public series when both cover the same calendar day.
+  // unstable_cache (inside getBrechaHistory) serializes cached results
+  // through JSON, so row.date can be a plain string instead of a Date on a
+  // cache hit — normalize before calling Date methods on it.
   for (const row of localData) {
-    const day = row.date.toISOString().slice(0, 10);
+    const rowDate = row.date instanceof Date ? row.date : new Date(row.date);
+    const day = rowDate.toISOString().slice(0, 10);
     publicRows.set(day, {
-      date: row.date.toISOString(),
+      date: rowDate.toISOString(),
       official_sell: row.official_sell,
       paralelo_sell: row.paralelo_sell,
       gap_abs: row.gap_abs,
