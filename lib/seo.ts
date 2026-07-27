@@ -34,15 +34,15 @@ export const pageDescriptions = {
   home:
     'Consulta el precio del dólar paralelo en Bolivia hoy: compra, venta, comparación USDT/BOB, dólar oficial, brecha e histórico actualizado.',
   paralelo:
-    'Precio del dólar paralelo hoy en Bolivia. Compra, venta, variación diaria, fuentes y contexto.',
+    'Precio del dólar paralelo hoy en Bolivia: compra, venta, variación diaria, tendencia de 30 días, fuentes públicas y datos actualizados cada 10 minutos.',
   oficial:
-    'Precio del dólar oficial en Bolivia hoy. Compra, venta, evolución y referencias oficiales.',
+    'Precio del dólar oficial en Bolivia hoy: compra, venta, evolución reciente y referencia publicada por el Banco Central de Bolivia (BCB), actualizada regularmente.',
   brecha:
-    'Brecha cambiaria entre dólar oficial y paralelo en Bolivia. Análisis de la diferencia y su evolución.',
+    'Brecha cambiaria entre dólar oficial y paralelo en Bolivia: diferencia en bolivianos y porcentaje, su evolución diaria y qué significa para el mercado.',
   historicoParalelo:
-    'Serie histórica del dólar paralelo en Bolivia con datos diarios y metodología transparente.',
+    'Serie histórica del dólar paralelo en Bolivia con datos diarios desde 2024, tendencia de 30 y 365 días, metodología transparente y fuentes públicas verificables.',
   historicoOficial:
-    'Serie histórica del dólar oficial en Bolivia con datos diarios y metodología transparente.',
+    'Serie histórica del dólar oficial en Bolivia con datos diarios publicados por el BCB, tendencia reciente, metodología transparente y fuentes verificables.',
   usdtBob:
     'Conversor USDT a BOB y cotización P2P en Bolivia hoy. Compara compra, venta y plataformas con datos actualizados.',
   dolarBlue:
@@ -50,7 +50,7 @@ export const pageDescriptions = {
   exchanges:
     'Compara cotizaciones P2P de exchanges y billeteras disponibles para Bolivia: compra, venta, actualización y condiciones.',
   faq:
-    'Preguntas frecuentes, metodología, validación y avisos legales sobre el dólar en Bolivia.',
+    'Preguntas frecuentes sobre el dólar en Bolivia: metodología de cálculo, validación de fuentes, actualización de datos y avisos legales del sitio.',
   devs:
     'Documentación de la API pública con endpoints de cotización, histórico y estadísticas del dólar en Bolivia.',
   fuentes:

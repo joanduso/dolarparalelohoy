@@ -46,7 +46,9 @@ export default async function HistoricoOficialPage() {
     name: pageTitles.historicoOficial,
     description: pageDescriptions.historicoOficial,
     url: `${siteConfig.url}/historico/oficial`,
-    inLanguage: siteConfig.language
+    inLanguage: siteConfig.language,
+    creator: { '@id': `${siteConfig.url}/#organization` },
+    license: `${siteConfig.url}/terminos`
   };
 
   const faqItems: SeoFaqItem[] = [

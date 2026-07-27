@@ -51,7 +51,9 @@ export default async function HistoricoParaleloPage() {
     name: pageTitles.historicoParalelo,
     description: pageDescriptions.historicoParalelo,
     url: `${siteConfig.url}/historico/paralelo`,
-    inLanguage: siteConfig.language
+    inLanguage: siteConfig.language,
+    creator: { '@id': `${siteConfig.url}/#organization` },
+    license: `${siteConfig.url}/terminos`
   };
 
   const faqItems: SeoFaqItem[] = [
