@@ -17,12 +17,13 @@ const platforms = [
     key: 'takenos' as PlatformKey,
     name: 'Takenos',
     domain: 'takenos.com',
-    href: 'https://takenos.com/',
+    href: 'https://takenos.go.link/?adj_t=1ptq1hru&adj_label=joseandresdurans',
     mark: 'T',
     color: 'bg-violet-600 text-white',
     type: 'Billetera · USD digital',
     detail: 'Recibe BOB y paga QR con conversión automática.',
-    featured: true
+    featured: true,
+    affiliate: true
   },
   {
     key: 'airtm' as PlatformKey,
@@ -40,12 +41,13 @@ const platforms = [
     key: 'bybit' as PlatformKey,
     name: 'Bybit',
     domain: 'bybit.com',
-    href: 'https://www.bybit.com/fiat/trade/otc/',
+    href: 'https://www.bybit.com/invite?ref=YDGOMZZ&medium=referral&utm_campaign=evergreen',
     mark: 'BY',
     color: 'bg-amber-400 text-black',
     type: 'Exchange · P2P BOB',
     detail: 'Mercado de anuncios para comprar y vender USDT.',
-    featured: false
+    featured: false,
+    affiliate: true
   },
   {
     key: 'meru' as PlatformKey,
