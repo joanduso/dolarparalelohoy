@@ -128,6 +128,7 @@ export default async function UsdtBobPage() {
           <p className="text-ink/70">Las tasas pueden variar entre plataformas y billeteras. Consulta la cotización y condiciones de cada una.</p>
           <Link href="/exchanges" className="underline underline-offset-4 text-sm">Ver comparador de exchanges P2P en Bolivia</Link>
           <Link href="/comprar-usdt-bolivia" className="underline underline-offset-4 text-sm">Guía paso a paso: cómo comprar USDT en Bolivia</Link>
+          <Link href="/bancos-usdt-bolivia" className="underline underline-offset-4 text-sm">Qué bancos venden USDT en Bolivia</Link>
           <Link href="/eur-bob" className="underline underline-offset-4 text-sm">Convertir euros a bolivianos</Link>
           <Link href="/btc-bob" className="underline underline-offset-4 text-sm">Convertir Bitcoin a bolivianos</Link>
         </div>

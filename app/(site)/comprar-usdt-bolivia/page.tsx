@@ -113,6 +113,8 @@ export default function ComprarUsdtBoliviaPage() {
             <Link href="/paralelo" className="underline underline-offset-4">precio del dólar paralelo</Link>{' '}
             para saber si conviene vender ahora o esperar, y entender de dónde sale esta referencia en{' '}
             <Link href="/que-es-dolar-blue-bolivia" className="underline underline-offset-4">qué es el dólar blue en Bolivia</Link>.
+            {' '}Si prefieres comprar dentro de un banco regulado en vez del mercado P2P, revisa{' '}
+            <Link href="/bancos-usdt-bolivia" className="underline underline-offset-4">qué bancos venden USDT en Bolivia</Link>.
           </p>
         </div>
 

@@ -30,6 +30,7 @@ export const siteRoutes = [
   ...HISTORY_PERIODS.map((period) => `/historico/paralelo/${period.slug}`),
   ...HISTORY_PERIODS.map((period) => `/historico/oficial/${period.slug}`),
   '/comprar-usdt-bolivia',
+  '/bancos-usdt-bolivia',
   '/que-es-dolar-blue-bolivia',
   '/faq',
   '/fuentes',
@@ -51,6 +52,7 @@ export const pageTitles = {
   dolarBlue: 'Dólar blue Bolivia hoy: precio y diferencia con el oficial',
   exchanges: 'Comparador de exchanges P2P Bolivia',
   comprarUsdt: 'Cómo comprar USDT en Bolivia 2026: guía completa paso a paso',
+  bancosUsdt: 'Qué bancos venden USDT en Bolivia: BCP, BISA, Ganadero, Unión y FIE',
   queEsDolarBlue: 'Qué es el dólar blue y cómo funciona en Bolivia',
   faq: 'Metodología y preguntas frecuentes',
   devs: 'API pública para desarrolladores',
@@ -84,6 +86,8 @@ export const pageDescriptions = {
     'Compara cotizaciones P2P de exchanges y billeteras disponibles para Bolivia: compra, venta, actualización y condiciones.',
   comprarUsdt:
     'Guía paso a paso para comprar USDT en Bolivia: elegir plataforma, crear cuenta, verificar identidad, encontrar un anuncio P2P seguro y evitar errores comunes.',
+  bancosUsdt:
+    'Qué bancos bolivianos venden USDT o USDC: BCP, Banco BISA, Banco Ganadero, Banco Unión/Yasta y Banco FIE, con límites, comisiones y requisitos verificados.',
   queEsDolarBlue:
     'Qué es el dólar blue, de dónde viene el término y por qué se usa en Bolivia para describir el mercado paralelo de divisas y el precio de USDT en plataformas P2P.',
   faq:
