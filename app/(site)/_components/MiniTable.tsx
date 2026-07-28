@@ -1,5 +1,5 @@
 ﻿import Link from 'next/link';
-import { formatCurrency, formatDate } from '@/lib/format';
+import { formatCalendarDate, formatCurrency } from '@/lib/format';
 
 type MiniRow = {
   date: Date;
@@ -31,7 +31,7 @@ export function MiniTable({
             key={row.date.toISOString()}
             className="flex items-center justify-between border-b border-black/5 pb-2"
           >
-            <span>{formatDate(row.date)}</span>
+            <span>{formatCalendarDate(row.date)}</span>
             <span className="font-medium">{formatCurrency(row.sell_avg)}</span>
           </div>
         ))}

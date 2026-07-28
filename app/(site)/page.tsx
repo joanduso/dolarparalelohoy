@@ -280,6 +280,8 @@ function RatesGrid({
         sourcesCount={indexSources}
         href="/paralelo"
         sourceNote={parallelSourceNote}
+        shareHref="/compartir?utm_source=home&utm_medium=internal&utm_campaign=tarjeta_diaria&utm_content=kpi_p2p"
+        sharePlacement="home_p2p_card"
       />
       <RateCard
         title="Dólar oficial"
