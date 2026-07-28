@@ -166,8 +166,6 @@ async function RatesSection() {
         ? 'border-amber-200 text-amber-800 bg-amber-50'
         : 'border-rose-200 text-rose-700 bg-rose-50';
 
-  void parallelActive;
-
   return (
     <>
       <div className="flex flex-wrap items-center justify-between gap-3">
