@@ -1,0 +1,101 @@
+id,consulta,cluster,intencion,url_objetivo,prioridad,fuente
+1,dolar paralelo bolivia,dólar paralelo,cotización actual,/,P1,GSC
+2,dolar paralelo en bolivia,dólar paralelo,cotización actual,/,P1,GSC
+3,dolar paralelo,dólar paralelo,cotización actual,/paralelo,P1,GSC
+4,dolar paralelo en bolivia hoy,dólar paralelo,cotización actual,/,P1,GSC
+5,dolar en bolivia hoy,dólar general,cotización actual,/,P1,GSC
+6,dólar paralelo bolivia,dólar paralelo,cotización actual,/,P1,GSC
+7,precio del dolar paralelo en bolivia,dólar paralelo,precio compra venta,/paralelo,P1,GSC
+8,dólar paralelo en bolivia hoy,dólar paralelo,cotización actual,/,P1,GSC
+9,dolar paralelo en bolivia ayer,histórico,consulta por fecha,/historico/paralelo,P1,GSC
+10,el dólar paralelo en bolivia,dólar paralelo,informativa y cotización,/paralelo,P1,GSC
+11,precio del dólar paralelo en bolivia hoy,dólar paralelo,precio compra venta,/paralelo,P1,GSC
+12,dólar paralelo en bolivia,dólar paralelo,cotización actual,/,P1,GSC
+13,dolar paralelo hoy,dólar paralelo,cotización actual,/paralelo,P1,GSC
+14,precio oficial del dolar en bolivia,dólar oficial,cotización oficial,/oficial,P1,GSC
+15,cuanto esta el dolar en bolivia hoy,dólar general,respuesta directa,/,P1,GSC
+16,cotización dólar oficial dólar blue hoy,comparación,comparar mercados,/brecha,P1,GSC
+17,el dólar en bolivia hoy,dólar general,cotización actual,/,P1,GSC
+18,cambio dólar paralelo bolivia,dólar paralelo,cotización actual,/paralelo,P1,GSC
+19,dolar blue hoy,dólar blue,cotización actual,/dolar-blue-bolivia,P1,GSC
+20,precio dolar bolivia hoy,dólar general,cotización actual,/,P1,Hipótesis
+21,dolar compra venta bolivia,dólar paralelo,precio compra venta,/paralelo,P1,Hipótesis
+22,tipo de cambio bolivia hoy,dólar general,cotización actual,/,P1,Hipótesis
+23,historico dolar paralelo bolivia,histórico,serie histórica,/historico/paralelo,P1,Hipótesis
+24,dolar oficial bolivia hoy,dólar oficial,cotización oficial,/oficial,P1,Hipótesis
+25,usdt bolivia hoy,USDT,cotización P2P,/usdt-bob,P1,Hipótesis
+26,dolar paralelo santa cruz,dólar paralelo,consulta local,/paralelo,P2,Hipótesis
+27,dolar paralelo la paz,dólar paralelo,consulta local,/paralelo,P2,Hipótesis
+28,dolar paralelo cochabamba,dólar paralelo,consulta local,/paralelo,P2,Hipótesis
+29,dolar paralelo sucre,dólar paralelo,consulta local,/paralelo,P3,Hipótesis
+30,dolar paralelo tarija,dólar paralelo,consulta local,/paralelo,P3,Hipótesis
+31,dolar paralelo oruro,dólar paralelo,consulta local,/paralelo,P3,Hipótesis
+32,dolar paralelo potosi,dólar paralelo,consulta local,/paralelo,P3,Hipótesis
+33,dolar paralelo beni,dólar paralelo,consulta local,/paralelo,P3,Hipótesis
+34,dolar paralelo pando,dólar paralelo,consulta local,/paralelo,P3,Hipótesis
+35,precio dolar calle bolivia,dólar paralelo,precio compra venta,/paralelo,P2,Hipótesis
+36,cotizacion dolar casa de cambio bolivia,dólar paralelo,precio compra venta,/paralelo,P2,Hipótesis
+37,dolar compra bolivia,dólar paralelo,precio de compra,/paralelo,P2,Hipótesis
+38,dolar venta bolivia,dólar paralelo,precio de venta,/paralelo,P2,Hipótesis
+39,a cuanto compran el dolar en bolivia,dólar paralelo,precio de compra,/paralelo,P2,Hipótesis
+40,a cuanto venden el dolar en bolivia,dólar paralelo,precio de venta,/paralelo,P2,Hipótesis
+41,dolar oficial bcb hoy,dólar oficial,cotización oficial,/oficial,P2,Hipótesis
+42,tipo de cambio bcb,dólar oficial,cotización oficial,/oficial,P2,Hipótesis
+43,precio dolar banco central bolivia,dólar oficial,cotización oficial,/oficial,P2,Hipótesis
+44,dolar oficial compra venta bolivia,dólar oficial,precio compra venta,/oficial,P2,Hipótesis
+45,historico dolar oficial bolivia,histórico,serie histórica,/historico/oficial,P2,Hipótesis
+46,dolar oficial bolivia por fecha,histórico,consulta por fecha,/historico/oficial,P2,Hipótesis
+47,diferencia dolar oficial y paralelo bolivia,brecha,comparar mercados,/brecha,P2,Hipótesis
+48,brecha cambiaria bolivia hoy,brecha,cotización actual,/brecha,P2,Hipótesis
+49,brecha dolar bolivia,brecha,comparar mercados,/brecha,P2,Hipótesis
+50,porcentaje brecha cambiaria bolivia,brecha,explicación y dato,/brecha,P2,Hipótesis
+51,dolar blue bolivia hoy,dólar blue,cotización actual,/dolar-blue-bolivia,P2,Hipótesis
+52,precio dolar blue bolivia,dólar blue,precio compra venta,/dolar-blue-bolivia,P2,Hipótesis
+53,que es dolar blue en bolivia,dólar blue,informativa,/que-es-dolar-blue-bolivia,P2,Hipótesis
+54,diferencia dolar blue y paralelo bolivia,dólar blue,comparativa,/dolar-blue-bolivia,P2,Hipótesis
+55,usdt a bolivianos,USDT,conversión,/usdt-bob,P2,Hipótesis
+56,precio usdt bolivia,USDT,cotización P2P,/usdt-bob,P2,Hipótesis
+57,usdt bob,USDT,cotización P2P,/usdt-bob,P2,Hipótesis
+58,convertir usdt a bolivianos,USDT,calculadora,/usdt-bob,P2,Hipótesis
+59,comprar usdt bolivia,USDT,transaccional,/comprar-usdt-bolivia,P2,Hipótesis
+60,como comprar usdt en bolivia,USDT,guía,/comprar-usdt-bolivia,P2,Hipótesis
+61,vender usdt bolivia,USDT,transaccional,/usdt-bob,P2,Hipótesis
+62,binance p2p bolivia,plataformas,comparación,/exchanges,P2,Hipótesis
+63,bybit p2p bolivia,plataformas,comparación,/exchanges,P2,Hipótesis
+64,airtm bolivia,plataformas,comparación,/exchanges,P2,Hipótesis
+65,el dorado p2p bolivia,plataformas,comparación,/exchanges,P2,Hipótesis
+66,takenos bolivia,plataformas,comparación,/exchanges,P2,Hipótesis
+67,meru bolivia,plataformas,comparación,/exchanges,P2,Hipótesis
+68,mejor p2p bolivia,plataformas,comparación,/exchanges,P2,Hipótesis
+69,exchanges p2p bolivia,plataformas,comparación,/exchanges,P2,Hipótesis
+70,comparar precio usdt bolivia,plataformas,comparación,/exchanges,P2,Hipótesis
+71,bancos que venden usdt en bolivia,bancos y USDT,informativa,/bancos-usdt-bolivia,P2,Hipótesis
+72,banco bisa usdt,bancos y USDT,informativa,/bancos-usdt-bolivia,P3,Hipótesis
+73,banco ganadero usdt,bancos y USDT,informativa,/bancos-usdt-bolivia,P3,Hipótesis
+74,bcp bolivia usdt,bancos y USDT,informativa,/bancos-usdt-bolivia,P3,Hipótesis
+75,banco union usdt,bancos y USDT,informativa,/bancos-usdt-bolivia,P3,Hipótesis
+76,banco fie usdt,bancos y USDT,informativa,/bancos-usdt-bolivia,P3,Hipótesis
+77,euro a bolivianos hoy,otras monedas,conversión,/eur-bob,P2,Hipótesis
+78,precio euro bolivia hoy,otras monedas,cotización,/eur-bob,P2,Hipótesis
+79,tipo de cambio euro bcb,otras monedas,cotización oficial,/eur-bob,P3,Hipótesis
+80,convertir euros a bolivianos,otras monedas,calculadora,/eur-bob,P3,Hipótesis
+81,bitcoin a bolivianos hoy,cripto,conversión,/btc-bob,P2,Hipótesis
+82,precio bitcoin bolivia,cripto,cotización,/btc-bob,P2,Hipótesis
+83,btc bob,cripto,cotización,/btc-bob,P3,Hipótesis
+84,convertir bitcoin a bolivianos,cripto,calculadora,/btc-bob,P3,Hipótesis
+85,cuanto valia el dolar ayer en bolivia,histórico,consulta por fecha,/historico/paralelo,P2,Hipótesis
+86,dolar paralelo bolivia hace una semana,histórico,consulta por período,/historico/paralelo/7d,P2,Hipótesis
+87,dolar paralelo bolivia ultimo mes,histórico,consulta por período,/historico/paralelo/30d,P2,Hipótesis
+88,dolar paralelo bolivia 6 meses,histórico,consulta por período,/historico/paralelo/90d,P3,Hipótesis
+89,dolar paralelo bolivia 2026,histórico,consulta anual,/historico/paralelo/1a,P2,Hipótesis
+90,evolucion dolar paralelo bolivia,histórico,tendencia,/historico/paralelo,P2,Hipótesis
+91,grafico dolar paralelo bolivia,histórico,tendencia,/historico/paralelo,P2,Hipótesis
+92,tendencia dolar bolivia,histórico,tendencia,/historico/paralelo,P2,Hipótesis
+93,api dolar bolivia,desarrolladores,API,/devs,P3,Hipótesis
+94,api tipo de cambio bolivia,desarrolladores,API,/devs,P3,Hipótesis
+95,api usdt bolivia,desarrolladores,API,/devs,P3,Hipótesis
+96,fuentes dolar paralelo bolivia,metodología,confianza,/fuentes,P3,Hipótesis
+97,como calculan dolar paralelo bolivia,metodología,confianza,/fuentes,P3,Hipótesis
+98,cotizacion dolar bolivia tiempo real,dólar general,cotización actual,/,P2,Hipótesis
+99,calculadora dolar bolivia,dólar general,calculadora,/,P2,Hipótesis
+100,convertir dolares a bolivianos hoy,dólar general,calculadora,/,P2,Hipótesis
