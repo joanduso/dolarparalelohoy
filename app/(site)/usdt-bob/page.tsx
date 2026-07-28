@@ -57,6 +57,8 @@ export default async function UsdtBobPage() {
         url: `${siteConfig.url}/usdt-bob`,
         dateModified: updatedAt?.toISOString(),
         creator: { '@id': `${siteConfig.url}/#organization` },
+        license: `${siteConfig.url}/terminos`,
+        isBasedOn: `${siteConfig.url}/fuentes`,
         variableMeasured: quote
           ? [
               { '@type': 'PropertyValue', name: 'Compra USDT/BOB', value: quote.buy, unitText: 'BOB por USDT' },

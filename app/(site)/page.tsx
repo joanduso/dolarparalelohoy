@@ -1,15 +1,15 @@
+import { Suspense } from 'react';
 import Link from 'next/link';
-import { ChartCard } from '@/app/(site)/_components/ChartCard';
 import { RateCard } from '@/app/(site)/_components/RateCard';
 import { BrechaCard } from '@/app/(site)/_components/BrechaCard';
 import { BCBCard } from '@/app/(site)/_components/BCBCard';
 import { MiniTable } from '@/app/(site)/_components/MiniTable';
 import { AdSlot } from '@/app/(site)/_components/AdSlot';
-import { Skeleton } from '@/app/(site)/_components/Skeleton';
-import { DeclareForm } from '@/app/(site)/_components/DeclareForm';
+import { DeclareFormLazy } from '@/app/(site)/_components/DeclareFormLazy';
 import { DeclaredBlock } from '@/app/(site)/_components/DeclaredBlock';
 import { PlatformCards } from '@/app/(site)/_components/PlatformCards';
 import { TrendSummary } from '@/app/(site)/_components/TrendSummary';
+import { ChartCardLazy } from '@/app/(site)/_components/ChartCardLazy';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
 import { fetchJson } from '@/lib/serverFetch';
 import { formatDateTime } from '@/lib/format';
@@ -98,24 +98,26 @@ function getDelta(history: { sell_avg: number }[]) {
   return ((today.sell_avg - yesterday.sell_avg) / yesterday.sell_avg) * 100;
 }
 
-export default async function HomePage() {
-  const [
-    latestResult,
-    paraleloHistoryResult,
-    oficialHistoryResult,
-    brechaHistoryResult,
-    brechaLatestResult,
-    bcbResult,
-    p2pIndex
-  ] = await Promise.all([
-    fetchJson<CurrentRatesResponse>('/api/rates/current?v=live-20260722', {}, 600),
-    fetchJson<HistoryResponse<DailyHistoryRow>>('/api/rates/history?kind=PARALELO&days=900&v=merged-history-20260722', {}, 600),
-    fetchJson<HistoryResponse<DailyHistoryRow>>('/api/rates/history?kind=OFICIAL&days=365&v=daily-20260722', {}, 600),
-    fetchJson<HistoryResponse<BrechaHistoryRow>>('/api/brecha/history?days=365', {}, 600),
-    fetchJson<BrechaLatestResponse>('/api/brecha/latest', {}, 600),
-    fetchJson<BcbResponse>('/api/bcb/valor-referencial?v=live-20260722', {}, 600),
-    fetchP2PIndex()
-  ]);
+// Full multi-hundred-day history is only needed for the below-the-fold trend
+// chart and mini tables, not for the headline quote. Both history sections
+// below request the exact same URL/options, so Next.js dedupes it into a
+// single request per render instead of fetching twice.
+const PARALELO_HISTORY_PATH = '/api/rates/history?kind=PARALELO&days=900&v=merged-history-20260722';
+const OFICIAL_HISTORY_PATH = '/api/rates/history?kind=OFICIAL&days=365&v=daily-20260722';
+const BRECHA_HISTORY_PATH = '/api/brecha/history?days=365';
+
+async function RatesSection() {
+  const [latestResult, brechaLatestResult, bcbResult, p2pIndex, paraleloDeltaResult, oficialDeltaResult] =
+    await Promise.all([
+      fetchJson<CurrentRatesResponse>('/api/rates/current?v=live-20260722', {}, 600),
+      fetchJson<BrechaLatestResponse>('/api/brecha/latest', {}, 600),
+      fetchJson<BcbResponse>('/api/bcb/valor-referencial?v=live-20260722', {}, 600),
+      fetchP2PIndex(),
+      // Small window: only the last couple of days are needed to compute
+      // "variación hoy" — no reason to wait on the full historical series.
+      fetchJson<HistoryResponse<DailyHistoryRow>>('/api/rates/history?kind=PARALELO&days=3', {}, 600),
+      fetchJson<HistoryResponse<DailyHistoryRow>>('/api/rates/history?kind=OFICIAL&days=3', {}, 600)
+    ]);
 
   const latest = latestResult.data;
   const paralelo = latest?.paralelo ?? null;
@@ -132,38 +134,9 @@ export default async function HomePage() {
       }
     : null;
   const brecha = indexBrecha ?? latest?.brecha ?? brechaLatestResult.data?.brecha ?? null;
-  const paraleloHistory = paraleloHistoryResult.data?.data ?? [];
-  const oficialHistory = oficialHistoryResult.data?.data ?? [];
-  const brechaHistory = brechaHistoryResult.data?.data ?? [];
 
-  const paraleloMiniRows = paraleloHistory.slice(-14).reverse().map((row) => ({
-    ...row,
-    date: new Date(row.date)
-  }));
-  const oficialMiniRows = oficialHistory.slice(-14).reverse().map((row) => ({
-    ...row,
-    date: new Date(row.date)
-  }));
-
-  const paraleloDelta = getDelta([...paraleloHistory].reverse());
-  const oficialDelta = getDelta([...oficialHistory].reverse());
-
-  const chartData = {
-    paralelo: paraleloHistory.map((row: DailyHistoryRow) => ({
-      date: row.date,
-      value: row.sell_avg
-    })),
-    oficial: oficialHistory.map((row: DailyHistoryRow) => ({
-      date: row.date,
-      value: row.sell_avg
-    })),
-    brecha: brechaHistory.map((row: BrechaHistoryRow) => ({
-      date: row.date,
-      value: row.gap_pct
-    }))
-  };
-
-  const paraleloTrend30d = computeTrend(chartData.paralelo, 30);
+  const paraleloDelta = getDelta([...(paraleloDeltaResult.data?.data ?? [])].reverse());
+  const oficialDelta = getDelta([...(oficialDeltaResult.data?.data ?? [])].reverse());
 
   const lastUpdated = latest?.updatedAt ? new Date(latest.updatedAt) : null;
   const bcbData = bcbResult.ok ? bcbResult.data : null;
@@ -193,6 +166,272 @@ export default async function HomePage() {
         ? 'border-amber-200 text-amber-800 bg-amber-50'
         : 'border-rose-200 text-rose-700 bg-rose-50';
 
+  void parallelActive;
+
+  return (
+    <>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="font-serif text-2xl">Fuentes y metodología</h2>
+        <div className="flex flex-wrap items-center gap-3 text-sm text-ink/70">
+          <span>Última actualización: {lastUpdated ? formatDateTime(lastUpdated) : '—'}</span>
+          <span className={`px-2 py-1 rounded-full border text-xs ${statusClass}`}>
+            Estado: {statusLabel}
+          </span>
+        </div>
+      </div>
+      <div className="flex flex-wrap items-center gap-4 text-sm text-ink/70">
+        <span>Fuentes activas: {activeSources}</span>
+        <div className="flex flex-wrap gap-2">
+          {sourceBadges.map((source) => (
+            <span
+              key={source.name}
+              className={`px-2 py-1 rounded-full border text-xs ${
+                source.active
+                  ? 'border-emerald-200 text-emerald-700 bg-emerald-50'
+                  : 'border-ink/10 text-ink/50'
+              }`}
+            >
+              {source.name}
+            </span>
+          ))}
+        </div>
+      </div>
+      <p className="text-xs text-ink/60">
+        La información es referencial y se basa en múltiples fuentes públicas. No constituye
+        una recomendación financiera.
+      </p>
+      {status !== 'OK' && latest?.notes ? (
+        <p className="text-xs text-ink/60">Nota técnica: {latest?.notes}</p>
+      ) : null}
+      <RatesGrid
+        indexBuy={indexBuy}
+        indexSell={indexSell}
+        paraleloDelta={paraleloDelta}
+        indexUpdatedAt={indexUpdatedAt ?? lastUpdated}
+        indexSources={indexSources}
+        parallelSourceNote={parallelSourceNote}
+        oficialBuy={oficial?.buy ?? null}
+        oficialSell={oficial?.sell ?? null}
+        oficialDelta={oficialDelta}
+        lastUpdated={lastUpdated}
+        oficialSourcesCount={oficial?.sources_count ?? null}
+        gapAbs={brecha?.gap_abs ?? null}
+        gapPct={brecha?.gap_pct ?? null}
+        bcbDateText={bcbData?.dateText}
+        bcbCompraText={bcbData?.compraText}
+        bcbVentaText={bcbData?.ventaText}
+        bcbError={bcbResult.ok ? null : bcbResult.error ?? 'fuente_no_disponible'}
+      />
+      <DeclaredBlock />
+      {!hasAnyData ? (
+        <div className="card p-6 text-sm text-ink/70">
+          No pudimos actualizar las fuentes. Intentaremos nuevamente en unos minutos.
+        </div>
+      ) : null}
+    </>
+  );
+}
+
+type RatesGridProps = {
+  indexBuy: number | null;
+  indexSell: number | null;
+  paraleloDelta: number | null;
+  indexUpdatedAt: Date | null;
+  indexSources: number;
+  parallelSourceNote: string;
+  oficialBuy: number | null | undefined;
+  oficialSell: number | null | undefined;
+  oficialDelta: number | null;
+  lastUpdated: Date | null;
+  oficialSourcesCount: number | null;
+  gapAbs: number | null;
+  gapPct: number | null;
+  bcbDateText?: string | null;
+  bcbCompraText?: string | null;
+  bcbVentaText?: string | null;
+  bcbError?: string | null;
+};
+
+function RatesGrid({
+  indexBuy,
+  indexSell,
+  paraleloDelta,
+  indexUpdatedAt,
+  indexSources,
+  parallelSourceNote,
+  oficialBuy,
+  oficialSell,
+  oficialDelta,
+  lastUpdated,
+  oficialSourcesCount,
+  gapAbs,
+  gapPct,
+  bcbDateText,
+  bcbCompraText,
+  bcbVentaText,
+  bcbError
+}: RatesGridProps) {
+  return (
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 items-stretch">
+      <RateCard
+        title="Índice P2P Bolivia"
+        buy={indexBuy}
+        sell={indexSell}
+        delta={paraleloDelta}
+        updatedAt={indexUpdatedAt}
+        sourcesCount={indexSources}
+        href="/paralelo"
+        sourceNote={parallelSourceNote}
+      />
+      <RateCard
+        title="Dólar oficial"
+        buy={oficialBuy}
+        sell={oficialSell}
+        delta={oficialDelta}
+        updatedAt={lastUpdated}
+        sourcesCount={oficialSourcesCount}
+        href="/oficial"
+        logoSrc="/logos/bcb.svg"
+        logoAlt="BCB"
+      />
+      <BrechaCard gapAbs={gapAbs} gapPct={gapPct} />
+      <BCBCard
+        dateText={bcbDateText}
+        compraText={bcbCompraText}
+        ventaText={bcbVentaText}
+        error={bcbError}
+      />
+    </div>
+  );
+}
+
+function RatesSectionFallback() {
+  return (
+    <>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="font-serif text-2xl">Fuentes y metodología</h2>
+      </div>
+      <p className="text-xs text-ink/60">
+        La información es referencial y se basa en múltiples fuentes públicas. No constituye
+        una recomendación financiera.
+      </p>
+      <RatesGrid
+        indexBuy={null}
+        indexSell={null}
+        paraleloDelta={null}
+        indexUpdatedAt={null}
+        indexSources={0}
+        parallelSourceNote="Cargando fuentes activas…"
+        oficialBuy={null}
+        oficialSell={null}
+        oficialDelta={null}
+        lastUpdated={null}
+        oficialSourcesCount={null}
+        gapAbs={null}
+        gapPct={null}
+      />
+    </>
+  );
+}
+
+async function ChartAndTrendSection() {
+  const [paraleloHistoryResult, oficialHistoryResult, brechaHistoryResult] = await Promise.all([
+    fetchJson<HistoryResponse<DailyHistoryRow>>(PARALELO_HISTORY_PATH, {}, 600),
+    fetchJson<HistoryResponse<DailyHistoryRow>>(OFICIAL_HISTORY_PATH, {}, 600),
+    fetchJson<HistoryResponse<BrechaHistoryRow>>(BRECHA_HISTORY_PATH, {}, 600)
+  ]);
+
+  const paraleloHistory = paraleloHistoryResult.data?.data ?? [];
+  const oficialHistory = oficialHistoryResult.data?.data ?? [];
+  const brechaHistory = brechaHistoryResult.data?.data ?? [];
+
+  const chartData = {
+    paralelo: paraleloHistory.map((row: DailyHistoryRow) => ({ date: row.date, value: row.sell_avg })),
+    oficial: oficialHistory.map((row: DailyHistoryRow) => ({ date: row.date, value: row.sell_avg })),
+    brecha: brechaHistory.map((row: BrechaHistoryRow) => ({ date: row.date, value: row.gap_pct }))
+  };
+
+  const paraleloTrend30d = computeTrend(chartData.paralelo, 30);
+
+  return (
+    <>
+      <TrendSummary label="El dólar paralelo" trend={paraleloTrend30d} />
+      <ChartCardLazy data={chartData} />
+    </>
+  );
+}
+
+function ChartAndTrendFallback() {
+  return (
+    <div className="card p-5 flex flex-col gap-4 min-h-[360px] animate-pulse">
+      <div className="h-4 w-2/3 rounded bg-ink/10" />
+      <div className="h-64 w-full rounded bg-ink/5" />
+    </div>
+  );
+}
+
+async function MiniTablesSection() {
+  const [paraleloHistoryResult, oficialHistoryResult] = await Promise.all([
+    fetchJson<HistoryResponse<DailyHistoryRow>>(PARALELO_HISTORY_PATH, {}, 600),
+    fetchJson<HistoryResponse<DailyHistoryRow>>(OFICIAL_HISTORY_PATH, {}, 600)
+  ]);
+
+  const paraleloHistory = paraleloHistoryResult.data?.data ?? [];
+  const oficialHistory = oficialHistoryResult.data?.data ?? [];
+
+  const paraleloMiniRows = paraleloHistory.slice(-14).reverse().map((row) => ({
+    ...row,
+    date: new Date(row.date)
+  }));
+  const oficialMiniRows = oficialHistory.slice(-14).reverse().map((row) => ({
+    ...row,
+    date: new Date(row.date)
+  }));
+
+  return (
+    <div className="grid gap-4 lg:grid-cols-2">
+      <MiniTable title="Histórico reciente paralelo" rows={paraleloMiniRows} href="/historico/paralelo" />
+      <MiniTable title="Histórico reciente oficial" rows={oficialMiniRows} href="/historico/oficial" />
+    </div>
+  );
+}
+
+function MiniTablesFallback() {
+  return (
+    <div className="grid gap-4 lg:grid-cols-2">
+      {[0, 1].map((i) => (
+        <div key={i} className="card p-5 min-h-[220px] animate-pulse">
+          <div className="h-5 w-1/2 rounded bg-ink/10 mb-4" />
+          <div className="grid gap-2">
+            {[0, 1, 2, 3].map((j) => (
+              <div key={j} className="h-5 w-full rounded bg-ink/5" />
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function PlatformCardsFallback() {
+  return (
+    <section className="grid gap-5">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p className="kicker">Opciones para Bolivia</p>
+          <h2 className="font-serif text-2xl">Plataformas recomendadas</h2>
+        </div>
+      </div>
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {[0, 1, 2, 3, 4, 5].map((i) => (
+          <div key={i} className="card p-5 min-h-[180px] animate-pulse" />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+export default function HomePage() {
   return (
     <main className="pb-16">
       <section className="w-full bg-gradient-to-b from-sand/70 via-sand/30 to-transparent">
@@ -209,91 +448,20 @@ export default async function HomePage() {
           </div>
 
           <div className="card p-5 grid gap-4">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <h2 className="font-serif text-2xl">Fuentes y metodología</h2>
-              <div className="flex flex-wrap items-center gap-3 text-sm text-ink/70">
-                <span>
-                  Última actualización:{' '}
-                  {lastUpdated ? formatDateTime(lastUpdated) : <Skeleton className="h-4 w-24" />}
-                </span>
-                <span className={`px-2 py-1 rounded-full border text-xs ${statusClass}`}>
-                  Estado: {statusLabel}
-                </span>
-              </div>
-            </div>
-            <div className="flex flex-wrap items-center gap-4 text-sm text-ink/70">
-              <span>Fuentes activas: {activeSources}</span>
-              <div className="flex flex-wrap gap-2">
-                {sourceBadges.map((source) => (
-                  <span
-                    key={source.name}
-                    className={`px-2 py-1 rounded-full border text-xs ${
-                      source.active
-                        ? 'border-emerald-200 text-emerald-700 bg-emerald-50'
-                        : 'border-ink/10 text-ink/50'
-                    }`}
-                  >
-                    {source.name}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <p className="text-xs text-ink/60">
-              La información es referencial y se basa en múltiples fuentes públicas. No constituye
-              una recomendación financiera.
-            </p>
-            {status !== 'OK' && latest?.notes ? (
-              <p className="text-xs text-ink/60">
-                Nota técnica: {latest?.notes}
-              </p>
-            ) : null}
-            <DeclareForm />
+            <Suspense fallback={<RatesSectionFallback />}>
+              <RatesSection />
+            </Suspense>
+            <DeclareFormLazy />
           </div>
-
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 items-stretch">
-            <RateCard
-              title="Índice P2P Bolivia"
-              buy={indexBuy}
-              sell={indexSell}
-              delta={paraleloDelta}
-              updatedAt={indexUpdatedAt ?? lastUpdated}
-              sourcesCount={indexSources}
-              href="/paralelo"
-              sourceNote={parallelSourceNote}
-            />
-            <RateCard
-              title="Dólar oficial"
-              buy={oficial?.buy}
-              sell={oficial?.sell}
-              delta={oficialDelta}
-              updatedAt={lastUpdated}
-              sourcesCount={oficial?.sources_count}
-              href="/oficial"
-              logoSrc="/logos/bcb.svg"
-              logoAlt="BCB"
-            />
-            <BrechaCard gapAbs={brecha?.gap_abs} gapPct={brecha?.gap_pct} />
-            <BCBCard
-              dateText={bcbData?.dateText}
-              compraText={bcbData?.compraText}
-              ventaText={bcbData?.ventaText}
-              error={bcbResult.ok ? null : bcbResult.error ?? 'fuente_no_disponible'}
-            />
-          </div>
-          <DeclaredBlock />
         </div>
       </section>
 
       <section className="section-shell grid gap-8">
-        {!hasAnyData ? (
-          <div className="card p-6 text-sm text-ink/70">
-            No pudimos actualizar las fuentes. Intentaremos nuevamente en unos minutos.
-          </div>
-        ) : null}
-
         <AdSlot label="Debajo del hero" />
 
-        <PlatformCards />
+        <Suspense fallback={<PlatformCardsFallback />}>
+          <PlatformCards />
+        </Suspense>
 
         <article className="card p-6 grid gap-4">
           <h2 className="font-serif text-2xl">
@@ -335,9 +503,9 @@ export default async function HomePage() {
           </p>
         </article>
 
-        <TrendSummary label="El dólar paralelo" trend={paraleloTrend30d} />
-
-        <ChartCard data={chartData} />
+        <Suspense fallback={<ChartAndTrendFallback />}>
+          <ChartAndTrendSection />
+        </Suspense>
 
         <div className="card p-5 flex flex-col gap-3">
           <h2 className="font-serif text-2xl">Explora más datos</h2>
@@ -384,10 +552,9 @@ export default async function HomePage() {
           </div>
         </div>
 
-        <div className="grid gap-4 lg:grid-cols-2">
-          <MiniTable title="Histórico reciente paralelo" rows={paraleloMiniRows} href="/historico/paralelo" />
-          <MiniTable title="Histórico reciente oficial" rows={oficialMiniRows} href="/historico/oficial" />
-        </div>
+        <Suspense fallback={<MiniTablesFallback />}>
+          <MiniTablesSection />
+        </Suspense>
 
         <div className="card p-6 flex flex-col gap-3">
           <h2 className="font-serif text-2xl">Metodología rápida</h2>
