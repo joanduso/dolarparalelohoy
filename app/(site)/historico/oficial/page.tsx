@@ -5,7 +5,7 @@ import { SeoFaq, type SeoFaqItem } from '@/app/(site)/_components/SeoFaq';
 import { TrendSummary } from '@/app/(site)/_components/TrendSummary';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
 import { fetchJson } from '@/lib/serverFetch';
-import { formatCurrency, formatDate } from '@/lib/format';
+import { formatCalendarDate, formatCurrency, toCalendarDateString } from '@/lib/format';
 import { computeTrend } from '@/lib/trend';
 import { HISTORY_PERIODS } from '@/lib/historyPeriods';
 import type { Metadata } from 'next';
@@ -61,8 +61,8 @@ export default async function HistoricoOficialPage() {
     isBasedOn: `${siteConfig.url}/fuentes`,
     ...(oldestRow && latestRow
       ? {
-          temporalCoverage: `${oldestRow.date}/${latestRow.date}`,
-          dateModified: latestRow.date
+          temporalCoverage: `${toCalendarDateString(oldestRow.date)}/${toCalendarDateString(latestRow.date)}`,
+          dateModified: toCalendarDateString(latestRow.date)
         }
       : {})
   };
@@ -72,7 +72,7 @@ export default async function HistoricoOficialPage() {
       question: '¿Qué periodo cubre el histórico?',
       answer:
         oldestRow && latestRow
-          ? `La tabla disponible va de ${formatDate(new Date(oldestRow.date))} a ${formatDate(new Date(latestRow.date))}.`
+          ? `La tabla disponible va de ${formatCalendarDate(new Date(oldestRow.date))} a ${formatCalendarDate(new Date(latestRow.date))}.`
           : 'Mostramos hasta 12 meses de promedios diarios para comparar la evolución del dólar oficial.'
     },
     {
@@ -102,8 +102,8 @@ export default async function HistoricoOficialPage() {
           </p>
           {oldestRow && latestRow ? (
             <p className="text-sm text-ink/70">
-              Cobertura disponible: del <strong>{formatDate(new Date(oldestRow.date))}</strong> al{' '}
-              <strong>{formatDate(new Date(latestRow.date))}</strong>.
+              Cobertura disponible: del <strong>{formatCalendarDate(new Date(oldestRow.date))}</strong> al{' '}
+              <strong>{formatCalendarDate(new Date(latestRow.date))}</strong>.
             </p>
           ) : null}
           <div className="flex flex-wrap gap-4 text-sm">
@@ -161,7 +161,7 @@ export default async function HistoricoOficialPage() {
               )}
               {[...history].reverse().map((row) => (
                 <tr key={row.date} className="border-t border-black/5">
-                  <td className="py-2">{formatDate(new Date(row.date))}</td>
+                  <td className="py-2">{formatCalendarDate(new Date(row.date))}</td>
                   <td className="py-2">{formatCurrency(row.buy_avg)}</td>
                   <td className="py-2">{formatCurrency(row.sell_avg)}</td>
                   <td className="py-2">{row.sources_count}</td>

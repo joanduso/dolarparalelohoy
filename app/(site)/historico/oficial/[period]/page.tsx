@@ -5,7 +5,7 @@ import { SeoFaq, type SeoFaqItem } from '@/app/(site)/_components/SeoFaq';
 import { TrendSummary } from '@/app/(site)/_components/TrendSummary';
 import { siteConfig } from '@/lib/seo';
 import { fetchJson } from '@/lib/serverFetch';
-import { formatCurrency, formatDate } from '@/lib/format';
+import { formatCalendarDate, formatCurrency } from '@/lib/format';
 import { computeTrend } from '@/lib/trend';
 import { HISTORY_PERIODS, getHistoryPeriod } from '@/lib/historyPeriods';
 import type { Metadata } from 'next';
@@ -147,7 +147,7 @@ export default async function HistoricoOficialPeriodPage({
               )}
               {[...history].reverse().map((row) => (
                 <tr key={row.date} className="border-t border-black/5">
-                  <td className="py-2">{formatDate(new Date(row.date))}</td>
+                  <td className="py-2">{formatCalendarDate(new Date(row.date))}</td>
                   <td className="py-2">{formatCurrency(row.buy_avg)}</td>
                   <td className="py-2">{formatCurrency(row.sell_avg)}</td>
                   <td className="py-2">{row.sources_count}</td>

@@ -2,6 +2,7 @@
 import Image from 'next/image';
 import { formatCurrency, formatDateTime, formatNumber } from '@/lib/format';
 import { Skeleton } from '@/app/(site)/_components/Skeleton';
+import { ShareCtaLink } from '@/app/(site)/_components/ShareCtaLink';
 
 type RateCardProps = {
   title: string;
@@ -14,7 +15,12 @@ type RateCardProps = {
   sourceNote?: string;
   logoSrc?: string;
   logoAlt?: string;
+  shareHref?: string;
+  sharePlacement?: string;
 };
+
+const actionButtonClass =
+  'inline-flex min-h-11 items-center justify-center rounded-full px-4 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-ink focus:ring-offset-2';
 
 export function RateCard({
   title,
@@ -26,7 +32,9 @@ export function RateCard({
   href,
   sourceNote,
   logoSrc,
-  logoAlt
+  logoAlt,
+  shareHref,
+  sharePlacement
 }: RateCardProps) {
   const sources = sourcesCount ?? 0;
   const status = sources >= 2 ? `Confirmado por ${sources} fuentes` : 'Estimación pendiente';
@@ -35,7 +43,7 @@ export function RateCard({
   const hasSell = typeof sell === 'number';
 
   return (
-    <Link href={href} className="card p-5 flex flex-col gap-3 h-full">
+    <div className="card p-5 flex flex-col gap-3 h-full">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           {logoSrc ? (
@@ -79,6 +87,20 @@ export function RateCard({
         </span>
       </div>
       <p className="text-xs text-ink/60">{note}</p>
-    </Link>
+      <div className="mt-1 flex flex-wrap items-center gap-2">
+        <Link href={href} className={`${actionButtonClass} bg-ink text-white hover:bg-ink/90`}>
+          Ver detalle
+        </Link>
+        {shareHref ? (
+          <ShareCtaLink
+            href={shareHref}
+            placement={sharePlacement ?? 'home_p2p_card'}
+            className={`${actionButtonClass} border border-ink/20 bg-white text-ink hover:bg-sand`}
+          >
+            Compartir cotización
+          </ShareCtaLink>
+        ) : null}
+      </div>
+    </div>
   );
 }

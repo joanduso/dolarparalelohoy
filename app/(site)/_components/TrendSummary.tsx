@@ -1,4 +1,4 @@
-import { formatCurrency, formatDate } from '@/lib/format';
+import { formatCalendarDate, formatCurrency } from '@/lib/format';
 import type { TrendSummaryData } from '@/lib/trend';
 
 const LABELS: Record<'up' | 'down' | 'flat', string> = {
@@ -23,8 +23,8 @@ export function TrendSummary({
     <p className="text-sm text-ink/70">
       <strong className="text-ink">Tendencia ({trend.days} días):</strong> {label} {verb}
       {pctText ? ` ${pctText}` : ''} en los últimos {trend.days} días, de{' '}
-      {formatCurrency(trend.firstValue)} ({formatDate(new Date(trend.firstDate))}) a{' '}
-      {formatCurrency(trend.lastValue)} ({formatDate(new Date(trend.lastDate))}).
+      {formatCurrency(trend.firstValue)} ({formatCalendarDate(trend.firstDate)}) a{' '}
+      {formatCurrency(trend.lastValue)} ({formatCalendarDate(trend.lastDate)}).
     </p>
   );
 }

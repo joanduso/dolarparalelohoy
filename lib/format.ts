@@ -17,15 +17,30 @@ export function formatNumber(value?: number, fractionDigits = 2) {
   }).format(value);
 }
 
-export function formatDate(date: Date | string | number) {
+// Calendar dates (e.g. a daily history row's "2026-07-28") represent a day,
+// not an instant — they have no real time-of-day and are conventionally
+// stored as UTC midnight. Formatting them through a non-UTC timeZone shifts
+// the displayed day (America/La_Paz is UTC-4, so midnight UTC becomes
+// 20:00 the previous day). Read the UTC calendar components directly so the
+// stored date always displays as itself, regardless of the viewer's or
+// server's timezone.
+export function formatCalendarDate(date: Date | string | number) {
   const parsed = date instanceof Date ? date : new Date(date);
   if (Number.isNaN(parsed.getTime())) return '—';
   return new Intl.DateTimeFormat('es-BO', {
-    timeZone: BOLIVIA_TIME_ZONE,
+    timeZone: 'UTC',
     day: 'numeric',
     month: 'long',
     year: 'numeric'
   }).format(parsed);
+}
+
+// Returns a stable YYYY-MM-DD for a calendar date, for use in structured
+// data (Dataset temporalCoverage) — same UTC-components rule as above.
+export function toCalendarDateString(date: Date | string | number) {
+  const parsed = date instanceof Date ? date : new Date(date);
+  if (Number.isNaN(parsed.getTime())) return null;
+  return parsed.toISOString().slice(0, 10);
 }
 
 export function formatDateTime(date: Date | string | number) {
