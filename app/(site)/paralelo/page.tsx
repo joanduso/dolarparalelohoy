@@ -98,6 +98,13 @@ export default async function ParaleloPage() {
 
   const faqItems: SeoFaqItem[] = [
     {
+      question: '¿Cuánto está el dólar paralelo en Bolivia hoy?',
+      answer:
+        typeof latest?.buy === 'number' && typeof latest?.sell === 'number'
+          ? `La referencia actual es ${formatCurrency(latest.buy)} para compra y ${formatCurrency(latest.sell)} para venta. La hora de actualización aparece junto a la cotización.`
+          : 'La cotización aparece en esta página cuando las fuentes activas completan la validación.'
+    },
+    {
       question: '¿Cómo se calcula el dólar paralelo?',
       answer: 'Se calcula con promedios de fuentes públicas y mercados P2P, filtrando valores atípicos antes de publicar la referencia.'
     },
@@ -114,11 +121,28 @@ export default async function ParaleloPage() {
       <section className="grid gap-8">
         <div className="grid gap-3">
           <p className="kicker">Dólar paralelo hoy Bolivia</p>
-          <h1 className="font-serif text-3xl sm:text-4xl">Precio dólar paralelo Bolivia</h1>
+          <h1 className="font-serif text-3xl sm:text-4xl">
+            Precio del dólar paralelo en Bolivia hoy
+          </h1>
           <p className="text-ink/70 max-w-2xl">
-            El dólar paralelo refleja operaciones fuera del canal oficial. Publicamos promedios
-            diarios para ofrecer una referencia transparente.
+            Consulta cuánto está el dólar paralelo en Bolivia hoy, su precio de compra y venta y
+            la hora de la última actualización. La referencia se calcula con fuentes públicas y
+            mercados P2P filtrados.
           </p>
+          {typeof latest?.buy === 'number' && typeof latest?.sell === 'number' ? (
+            <p className="text-lg text-ink max-w-2xl">
+              Hoy la referencia es <strong>{formatCurrency(latest.buy)}</strong> para compra y{' '}
+              <strong>{formatCurrency(latest.sell)}</strong> para venta.
+            </p>
+          ) : null}
+          <div className="flex flex-wrap gap-4 text-sm">
+            <Link href="/historico/paralelo" className="underline underline-offset-4">
+              Ver histórico por fecha
+            </Link>
+            <Link href="/brecha" className="underline underline-offset-4">
+              Comparar con el dólar oficial
+            </Link>
+          </div>
         </div>
 
 

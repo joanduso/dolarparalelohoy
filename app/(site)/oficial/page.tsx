@@ -94,6 +94,13 @@ export default async function OficialPage() {
 
   const faqItems: SeoFaqItem[] = [
     {
+      question: '¿Cuál es el precio oficial del dólar en Bolivia hoy?',
+      answer:
+        typeof latest?.buy === 'number' && typeof latest?.sell === 'number'
+          ? `La referencia actual es ${formatCurrency(latest.buy)} para compra y ${formatCurrency(latest.sell)} para venta.`
+          : 'El precio oficial aparece en esta página cuando la fuente institucional está disponible.'
+    },
+    {
       question: '¿De dónde sale el dólar oficial?',
       answer: 'Se obtiene de fuentes institucionales y referencias oficiales publicadas en Bolivia, incluyendo el Banco Central de Bolivia.'
     },
@@ -110,11 +117,27 @@ export default async function OficialPage() {
       <section className="grid gap-8">
         <div className="grid gap-3">
           <p className="kicker">Dólar oficial hoy Bolivia</p>
-          <h1 className="font-serif text-3xl sm:text-4xl">Precio dólar oficial Bolivia</h1>
+          <h1 className="font-serif text-3xl sm:text-4xl">
+            Precio oficial del dólar en Bolivia hoy
+          </h1>
           <p className="text-ink/70 max-w-2xl">
-            El dólar oficial proviene de fuentes institucionales y sirve como referencia para
-            operaciones reguladas.
+            Consulta el tipo de cambio oficial de compra y venta publicado para Bolivia. Esta
+            referencia proviene de fuentes institucionales, incluido el Banco Central de Bolivia.
           </p>
+          {typeof latest?.buy === 'number' && typeof latest?.sell === 'number' ? (
+            <p className="text-lg text-ink max-w-2xl">
+              La cotización oficial actual es <strong>{formatCurrency(latest.buy)}</strong> para
+              compra y <strong>{formatCurrency(latest.sell)}</strong> para venta.
+            </p>
+          ) : null}
+          <div className="flex flex-wrap gap-4 text-sm">
+            <Link href="/historico/oficial" className="underline underline-offset-4">
+              Ver histórico oficial
+            </Link>
+            <Link href="/brecha" className="underline underline-offset-4">
+              Comparar oficial vs. paralelo
+            </Link>
+          </div>
         </div>
 
 

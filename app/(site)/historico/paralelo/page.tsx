@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { JsonLd } from '@/app/(site)/_components/JsonLd';
 import { Breadcrumbs } from '@/app/(site)/_components/Breadcrumbs';
 import { SeoFaq, type SeoFaqItem } from '@/app/(site)/_components/SeoFaq';
@@ -45,6 +46,8 @@ export default async function HistoricoParaleloPage() {
   const trendPoints = history.map((row) => ({ date: row.date, value: row.sell_avg }));
   const trend30d = computeTrend(trendPoints, 30);
   const trend365d = computeTrend(trendPoints, 365);
+  const oldestRow = history.at(0) ?? null;
+  const latestRow = history.at(-1) ?? null;
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -54,13 +57,30 @@ export default async function HistoricoParaleloPage() {
     url: `${siteConfig.url}/historico/paralelo`,
     inLanguage: siteConfig.language,
     creator: { '@id': `${siteConfig.url}/#organization` },
-    license: `${siteConfig.url}/terminos`
+    license: `${siteConfig.url}/terminos`,
+    isBasedOn: `${siteConfig.url}/fuentes`,
+    ...(oldestRow && latestRow
+      ? {
+          temporalCoverage: `${oldestRow.date}/${latestRow.date}`,
+          dateModified: latestRow.date
+        }
+      : {})
   };
 
   const faqItems: SeoFaqItem[] = [
     {
       question: '¿Qué periodo cubre el histórico?',
-      answer: 'Mostramos hasta 12 meses de promedios diarios para comparar la tendencia del dólar paralelo.'
+      answer:
+        oldestRow && latestRow
+          ? `La tabla disponible va de ${formatDate(new Date(oldestRow.date))} a ${formatDate(new Date(latestRow.date))}.`
+          : 'Mostramos hasta 12 meses de promedios diarios para comparar la tendencia del dólar paralelo.'
+    },
+    {
+      question: '¿Cuánto estaba el dólar paralelo ayer en Bolivia?',
+      answer:
+        history.length >= 2
+          ? `El registro anterior más reciente muestra compra a ${formatCurrency(history.at(-2)!.buy_avg)} y venta a ${formatCurrency(history.at(-2)!.sell_avg)}. Consulta la fecha exacta en la tabla.`
+          : 'Consulta la tabla por fecha cuando exista más de un registro diario validado.'
     },
     {
       question: '¿Cada cuánto se actualiza?',
@@ -75,11 +95,28 @@ export default async function HistoricoParaleloPage() {
       <section className="grid gap-6">
         <div className="grid gap-3">
           <p className="kicker">Histórico dólar paralelo Bolivia</p>
-          <h1 className="font-serif text-3xl sm:text-4xl">Histórico dólar paralelo Bolivia</h1>
+          <h1 className="font-serif text-3xl sm:text-4xl">
+            Histórico del dólar paralelo en Bolivia por fecha
+          </h1>
           <p className="text-ink/70 max-w-2xl">
-            Serie histórica con promedios diarios del dólar paralelo. Datos agregados de múltiples
-            fuentes y filtrados por validación.
+            Consulta cuánto estaba el dólar paralelo en Bolivia ayer o en una fecha anterior.
+            La tabla muestra promedios diarios de compra y venta, fuentes utilizadas y tendencias
+            de 30 días y un año.
           </p>
+          {oldestRow && latestRow ? (
+            <p className="text-sm text-ink/70">
+              Cobertura disponible: del <strong>{formatDate(new Date(oldestRow.date))}</strong> al{' '}
+              <strong>{formatDate(new Date(latestRow.date))}</strong>.
+            </p>
+          ) : null}
+          <div className="flex flex-wrap gap-4 text-sm">
+            <Link href="/paralelo" className="underline underline-offset-4">
+              Ver precio de hoy
+            </Link>
+            <Link href="/brecha" className="underline underline-offset-4">
+              Ver brecha cambiaria
+            </Link>
+          </div>
         </div>
 
         <div className="grid gap-2">
