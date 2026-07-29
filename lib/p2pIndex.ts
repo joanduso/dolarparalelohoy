@@ -13,6 +13,21 @@ export type ParallelQuote = {
   sourceCount: number;
 };
 
+export const P2P_INDEX_MAX_AGE_MS = 30 * 60 * 1000;
+const P2P_INDEX_MAX_FUTURE_SKEW_MS = 5 * 60 * 1000;
+
+export function isP2PIndexFresh(
+  index: Pick<P2PIndex, 'timestamp'>,
+  nowMs = Date.now(),
+  maxAgeMs = P2P_INDEX_MAX_AGE_MS
+) {
+  const timestampMs = Date.parse(index.timestamp);
+  if (!Number.isFinite(timestampMs)) return false;
+
+  const ageMs = nowMs - timestampMs;
+  return ageMs >= -P2P_INDEX_MAX_FUTURE_SKEW_MS && ageMs <= maxAgeMs;
+}
+
 export async function fetchP2PIndex(): Promise<P2PIndex | null> {
   try {
     const response = await fetch('https://paralelo.bo/api/v1/rate', {
@@ -32,7 +47,13 @@ export async function fetchP2PIndex(): Promise<P2PIndex | null> {
       return null;
     }
 
-    return data as P2PIndex;
+    const index = data as P2PIndex;
+    if (!isP2PIndexFresh(index)) {
+      console.warn('[p2p-index] stale quote ignored', index.timestamp);
+      return null;
+    }
+
+    return index;
   } catch (error) {
     console.warn('[p2p-index] unavailable', String(error));
     return null;
