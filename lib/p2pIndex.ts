@@ -28,6 +28,10 @@ export function isP2PIndexFresh(
   return ageMs >= -P2P_INDEX_MAX_FUTURE_SKEW_MS && ageMs <= maxAgeMs;
 }
 
+function isValidRate(value: unknown): value is number {
+  return typeof value === 'number' && Number.isFinite(value) && value > 0;
+}
+
 export async function fetchP2PIndex(): Promise<P2PIndex | null> {
   try {
     const response = await fetch('https://paralelo.bo/api/v1/rate', {
@@ -60,9 +64,35 @@ export async function fetchP2PIndex(): Promise<P2PIndex | null> {
   }
 }
 
+async function getOwnParallelQuote(): Promise<ParallelQuote | null> {
+  try {
+    const { computeLatest } = await import('./engine/priceEngine');
+    const { result } = await computeLatest();
+    const updatedAt = result.timestampUtc.toISOString();
+
+    if (
+      !isValidRate(result.parallel.buy) ||
+      !isValidRate(result.parallel.sell) ||
+      !isP2PIndexFresh({ timestamp: updatedAt })
+    ) {
+      return null;
+    }
+
+    return {
+      buy: result.parallel.buy,
+      sell: result.parallel.sell,
+      updatedAt,
+      sourceCount: result.quality.sources_used.includes('BINANCE') ? 1 : 0
+    };
+  } catch (error) {
+    console.warn('[p2p-index] own quote unavailable', String(error));
+    return null;
+  }
+}
+
 export async function getParallelQuote(): Promise<ParallelQuote | null> {
   const index = await fetchP2PIndex();
-  if (!index) return null;
+  if (!index) return getOwnParallelQuote();
 
   return {
     buy: index.buy,
