@@ -1,11 +1,13 @@
 import Link from 'next/link';
 import { JsonLd } from '@/app/(site)/_components/JsonLd';
 import { Breadcrumbs } from '@/app/(site)/_components/Breadcrumbs';
+import { ChartCardLazy } from '@/app/(site)/_components/ChartCardLazy';
+import { HistoryHighlights } from '@/app/(site)/_components/HistoryHighlights';
 import { SeoFaq, type SeoFaqItem } from '@/app/(site)/_components/SeoFaq';
-import { TrendSummary } from '@/app/(site)/_components/TrendSummary';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
 import { fetchJson } from '@/lib/serverFetch';
 import { formatCalendarDate, formatCurrency, toCalendarDateString } from '@/lib/format';
+import { computeHistoryStats } from '@/lib/historyStats';
 import { computeTrend } from '@/lib/trend';
 import { HISTORY_PERIODS } from '@/lib/historyPeriods';
 import type { Metadata } from 'next';
@@ -19,6 +21,15 @@ type DailyHistoryRow = {
 
 type HistoryResponse = {
   data: DailyHistoryRow[];
+};
+
+type BrechaHistoryRow = {
+  date: string;
+  gap_pct: number;
+};
+
+type BrechaHistoryResponse = {
+  data: BrechaHistoryRow[];
 };
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -35,19 +46,29 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HistoricoOficialPage() {
-  const historyResult = await fetchJson<HistoryResponse>(
-    '/api/rates/history?kind=OFICIAL&days=365',
-    {},
-    600
-  );
+  const [historyResult, parallelHistoryResult, brechaHistoryResult] = await Promise.all([
+    fetchJson<HistoryResponse>('/api/rates/history?kind=OFICIAL&days=365', {}, 600),
+    fetchJson<HistoryResponse>('/api/rates/history?kind=PARALELO&days=365', {}, 600),
+    fetchJson<BrechaHistoryResponse>('/api/brecha/history?days=365', {}, 600)
+  ]);
 
   const history = historyResult.data?.data ?? [];
+  const parallelHistory = parallelHistoryResult.data?.data ?? [];
+  const brechaHistory = brechaHistoryResult.data?.data ?? [];
   const hasAnyData = history.length > 0;
   const trendPoints = history.map((row) => ({ date: row.date, value: row.sell_avg }));
+  const trend7d = computeTrend(trendPoints, 7);
   const trend30d = computeTrend(trendPoints, 30);
+  const trend90d = computeTrend(trendPoints, 90);
   const trend365d = computeTrend(trendPoints, 365);
+  const stats = computeHistoryStats(trendPoints);
   const oldestRow = history.at(0) ?? null;
   const latestRow = history.at(-1) ?? null;
+  const chartData = {
+    paralelo: parallelHistory.map((row) => ({ date: row.date, value: row.sell_avg })),
+    oficial: trendPoints,
+    brecha: brechaHistory.map((row) => ({ date: row.date, value: row.gap_pct }))
+  };
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -116,10 +137,23 @@ export default async function HistoricoOficialPage() {
           </div>
         </div>
 
-        <div className="grid gap-2">
-          <TrendSummary label="El dólar oficial" trend={trend30d} />
-          <TrendSummary label="El dólar oficial" trend={trend365d} />
-        </div>
+        <HistoryHighlights
+          label="El dólar oficial"
+          stats={stats}
+          trends={[
+            { label: '7 días', trend: trend7d },
+            { label: '30 días', trend: trend30d },
+            { label: '90 días', trend: trend90d },
+            { label: '1 año', trend: trend365d }
+          ]}
+        />
+
+        <ChartCardLazy
+          data={chartData}
+          title="Evolución del dólar en Bolivia"
+          initialSeries="oficial"
+          initialRange={365}
+        />
 
         <div className="card p-5 grid gap-3">
           <p className="text-sm font-medium text-ink">Ver por período</p>

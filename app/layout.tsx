@@ -166,11 +166,11 @@ export default function RootLayout({
                 <Link href="/brecha" className="underline underline-offset-4">
                   Brecha
                 </Link>
+                <Link href="/historico/paralelo" className="underline underline-offset-4">
+                  Histórico y tendencias
+                </Link>
                 <Link href="/usdt-bob" className="underline underline-offset-4">
                   Conversor USDT/BOB
-                </Link>
-                <Link href="/dolar-blue-bolivia" className="underline underline-offset-4">
-                  Dólar blue
                 </Link>
                 <Link href="/exchanges" className="underline underline-offset-4">
                   Comparar exchanges
