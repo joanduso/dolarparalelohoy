@@ -137,7 +137,7 @@ export default async function ParaleloPage() {
           ) : null}
           <div className="flex flex-wrap gap-4 text-sm">
             <Link href="/historico/paralelo" className="underline underline-offset-4">
-              Ver histórico por fecha
+              Analizar tendencia, máximos y mínimos
             </Link>
             <Link href="/brecha" className="underline underline-offset-4">
               Comparar con el dólar oficial
@@ -205,6 +205,22 @@ export default async function ParaleloPage() {
         <AdSlot label="Paralelo debajo del hero" />
 
         <ChartCard data={chartData} />
+
+        <div className="card p-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="kicker">Más contexto</p>
+            <h2 className="font-serif text-2xl">¿Cómo cambió el dólar paralelo?</h2>
+            <p className="mt-1 text-sm text-ink/70">
+              Compara 7, 30, 90 y 365 días, revisa máximos y mínimos y descarga la serie diaria.
+            </p>
+          </div>
+          <Link
+            href="/historico/paralelo"
+            className="shrink-0 rounded-full bg-ink px-4 py-2 text-sm text-white"
+          >
+            Explorar histórico
+          </Link>
+        </div>
 
         <div className="grid gap-4 lg:grid-cols-2">
           <MiniTable title="Últimos 14 días" rows={miniRows} href="/historico/paralelo" />
