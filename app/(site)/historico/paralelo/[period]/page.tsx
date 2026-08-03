@@ -4,7 +4,7 @@ import { Breadcrumbs } from '@/app/(site)/_components/Breadcrumbs';
 import { SeoFaq, type SeoFaqItem } from '@/app/(site)/_components/SeoFaq';
 import { TrendSummary } from '@/app/(site)/_components/TrendSummary';
 import { siteConfig } from '@/lib/seo';
-import { fetchJson } from '@/lib/serverFetch';
+import { getSiteData } from '@/lib/siteData';
 import { formatCalendarDate, formatCurrency } from '@/lib/format';
 import { computeTrend } from '@/lib/trend';
 import { HISTORY_PERIODS, getHistoryPeriod } from '@/lib/historyPeriods';
@@ -24,6 +24,8 @@ type HistoryResponse = {
 export function generateStaticParams() {
   return HISTORY_PERIODS.map((period) => ({ period: period.slug }));
 }
+
+export const revalidate = 21600;
 
 export async function generateMetadata({
   params
@@ -52,10 +54,8 @@ export default async function HistoricoParaleloPeriodPage({
   const period = getHistoryPeriod(params.period);
   if (!period) notFound();
 
-  const historyResult = await fetchJson<HistoryResponse>(
-    `/api/rates/history?kind=PARALELO&days=${period.days}`,
-    {},
-    600
+  const historyResult = await getSiteData<HistoryResponse>(
+    `/api/rates/history?kind=PARALELO&days=${period.days}`
   );
 
   const history = historyResult.data?.data ?? [];

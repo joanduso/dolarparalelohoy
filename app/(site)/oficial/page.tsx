@@ -7,7 +7,7 @@ import { Skeleton } from '@/app/(site)/_components/Skeleton';
 import { Breadcrumbs } from '@/app/(site)/_components/Breadcrumbs';
 import { SeoFaq, type SeoFaqItem } from '@/app/(site)/_components/SeoFaq';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
-import { fetchJson } from '@/lib/serverFetch';
+import { getSiteData } from '@/lib/siteData';
 import { formatCurrency, formatDateTime } from '@/lib/format';
 import type { Metadata } from 'next';
 
@@ -45,10 +45,12 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+export const revalidate = 600;
+
 export default async function OficialPage() {
   const [latestResult, historyResult] = await Promise.all([
-    fetchJson<CurrentRatesResponse>('/api/rates/current?v=live-20260722', {}, 600),
-    fetchJson<HistoryResponse<DailyHistoryRow>>('/api/rates/history?kind=OFICIAL&days=365', {}, 600)
+    getSiteData<CurrentRatesResponse>('/api/rates/current?v=live-20260722'),
+    getSiteData<HistoryResponse<DailyHistoryRow>>('/api/rates/history?kind=OFICIAL&days=365')
   ]);
 
   const latest = latestResult.data?.oficial ?? null;

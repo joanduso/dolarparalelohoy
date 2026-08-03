@@ -1,19 +1,29 @@
 import { NextResponse } from 'next/server';
-import { getLatestBrecha } from '@/lib/queries';
-import { prisma } from '@/lib/db';
-import { ensureFreshRates } from '@/lib/ingest/ensureFresh';
+import {
+  CURRENT_DATA_REVALIDATE_SECONDS,
+  getCurrentRatesData
+} from '@/lib/siteData';
 
-export const revalidate = 600;
-export const dynamic = 'force-dynamic';
+export const revalidate = CURRENT_DATA_REVALIDATE_SECONDS;
 
 export async function GET() {
-  await ensureFreshRates(prisma, 10 * 60_000);
-  const brecha = await getLatestBrecha();
+  const current = await getCurrentRatesData();
+  const brecha = current.brecha && current.brecha.gap_abs !== null && current.brecha.gap_pct !== null
+    ? {
+        ...current.brecha,
+        date: current.updatedAt
+      }
+    : null;
   const errors = [];
   if (!brecha) errors.push({ source: 'BRECHA', error: 'unavailable' });
   return NextResponse.json({
-    updatedAt: new Date().toISOString(),
+    updatedAt: current.updatedAt,
     brecha,
     errors
+  }, {
+    headers: {
+      'Cache-Control': 'public, max-age=60',
+      'Vercel-CDN-Cache-Control': 'public, s-maxage=600, stale-while-revalidate=86400'
+    }
   });
 }
