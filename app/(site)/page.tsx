@@ -11,7 +11,7 @@ import { PlatformCards } from '@/app/(site)/_components/PlatformCards';
 import { TrendSummary } from '@/app/(site)/_components/TrendSummary';
 import { ChartCardLazy } from '@/app/(site)/_components/ChartCardLazy';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
-import { fetchJson } from '@/lib/serverFetch';
+import { getSiteData } from '@/lib/siteData';
 import { formatDateTime } from '@/lib/format';
 import { computeTrend } from '@/lib/trend';
 import type { Metadata } from 'next';
@@ -92,6 +92,8 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+export const revalidate = 600;
+
 function getDelta(history: { sell_avg: number }[]) {
   if (history.length < 2) return null;
   const [today, yesterday] = history.slice(0, 2);
@@ -109,14 +111,14 @@ const BRECHA_HISTORY_PATH = '/api/brecha/history?days=365';
 async function RatesSection() {
   const [latestResult, brechaLatestResult, bcbResult, p2pIndex, paraleloDeltaResult, oficialDeltaResult] =
     await Promise.all([
-      fetchJson<CurrentRatesResponse>('/api/rates/current?v=live-20260722', {}, 600),
-      fetchJson<BrechaLatestResponse>('/api/brecha/latest', {}, 600),
-      fetchJson<BcbResponse>('/api/bcb/valor-referencial?v=live-20260722', {}, 600),
+      getSiteData<CurrentRatesResponse>('/api/rates/current?v=live-20260722'),
+      getSiteData<BrechaLatestResponse>('/api/brecha/latest'),
+      getSiteData<BcbResponse>('/api/bcb/valor-referencial?v=live-20260722'),
       fetchP2PIndex(),
       // Small window: only the last couple of days are needed to compute
       // "variación hoy" — no reason to wait on the full historical series.
-      fetchJson<HistoryResponse<DailyHistoryRow>>('/api/rates/history?kind=PARALELO&days=3', {}, 600),
-      fetchJson<HistoryResponse<DailyHistoryRow>>('/api/rates/history?kind=OFICIAL&days=3', {}, 600)
+      getSiteData<HistoryResponse<DailyHistoryRow>>('/api/rates/history?kind=PARALELO&days=3'),
+      getSiteData<HistoryResponse<DailyHistoryRow>>('/api/rates/history?kind=OFICIAL&days=3')
     ]);
 
   const latest = latestResult.data;
@@ -336,9 +338,9 @@ function RatesSectionFallback() {
 
 async function ChartAndTrendSection() {
   const [paraleloHistoryResult, oficialHistoryResult, brechaHistoryResult] = await Promise.all([
-    fetchJson<HistoryResponse<DailyHistoryRow>>(PARALELO_HISTORY_PATH, {}, 600),
-    fetchJson<HistoryResponse<DailyHistoryRow>>(OFICIAL_HISTORY_PATH, {}, 600),
-    fetchJson<HistoryResponse<BrechaHistoryRow>>(BRECHA_HISTORY_PATH, {}, 600)
+    getSiteData<HistoryResponse<DailyHistoryRow>>(PARALELO_HISTORY_PATH),
+    getSiteData<HistoryResponse<DailyHistoryRow>>(OFICIAL_HISTORY_PATH),
+    getSiteData<HistoryResponse<BrechaHistoryRow>>(BRECHA_HISTORY_PATH)
   ]);
 
   const paraleloHistory = paraleloHistoryResult.data?.data ?? [];
@@ -372,8 +374,8 @@ function ChartAndTrendFallback() {
 
 async function MiniTablesSection() {
   const [paraleloHistoryResult, oficialHistoryResult] = await Promise.all([
-    fetchJson<HistoryResponse<DailyHistoryRow>>(PARALELO_HISTORY_PATH, {}, 600),
-    fetchJson<HistoryResponse<DailyHistoryRow>>(OFICIAL_HISTORY_PATH, {}, 600)
+    getSiteData<HistoryResponse<DailyHistoryRow>>(PARALELO_HISTORY_PATH),
+    getSiteData<HistoryResponse<DailyHistoryRow>>(OFICIAL_HISTORY_PATH)
   ]);
 
   const paraleloHistory = paraleloHistoryResult.data?.data ?? [];

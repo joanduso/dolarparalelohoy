@@ -36,7 +36,7 @@ export async function fetchP2PIndex(): Promise<P2PIndex | null> {
   try {
     const response = await fetch('https://paralelo.bo/api/v1/rate', {
       signal: AbortSignal.timeout(8_000),
-      next: { revalidate: 60 }
+      next: { revalidate: 600 }
     });
     if (!response.ok) return null;
 

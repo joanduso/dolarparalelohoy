@@ -249,7 +249,7 @@ export async function getDeclaredAggregate(kind: RateKind = 'PARALELO'): Promise
       }, { buy: null, sell: null, sampleSize: 0, updatedAt: null });
     },
     ['declared-aggregate', kind],
-    { revalidate: 60 }
+    { revalidate: 600 }
   );
 
   return cached();

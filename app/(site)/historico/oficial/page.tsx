@@ -5,7 +5,7 @@ import { ChartCardLazy } from '@/app/(site)/_components/ChartCardLazy';
 import { HistoryHighlights } from '@/app/(site)/_components/HistoryHighlights';
 import { SeoFaq, type SeoFaqItem } from '@/app/(site)/_components/SeoFaq';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
-import { fetchJson } from '@/lib/serverFetch';
+import { getSiteData } from '@/lib/siteData';
 import { formatCalendarDate, formatCurrency, toCalendarDateString } from '@/lib/format';
 import { computeHistoryStats } from '@/lib/historyStats';
 import { computeTrend } from '@/lib/trend';
@@ -45,11 +45,13 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+export const revalidate = 21600;
+
 export default async function HistoricoOficialPage() {
   const [historyResult, parallelHistoryResult, brechaHistoryResult] = await Promise.all([
-    fetchJson<HistoryResponse>('/api/rates/history?kind=OFICIAL&days=365', {}, 600),
-    fetchJson<HistoryResponse>('/api/rates/history?kind=PARALELO&days=365', {}, 600),
-    fetchJson<BrechaHistoryResponse>('/api/brecha/history?days=365', {}, 600)
+    getSiteData<HistoryResponse>('/api/rates/history?kind=OFICIAL&days=365'),
+    getSiteData<HistoryResponse>('/api/rates/history?kind=PARALELO&days=365'),
+    getSiteData<BrechaHistoryResponse>('/api/brecha/history?days=365')
   ]);
 
   const history = historyResult.data?.data ?? [];

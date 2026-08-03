@@ -6,7 +6,7 @@ import { Skeleton } from '@/app/(site)/_components/Skeleton';
 import { Breadcrumbs } from '@/app/(site)/_components/Breadcrumbs';
 import { SeoFaq, type SeoFaqItem } from '@/app/(site)/_components/SeoFaq';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
-import { fetchJson } from '@/lib/serverFetch';
+import { getSiteData } from '@/lib/siteData';
 import { formatCurrency, formatNumber } from '@/lib/format';
 import type { Metadata } from 'next';
 
@@ -45,11 +45,13 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+export const revalidate = 600;
+
 export default async function BrechaPage() {
   const [latestResult, historyResult, latestRateResult] = await Promise.all([
-    fetchJson<BrechaLatestResponse>('/api/brecha/latest', {}, 600),
-    fetchJson<BrechaHistoryResponse>('/api/brecha/history?days=365', {}, 600),
-    fetchJson<CurrentRatesResponse>('/api/rates/current?v=live-20260722', {}, 600)
+    getSiteData<BrechaLatestResponse>('/api/brecha/latest'),
+    getSiteData<BrechaHistoryResponse>('/api/brecha/history?days=365'),
+    getSiteData<CurrentRatesResponse>('/api/rates/current?v=live-20260722')
   ]);
 
   const latest = latestResult.data?.brecha ?? null;
