@@ -14,6 +14,7 @@ export type ParallelQuote = {
 };
 
 export const P2P_INDEX_MAX_AGE_MS = 30 * 60 * 1000;
+export const P2P_INDEX_REVALIDATE_SECONDS = 60;
 const P2P_INDEX_MAX_FUTURE_SKEW_MS = 5 * 60 * 1000;
 
 export function isP2PIndexFresh(
@@ -36,7 +37,7 @@ export async function fetchP2PIndex(): Promise<P2PIndex | null> {
   try {
     const response = await fetch('https://paralelo.bo/api/v1/rate', {
       signal: AbortSignal.timeout(8_000),
-      next: { revalidate: 600 }
+      next: { revalidate: P2P_INDEX_REVALIDATE_SECONDS }
     });
     if (!response.ok) return null;
 

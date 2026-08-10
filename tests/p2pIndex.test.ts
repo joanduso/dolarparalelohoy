@@ -2,7 +2,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   getParallelQuote,
   isP2PIndexFresh,
-  P2P_INDEX_MAX_AGE_MS
+  P2P_INDEX_MAX_AGE_MS,
+  P2P_INDEX_REVALIDATE_SECONDS
 } from '../lib/p2pIndex';
 
 const computeLatestMock = vi.fn();
@@ -77,6 +78,12 @@ describe('getParallelQuote', () => {
       updatedAt: new Date(NOW - 5 * 60 * 1000).toISOString(),
       sourceCount: 1
     });
+    expect(fetch).toHaveBeenCalledWith(
+      'https://paralelo.bo/api/v1/rate',
+      expect.objectContaining({
+        next: { revalidate: P2P_INDEX_REVALIDATE_SECONDS }
+      })
+    );
   });
 
   it('still rejects an own fallback quote that is also stale', async () => {
