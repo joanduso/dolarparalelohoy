@@ -44,8 +44,21 @@ export default async function HistoricoParaleloPage() {
   const history = historyResult.data?.data ?? [];
   const hasAnyData = history.length > 0;
   const trendPoints = history.map((row) => ({ date: row.date, value: row.sell_avg }));
+  const trend7d = computeTrend(trendPoints, 7);
   const trend30d = computeTrend(trendPoints, 30);
   const trend365d = computeTrend(trendPoints, 365);
+  const validHistory = history.filter((row) => Number.isFinite(row.sell_avg) && row.sell_avg > 0);
+  const minimumRow = validHistory.reduce<DailyHistoryRow | null>(
+    (minimum, row) => (!minimum || row.sell_avg < minimum.sell_avg ? row : minimum),
+    null
+  );
+  const maximumRow = validHistory.reduce<DailyHistoryRow | null>(
+    (maximum, row) => (!maximum || row.sell_avg > maximum.sell_avg ? row : maximum),
+    null
+  );
+  const averageSell = validHistory.length
+    ? validHistory.reduce((sum, row) => sum + row.sell_avg, 0) / validHistory.length
+    : null;
   const oldestRow = history.at(0) ?? null;
   const latestRow = history.at(-1) ?? null;
 
@@ -100,8 +113,8 @@ export default async function HistoricoParaleloPage() {
           </h1>
           <p className="text-ink/70 max-w-2xl">
             Consulta cuánto estaba el dólar paralelo en Bolivia ayer o en una fecha anterior.
-            La tabla muestra promedios diarios de compra y venta, fuentes utilizadas y tendencias
-            de 30 días y un año.
+            La tabla muestra promedios diarios de compra y venta, fuentes utilizadas, variaciones
+            de 7, 30 y 365 días y los valores máximo, mínimo y promedio del último año.
           </p>
           {oldestRow && latestRow ? (
             <p className="text-sm text-ink/70">
@@ -119,10 +132,42 @@ export default async function HistoricoParaleloPage() {
           </div>
         </div>
 
-        <div className="grid gap-2">
-          <TrendSummary label="El dólar paralelo" trend={trend30d} />
-          <TrendSummary label="El dólar paralelo" trend={trend365d} />
-        </div>
+        {latestRow && minimumRow && maximumRow && averageSell !== null ? (
+          <section className="card p-5 grid gap-4" aria-labelledby="resumen-historico-paralelo">
+            <div className="grid gap-2">
+              <h2 id="resumen-historico-paralelo" className="font-serif text-2xl">
+                ¿Cómo cambió el dólar paralelo en Bolivia?
+              </h2>
+              <p className="text-ink/70">
+                El último promedio de venta disponible es <strong>{formatCurrency(latestRow.sell_avg)}</strong>,
+                correspondiente al <strong>{formatCalendarDate(new Date(latestRow.date))}</strong>.
+                Compara debajo la variación de la última semana, el último mes y el último año.
+              </p>
+            </div>
+            <dl className="grid gap-3 sm:grid-cols-3">
+              <div className="rounded-xl bg-black/5 p-4">
+                <dt className="text-xs uppercase tracking-wide text-ink/50">Máximo del período</dt>
+                <dd className="mt-1 font-semibold">{formatCurrency(maximumRow.sell_avg)}</dd>
+                <dd className="text-xs text-ink/60">{formatCalendarDate(new Date(maximumRow.date))}</dd>
+              </div>
+              <div className="rounded-xl bg-black/5 p-4">
+                <dt className="text-xs uppercase tracking-wide text-ink/50">Mínimo del período</dt>
+                <dd className="mt-1 font-semibold">{formatCurrency(minimumRow.sell_avg)}</dd>
+                <dd className="text-xs text-ink/60">{formatCalendarDate(new Date(minimumRow.date))}</dd>
+              </div>
+              <div className="rounded-xl bg-black/5 p-4">
+                <dt className="text-xs uppercase tracking-wide text-ink/50">Promedio del período</dt>
+                <dd className="mt-1 font-semibold">{formatCurrency(averageSell)}</dd>
+                <dd className="text-xs text-ink/60">{validHistory.length} registros diarios</dd>
+              </div>
+            </dl>
+            <div className="grid gap-2">
+              <TrendSummary label="El dólar paralelo" trend={trend7d} />
+              <TrendSummary label="El dólar paralelo" trend={trend30d} />
+              <TrendSummary label="El dólar paralelo" trend={trend365d} />
+            </div>
+          </section>
+        ) : null}
 
         <div className="card p-5 grid gap-3">
           <p className="text-sm font-medium text-ink">Ver por período</p>
