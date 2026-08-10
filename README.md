@@ -59,6 +59,9 @@ npm run dev
 - `DECLARED_SALT`: secreto para hashear IP y user-agent en reportes declarados
 - `ADMIN_KEY`: clave para el endpoint `/api/rates/refresh`
 - `CRON_SECRET`: secreto para el endpoint `/api/cron/refresh`
+- `RESEND_API_KEY`: clave del proveedor de correo para confirmaciones y alertas
+- `ALERTS_FROM_EMAIL`: remitente de un dominio verificado, por ejemplo `Dólar Paralelo Hoy <alertas@dolarparalelohoy.com>`
+- `ALERT_TOKEN_SALT`: secreto separado para proteger tokens de confirmación
 
 Configura estas variables en Vercel para Production, Preview y Development.
 
@@ -124,6 +127,11 @@ El endpoint interno est? en `/api/cron/refresh` y requiere `CRON_SECRET`.
 2. Vercel Cron invoca el endpoint con `GET` y envía `Authorization: Bearer <CRON_SECRET>` automáticamente. El endpoint también conserva `POST` y `x-cron-secret` para llamadas manuales anteriores.
 
 En Vercel Hobby la cadencia automática es diaria a las 12:00 UTC (08:00 en Bolivia), que es el máximo permitido por ese plan. En Pro puede configurarse una frecuencia mayor.
+
+El mismo cron envía el resumen diario a suscripciones confirmadas después de actualizar las
+cotizaciones. Antes de activarlo, verifica `dolarparalelohoy.com` en Resend y configura
+`RESEND_API_KEY`, `ALERTS_FROM_EMAIL` y `ALERT_TOKEN_SALT` en Vercel. Sin estas variables, las
+solicitudes se guardan como pendientes y no se envían correos.
 
 ## Tests
 

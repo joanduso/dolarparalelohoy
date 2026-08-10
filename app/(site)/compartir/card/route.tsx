@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og';
 import { formatDateTime, formatNumber } from '@/lib/format';
-import { getShareRate } from '@/lib/shareRate';
+import { getShareSnapshot } from '@/lib/shareRate';
 
 export const runtime = 'edge';
 
@@ -10,7 +10,13 @@ const size = {
 };
 
 export async function GET() {
-  const rate = await getShareRate();
+  const rate = await getShareSnapshot();
+  const variation = rate?.changePct === null || rate?.changePct === undefined
+    ? 'Variación pendiente'
+    : `${rate.changePct >= 0 ? '+' : ''}${formatNumber(rate.changePct, 1)}% vs. ayer`;
+  const gap = rate?.gapPct === null || rate?.gapPct === undefined
+    ? 'Brecha pendiente'
+    : `${formatNumber(rate.gapPct, 1)}% sobre el oficial`;
 
   return new ImageResponse(
     (
@@ -102,6 +108,17 @@ export async function GET() {
             Cotización temporalmente no disponible
           </div>
         )}
+
+        {rate ? (
+          <div style={{ display: 'flex', gap: 18, fontSize: 22, fontWeight: 600 }}>
+            <div style={{ display: 'flex', borderRadius: 999, background: 'rgba(255,255,255,0.1)', padding: '10px 18px' }}>
+              Variación: {variation}
+            </div>
+            <div style={{ display: 'flex', borderRadius: 999, background: 'rgba(255,255,255,0.1)', padding: '10px 18px' }}>
+              Brecha: {gap}
+            </div>
+          </div>
+        ) : null}
 
         <div
           style={{

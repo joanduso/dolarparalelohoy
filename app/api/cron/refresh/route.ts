@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { runIngest } from '@/lib/ingest/run';
+import { dispatchRateAlerts } from '@/lib/dispatchAlerts';
 
 export const runtime = 'nodejs';
 
@@ -24,17 +25,20 @@ async function refresh(request: Request) {
 
   try {
     const result = await runIngest(prisma);
+    const alerts = await dispatchRateAlerts();
     console.info('[cron/refresh] completed', {
       runId: result.runId,
       inserted: result.inserted,
       status: result.status,
       sourcesUsed: result.sourcesUsed,
+      alerts,
       errors: result.errors
     });
     return NextResponse.json({
       ok: true,
       runId: result.runId,
-      inserted: result.inserted
+      inserted: result.inserted,
+      alerts
     });
   } catch (error) {
     const details = errorDetails(error);
