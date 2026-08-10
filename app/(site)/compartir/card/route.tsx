@@ -3,6 +3,7 @@ import { formatDateTime, formatNumber } from '@/lib/format';
 import { getShareSnapshot } from '@/lib/shareRate';
 
 export const runtime = 'edge';
+export const dynamic = 'force-dynamic';
 
 const size = {
   width: 1200,
@@ -139,6 +140,12 @@ export async function GET() {
         </div>
       </div>
     ),
-    size
+    {
+      ...size,
+      headers: {
+        'Cache-Control': 'public, max-age=0, must-revalidate',
+        'Vercel-CDN-Cache-Control': 'public, max-age=60, stale-if-error=300'
+      }
+    }
   );
 }
