@@ -19,6 +19,21 @@ export type ShareRate = {
   sourceLabel: string;
 };
 
+export type ShareSnapshot = ShareRate & {
+  changeAbs: number | null;
+  changePct: number | null;
+  gapAbs: number | null;
+  gapPct: number | null;
+};
+
+type HistoryResponse = {
+  data?: Array<{ date: string; sell_avg: number }>;
+};
+
+type BrechaResponse = {
+  brecha?: { gap_abs: number | null; gap_pct: number | null } | null;
+};
+
 function isValidRate(value: unknown): value is number {
   return typeof value === 'number' && Number.isFinite(value) && value > 0;
 }
@@ -59,4 +74,51 @@ export async function getShareRate(): Promise<ShareRate | null> {
     console.warn('[share-rate] unavailable', String(error));
     return null;
   }
+}
+
+export async function getShareSnapshot(): Promise<ShareSnapshot | null> {
+  const rate = await getShareRate();
+  if (!rate) return null;
+
+  let changeAbs: number | null = null;
+  let changePct: number | null = null;
+  let gapAbs: number | null = null;
+  let gapPct: number | null = null;
+
+  try {
+    const [historyResponse, brechaResponse] = await Promise.all([
+      fetch(`${siteConfig.url}/api/rates/history?kind=PARALELO&days=3&v=share-snapshot`, {
+        next: { revalidate: 60 }
+      }),
+      fetch(`${siteConfig.url}/api/brecha/latest?v=share-snapshot`, {
+        next: { revalidate: 60 }
+      })
+    ]);
+
+    if (historyResponse.ok) {
+      const history = (await historyResponse.json()) as HistoryResponse;
+      const byDay = new Map<string, number>();
+      for (const row of history.data ?? []) {
+        if (Number.isFinite(row.sell_avg) && row.sell_avg > 0) {
+          byDay.set(row.date.slice(0, 10), row.sell_avg);
+        }
+      }
+      const dailyValues = Array.from(byDay.entries()).sort(([a], [b]) => a.localeCompare(b));
+      const previous = dailyValues.at(-2)?.[1] ?? null;
+      if (previous && previous > 0) {
+        changeAbs = rate.sell - previous;
+        changePct = (changeAbs / previous) * 100;
+      }
+    }
+
+    if (brechaResponse.ok) {
+      const brecha = (await brechaResponse.json()) as BrechaResponse;
+      gapAbs = brecha.brecha?.gap_abs ?? null;
+      gapPct = brecha.brecha?.gap_pct ?? null;
+    }
+  } catch (error) {
+    console.warn('[share-rate] context unavailable', String(error));
+  }
+
+  return { ...rate, changeAbs, changePct, gapAbs, gapPct };
 }

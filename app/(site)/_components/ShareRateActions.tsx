@@ -8,6 +8,9 @@ type ShareRateActionsProps = {
   baseUrl: string;
   buy: number | null;
   sell: number | null;
+  changePct: number | null;
+  gapPct: number | null;
+  updatedAt: string | null;
 };
 
 function formatRate(value: number | null) {
@@ -18,13 +21,25 @@ function formatRate(value: number | null) {
   }).format(value);
 }
 
-export function ShareRateActions({ baseUrl, buy, sell }: ShareRateActionsProps) {
+export function ShareRateActions({
+  baseUrl,
+  buy,
+  sell,
+  changePct,
+  gapPct,
+  updatedAt
+}: ShareRateActionsProps) {
   const [copied, setCopied] = useState(false);
   const buyText = formatRate(buy);
   const sellText = formatRate(sell);
+  const context = [
+    changePct === null ? null : `variación ${changePct >= 0 ? '+' : ''}${changePct.toFixed(1)}% vs. ayer`,
+    gapPct === null ? null : `brecha ${gapPct.toFixed(1)}%`,
+    updatedAt ? `actualizado ${updatedAt}` : null
+  ].filter(Boolean).join(' · ');
   const message =
     buyText && sellText
-      ? `Dólar paralelo en Bolivia hoy: compra Bs ${buyText} · venta Bs ${sellText}.`
+      ? `Dólar paralelo en Bolivia hoy: compra Bs ${buyText} · venta Bs ${sellText}.${context ? ` ${context}.` : ''}`
       : 'Consulta la cotización actualizada del dólar paralelo en Bolivia.';
 
   const trackedUrl = (channel: ShareChannel) => {

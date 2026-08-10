@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { AlertSubscriptionForm } from '@/app/(site)/_components/AlertSubscriptionForm';
 import { ShareRateActions } from '@/app/(site)/_components/ShareRateActions';
 import { formatDateTime, formatNumber } from '@/lib/format';
-import { getShareRate } from '@/lib/shareRate';
+import { getShareSnapshot } from '@/lib/shareRate';
 import { siteConfig } from '@/lib/seo';
 
 export const revalidate = 60;
@@ -43,9 +44,19 @@ export const metadata: Metadata = {
   }
 };
 
-export default async function SharePage() {
-  const rate = await getShareRate();
+export default async function SharePage({
+  searchParams
+}: {
+  searchParams?: { alert?: string };
+}) {
+  const rate = await getShareSnapshot();
   const updatedAt = rate ? formatDateTime(rate.updatedAt) : null;
+  const variationText = rate?.changePct === null || rate?.changePct === undefined
+    ? 'Variación pendiente'
+    : `${rate.changePct >= 0 ? '+' : ''}${formatNumber(rate.changePct, 1)}% vs. ayer`;
+  const gapText = rate?.gapPct === null || rate?.gapPct === undefined
+    ? 'Brecha pendiente'
+    : `${formatNumber(rate.gapPct, 1)}% sobre el oficial`;
 
   return (
     <main className="pb-16">
@@ -101,6 +112,14 @@ export default async function SharePage() {
                     </span>
                     <span>{updatedAt}</span>
                   </div>
+                  <div className="flex flex-wrap gap-2 text-xs font-semibold">
+                    <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5">
+                      {variationText}
+                    </span>
+                    <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5">
+                      Brecha: {gapText}
+                    </span>
+                  </div>
                 </>
               ) : (
                 <div className="rounded-2xl border border-white/15 bg-white/10 p-6">
@@ -125,11 +144,40 @@ export default async function SharePage() {
               baseUrl={siteConfig.url}
               buy={rate?.buy ?? null}
               sell={rate?.sell ?? null}
+              changePct={rate?.changePct ?? null}
+              gapPct={rate?.gapPct ?? null}
+              updatedAt={updatedAt}
             />
             <p className="text-xs text-ink/60">
               La cotización es informativa. Verifica el precio final y las condiciones antes de
               realizar una operación.
             </p>
+          </div>
+
+          <div className="card grid gap-5 p-5 sm:p-6">
+            <div className="grid gap-2">
+              <p className="kicker">Alertas gratuitas</p>
+              <h2 className="font-serif text-2xl">Recibe la cotización sin tener que buscarla</h2>
+              <p className="max-w-2xl text-ink/70">
+                Elige un resumen diario o recibe un aviso únicamente cuando el precio cambie de forma relevante.
+              </p>
+            </div>
+            {searchParams?.alert === 'confirmed' ? (
+              <p className="rounded-xl bg-green-50 p-4 text-sm text-green-800">
+                Suscripción confirmada. Recibirás la cotización según tu preferencia.
+              </p>
+            ) : null}
+            {searchParams?.alert === 'unsubscribed' ? (
+              <p className="rounded-xl bg-sand p-4 text-sm text-ink/70">
+                Tu suscripción fue cancelada correctamente.
+              </p>
+            ) : null}
+            {searchParams?.alert === 'invalid' ? (
+              <p className="rounded-xl bg-red-50 p-4 text-sm text-red-800">
+                El enlace de confirmación no es válido o ya fue utilizado.
+              </p>
+            ) : null}
+            <AlertSubscriptionForm />
           </div>
 
           <Link href="/" className="justify-self-start underline underline-offset-4">

@@ -49,6 +49,17 @@ enum ConfidenceLevel {
   LOW
 }
 
+enum AlertFrequency {
+  DAILY
+  THRESHOLD
+}
+
+enum AlertSubscriptionStatus {
+  PENDING
+  ACTIVE
+  UNSUBSCRIBED
+}
+
 model RatePoint {
   id            String   @id @default(cuid())
   kind          RateKind
@@ -137,4 +148,24 @@ model RatesHistory {
   notes          String?
 
   @@index([timestampUtc])
+}
+
+model AlertSubscription {
+  id                      String                  @id @default(cuid())
+  email                   String                  @unique
+  email_hash              String                  @unique
+  status                  AlertSubscriptionStatus @default(PENDING)
+  frequency               AlertFrequency          @default(DAILY)
+  threshold_pct           Float?
+  consent_at              DateTime
+  confirmed_at            DateTime?
+  confirmation_token_hash String?
+  unsubscribe_token       String                  @unique
+  source                  String?
+  last_sent_at            DateTime?
+  created_at              DateTime                @default(now())
+  updated_at              DateTime                @updatedAt
+
+  @@index([status, frequency])
+  @@index([confirmation_token_hash])
 }
