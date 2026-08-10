@@ -47,5 +47,6 @@ describe('/api/rates/current live source behavior', () => {
     expect(payload.oficial.sell).toBe(11);
     expect(payload.paralelo.buy).toBe(11.44);
     expect(payload.sources).toEqual({ bcb: 'OK', binance_p2p: 'OK' });
+    expect(response.headers.get('vercel-cdn-cache-control')).toContain('s-maxage=600');
   });
 });

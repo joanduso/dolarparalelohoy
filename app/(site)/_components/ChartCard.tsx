@@ -17,7 +17,9 @@ ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, Tooltip)
 
 type SeriesPoint = { date: string; value: number };
 
-type ChartPayload = {
+type SeriesKey = 'paralelo' | 'oficial' | 'brecha';
+
+export type ChartPayload = {
   paralelo: SeriesPoint[];
   oficial: SeriesPoint[];
   brecha: SeriesPoint[];
@@ -31,9 +33,25 @@ const ranges = [
   { label: 'Todo', days: 0 }
 ];
 
-export function ChartCard({ data }: { data: ChartPayload }) {
-  const [series, setSeries] = useState<'paralelo' | 'oficial' | 'brecha'>('paralelo');
-  const [range, setRange] = useState(30);
+export function ChartCard({
+  data,
+  title,
+  initialSeries = 'paralelo',
+  initialRange = 30
+}: {
+  data: ChartPayload;
+  title?: string;
+  initialSeries?: SeriesKey;
+  initialRange?: number;
+}) {
+  const availableSeries = (['paralelo', 'oficial', 'brecha'] as const).filter(
+    (option) => data[option].length > 0
+  );
+  const startingSeries = availableSeries.includes(initialSeries)
+    ? initialSeries
+    : (availableSeries[0] ?? initialSeries);
+  const [series, setSeries] = useState<SeriesKey>(startingSeries);
+  const [range, setRange] = useState(initialRange);
 
   const selected = data[series];
 
@@ -109,21 +127,26 @@ export function ChartCard({ data }: { data: ChartPayload }) {
 
   return (
     <div className="card p-5 flex flex-col gap-4">
+      {title ? <h2 className="font-serif text-2xl">{title}</h2> : null}
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex gap-2">
-          {(['paralelo', 'oficial', 'brecha'] as const).map((option) => (
-            <button
-              key={option}
-              onClick={() => setSeries(option)}
-              className={`px-3 py-1 rounded-full text-xs uppercase tracking-wide ${
-                series === option ? 'bg-ink text-white' : 'bg-black/5'
-              }`}
-            >
-              {option}
-            </button>
-          ))}
-        </div>
-        <div className="flex gap-2">
+        {availableSeries.length > 1 ? (
+          <div className="flex gap-2">
+            {availableSeries.map((option) => (
+              <button
+                key={option}
+                onClick={() => setSeries(option)}
+                className={`px-3 py-1 rounded-full text-xs uppercase tracking-wide ${
+                  series === option ? 'bg-ink text-white' : 'bg-black/5'
+                }`}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+        ) : (
+          <p className="text-xs uppercase tracking-wide text-ink/50">{series}</p>
+        )}
+        <div className="flex flex-wrap gap-2">
           {ranges.map((option) => (
             <button
               key={option.label}

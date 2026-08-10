@@ -1,11 +1,13 @@
 import Link from 'next/link';
 import { JsonLd } from '@/app/(site)/_components/JsonLd';
 import { Breadcrumbs } from '@/app/(site)/_components/Breadcrumbs';
+import { ChartCardLazy } from '@/app/(site)/_components/ChartCardLazy';
+import { HistoryHighlights } from '@/app/(site)/_components/HistoryHighlights';
 import { SeoFaq, type SeoFaqItem } from '@/app/(site)/_components/SeoFaq';
-import { TrendSummary } from '@/app/(site)/_components/TrendSummary';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
-import { fetchJson } from '@/lib/serverFetch';
+import { getSiteData } from '@/lib/siteData';
 import { formatCalendarDate, formatCurrency, toCalendarDateString } from '@/lib/format';
+import { computeHistoryStats } from '@/lib/historyStats';
 import { computeTrend } from '@/lib/trend';
 import { HISTORY_PERIODS } from '@/lib/historyPeriods';
 import type { Metadata } from 'next';
@@ -21,6 +23,15 @@ type HistoryResponse = {
   data: DailyHistoryRow[];
 };
 
+type BrechaHistoryRow = {
+  date: string;
+  gap_pct: number;
+};
+
+type BrechaHistoryResponse = {
+  data: BrechaHistoryRow[];
+};
+
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: pageTitles.historicoParalelo,
@@ -34,33 +45,32 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+export const revalidate = 21600;
+
 export default async function HistoricoParaleloPage() {
-  const historyResult = await fetchJson<HistoryResponse>(
-    '/api/rates/history?kind=PARALELO&days=365',
-    {},
-    600
-  );
+  const [historyResult, officialHistoryResult, brechaHistoryResult] = await Promise.all([
+    getSiteData<HistoryResponse>('/api/rates/history?kind=PARALELO&days=365'),
+    getSiteData<HistoryResponse>('/api/rates/history?kind=OFICIAL&days=365'),
+    getSiteData<BrechaHistoryResponse>('/api/brecha/history?days=365')
+  ]);
 
   const history = historyResult.data?.data ?? [];
+  const officialHistory = officialHistoryResult.data?.data ?? [];
+  const brechaHistory = brechaHistoryResult.data?.data ?? [];
   const hasAnyData = history.length > 0;
   const trendPoints = history.map((row) => ({ date: row.date, value: row.sell_avg }));
   const trend7d = computeTrend(trendPoints, 7);
   const trend30d = computeTrend(trendPoints, 30);
+  const trend90d = computeTrend(trendPoints, 90);
   const trend365d = computeTrend(trendPoints, 365);
-  const validHistory = history.filter((row) => Number.isFinite(row.sell_avg) && row.sell_avg > 0);
-  const minimumRow = validHistory.reduce<DailyHistoryRow | null>(
-    (minimum, row) => (!minimum || row.sell_avg < minimum.sell_avg ? row : minimum),
-    null
-  );
-  const maximumRow = validHistory.reduce<DailyHistoryRow | null>(
-    (maximum, row) => (!maximum || row.sell_avg > maximum.sell_avg ? row : maximum),
-    null
-  );
-  const averageSell = validHistory.length
-    ? validHistory.reduce((sum, row) => sum + row.sell_avg, 0) / validHistory.length
-    : null;
+  const stats = computeHistoryStats(trendPoints);
   const oldestRow = history.at(0) ?? null;
   const latestRow = history.at(-1) ?? null;
+  const chartData = {
+    paralelo: trendPoints,
+    oficial: officialHistory.map((row) => ({ date: row.date, value: row.sell_avg })),
+    brecha: brechaHistory.map((row) => ({ date: row.date, value: row.gap_pct }))
+  };
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -132,42 +142,23 @@ export default async function HistoricoParaleloPage() {
           </div>
         </div>
 
-        {latestRow && minimumRow && maximumRow && averageSell !== null ? (
-          <section className="card p-5 grid gap-4" aria-labelledby="resumen-historico-paralelo">
-            <div className="grid gap-2">
-              <h2 id="resumen-historico-paralelo" className="font-serif text-2xl">
-                ¿Cómo cambió el dólar paralelo en Bolivia?
-              </h2>
-              <p className="text-ink/70">
-                El último promedio de venta disponible es <strong>{formatCurrency(latestRow.sell_avg)}</strong>,
-                correspondiente al <strong>{formatCalendarDate(new Date(latestRow.date))}</strong>.
-                Compara debajo la variación de la última semana, el último mes y el último año.
-              </p>
-            </div>
-            <dl className="grid gap-3 sm:grid-cols-3">
-              <div className="rounded-xl bg-black/5 p-4">
-                <dt className="text-xs uppercase tracking-wide text-ink/50">Máximo del período</dt>
-                <dd className="mt-1 font-semibold">{formatCurrency(maximumRow.sell_avg)}</dd>
-                <dd className="text-xs text-ink/60">{formatCalendarDate(new Date(maximumRow.date))}</dd>
-              </div>
-              <div className="rounded-xl bg-black/5 p-4">
-                <dt className="text-xs uppercase tracking-wide text-ink/50">Mínimo del período</dt>
-                <dd className="mt-1 font-semibold">{formatCurrency(minimumRow.sell_avg)}</dd>
-                <dd className="text-xs text-ink/60">{formatCalendarDate(new Date(minimumRow.date))}</dd>
-              </div>
-              <div className="rounded-xl bg-black/5 p-4">
-                <dt className="text-xs uppercase tracking-wide text-ink/50">Promedio del período</dt>
-                <dd className="mt-1 font-semibold">{formatCurrency(averageSell)}</dd>
-                <dd className="text-xs text-ink/60">{validHistory.length} registros diarios</dd>
-              </div>
-            </dl>
-            <div className="grid gap-2">
-              <TrendSummary label="El dólar paralelo" trend={trend7d} />
-              <TrendSummary label="El dólar paralelo" trend={trend30d} />
-              <TrendSummary label="El dólar paralelo" trend={trend365d} />
-            </div>
-          </section>
-        ) : null}
+        <HistoryHighlights
+          label="El dólar paralelo"
+          stats={stats}
+          trends={[
+            { label: '7 días', trend: trend7d },
+            { label: '30 días', trend: trend30d },
+            { label: '90 días', trend: trend90d },
+            { label: '1 año', trend: trend365d }
+          ]}
+        />
+
+        <ChartCardLazy
+          data={chartData}
+          title="Evolución del dólar en Bolivia"
+          initialSeries="paralelo"
+          initialRange={365}
+        />
 
         <div className="card p-5 grid gap-3">
           <p className="text-sm font-medium text-ink">Ver por período</p>

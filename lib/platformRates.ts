@@ -1,6 +1,7 @@
 import { aggregateSide } from '@/lib/engine/aggregate';
 import { getCache, setCache } from '@/lib/engine/cache';
 import { fetchBinanceP2P } from '@/lib/engine/sources/binance';
+import { unstable_cache } from 'next/cache';
 
 export type PlatformKey = 'eldorado' | 'takenos' | 'airtm' | 'bybit' | 'meru' | 'binance';
 
@@ -85,7 +86,7 @@ async function fetchBinanceRate(): Promise<PlatformRate | null> {
   }
 }
 
-export async function fetchPlatformRates(): Promise<PlatformRates> {
+async function fetchPlatformRatesUncached(): Promise<PlatformRates> {
   const cached = getCache<PlatformRates>(CACHE_KEY);
   if (cached) return cached;
 
@@ -106,4 +107,14 @@ export async function fetchPlatformRates(): Promise<PlatformRates> {
 
   setCache(CACHE_KEY, rates, CACHE_TTL_MS);
   return rates;
+}
+
+const getCachedPlatformRates = unstable_cache(
+  fetchPlatformRatesUncached,
+  ['site-platform-rates-v1'],
+  { revalidate: 600 }
+);
+
+export async function fetchPlatformRates(): Promise<PlatformRates> {
+  return getCachedPlatformRates();
 }

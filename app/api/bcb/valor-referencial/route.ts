@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { parseBcbOfficial, parseValorReferencial } from '@/lib/sources/bcb_html';
 
 export const runtime = 'nodejs';
+export const revalidate = 600;
 
 const SOURCE_URL = 'https://www.bcb.gob.bo/';
 
@@ -79,6 +80,11 @@ export async function GET() {
       dateText: parsed.dateText,
       source: 'BCB',
       fetchedAt: new Date().toISOString()
+    }, {
+      headers: {
+        'Cache-Control': 'public, max-age=60',
+        'Vercel-CDN-Cache-Control': 'public, s-maxage=600, stale-while-revalidate=86400'
+      }
     });
   } catch (error) {
     return NextResponse.json({
