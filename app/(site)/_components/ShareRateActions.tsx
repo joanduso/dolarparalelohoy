@@ -137,7 +137,7 @@ export function ShareRateActions({
         </button>
       </div>
       <a
-        href="/compartir/card"
+        href="/compartir/card?v=live-2"
         download="dolar-paralelo-bolivia-hoy.png"
         onClick={() => track('download')}
         className="justify-self-start text-sm font-semibold underline underline-offset-4"
