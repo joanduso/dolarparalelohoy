@@ -123,8 +123,8 @@ export default async function HistoricoParaleloPage() {
           </h1>
           <p className="text-ink/70 max-w-2xl">
             Consulta cuánto estaba el dólar paralelo en Bolivia ayer o en una fecha anterior.
-            La tabla muestra promedios diarios de compra y venta, fuentes utilizadas y tendencias
-            de 30 días y un año.
+            La tabla muestra promedios diarios de compra y venta, fuentes utilizadas, variaciones
+            de 7, 30 y 365 días y los valores máximo, mínimo y promedio del último año.
           </p>
           {oldestRow && latestRow ? (
             <p className="text-sm text-ink/70">
