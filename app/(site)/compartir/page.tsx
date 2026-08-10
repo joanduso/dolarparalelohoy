@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/compartir/card?v=live-2',
+        url: '/compartir/card?v=live-3',
         width: 1200,
         height: 630,
         alt: 'Cotización del dólar paralelo en Bolivia hoy'
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Dólar paralelo en Bolivia hoy',
     description: 'Compra y venta actualizadas para compartir.',
-    images: ['/compartir/card?v=live-2']
+    images: ['/compartir/card?v=live-3']
   }
 };
 
