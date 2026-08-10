@@ -143,8 +143,8 @@ export async function GET() {
     {
       ...size,
       headers: {
-        'Cache-Control': 'public, max-age=0, must-revalidate',
-        'Vercel-CDN-Cache-Control': 'public, max-age=60, stale-if-error=300'
+        'cache-control': 'public, max-age=0, must-revalidate',
+        'vercel-cdn-cache-control': 'public, max-age=60, stale-if-error=300'
       }
     }
   );
