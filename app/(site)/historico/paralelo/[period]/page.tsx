@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { JsonLd } from '@/app/(site)/_components/JsonLd';
 import { Breadcrumbs } from '@/app/(site)/_components/Breadcrumbs';
@@ -96,13 +97,20 @@ export default async function HistoricoParaleloPeriodPage({
       />
       <section className="grid gap-6">
         <div className="grid gap-3">
-          <p className="kicker">Histórico dólar paralelo Bolivia</p>
+          <p className="kicker">Serie histórica por período</p>
           <h1 className="font-serif text-3xl sm:text-4xl">
-            Dólar paralelo Bolivia: {period.shortLabel.toLowerCase()}
+            Histórico del dólar paralelo en Bolivia: {period.shortLabel.toLowerCase()}
           </h1>
           <p className="text-ink/70 max-w-2xl">
             Serie histórica con promedios diarios del dólar paralelo durante {period.label}. Datos
             agregados de múltiples fuentes y filtrados por validación.
+          </p>
+          <p className="text-sm text-ink/70">
+            Para la referencia vigente, consulta el{' '}
+            <Link href="/paralelo" className="underline underline-offset-4">
+              dólar paralelo Bolivia hoy
+            </Link>
+            .
           </p>
         </div>
 

@@ -9,9 +9,11 @@ import { DeclareForm } from '@/app/(site)/_components/DeclareForm';
 import { Skeleton } from '@/app/(site)/_components/Skeleton';
 import { Breadcrumbs } from '@/app/(site)/_components/Breadcrumbs';
 import { SeoFaq, type SeoFaqItem } from '@/app/(site)/_components/SeoFaq';
+import { TrendSummary } from '@/app/(site)/_components/TrendSummary';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
 import { getSiteData } from '@/lib/siteData';
 import { formatCurrency, formatDateTime } from '@/lib/format';
+import { computeTrend } from '@/lib/trend';
 import type { Metadata } from 'next';
 
 type DailyHistoryRow = {
@@ -62,6 +64,9 @@ export default async function ParaleloPage() {
   const notes = latestResult.data?.notes ?? null;
   const updatedAt = latestResult.data?.updatedAt ? new Date(latestResult.data.updatedAt) : null;
   const history = historyResult.data?.data ?? [];
+  const trendPoints = history.map((row) => ({ date: row.date, value: row.sell_avg }));
+  const trend7d = computeTrend(trendPoints, 7);
+  const trend30d = computeTrend(trendPoints, 30);
   const miniRows = history.slice(-14).reverse().map((row) => ({
     ...row,
     date: new Date(row.date)
@@ -86,7 +91,8 @@ export default async function ParaleloPage() {
     name: pageTitles.paralelo,
     description: pageDescriptions.paralelo,
     url: `${siteConfig.url}/paralelo`,
-    inLanguage: siteConfig.language
+    inLanguage: siteConfig.language,
+    dateModified: updatedAt?.toISOString()
   };
 
   const statusLabelValue = status ?? (hasAnyData ? 'DEGRADED' : 'ERROR');
@@ -122,14 +128,14 @@ export default async function ParaleloPage() {
       <Breadcrumbs items={[{ name: 'Dólar paralelo', href: '/paralelo' }]} />
       <section className="grid gap-8">
         <div className="grid gap-3">
-          <p className="kicker">Dólar paralelo hoy Bolivia</p>
+          <p className="kicker">Cotización actualizada cada 10 minutos</p>
           <h1 className="font-serif text-3xl sm:text-4xl">
-            Precio del dólar paralelo en Bolivia hoy
+            Dólar paralelo Bolivia hoy: compra y venta
           </h1>
           <p className="text-ink/70 max-w-2xl">
-            Consulta cuánto está el dólar paralelo en Bolivia hoy, su precio de compra y venta y
-            la hora de la última actualización. La referencia se calcula con fuentes públicas y
-            mercados P2P filtrados.
+            Consulta el precio del dólar paralelo en Bolivia hoy, cuánto pagan por comprar y cuánto
+            cuesta vender, la variación reciente y la hora de actualización. La referencia usa
+            fuentes públicas y mercados P2P filtrados.
           </p>
           {typeof latest?.buy === 'number' && typeof latest?.sell === 'number' ? (
             <p className="text-lg text-ink max-w-2xl">
@@ -195,6 +201,19 @@ export default async function ParaleloPage() {
             <p className="text-xs text-ink/60">Nota técnica: {notes}</p>
           ) : null}
         </div>
+
+        {(trend7d || trend30d) ? (
+          <section className="card p-5 grid gap-3" aria-labelledby="movimiento-dolar-paralelo">
+            <h2 id="movimiento-dolar-paralelo" className="font-serif text-2xl">
+              Movimiento reciente del dólar paralelo
+            </h2>
+            <TrendSummary label="La venta del dólar paralelo" trend={trend7d} />
+            <TrendSummary label="La venta del dólar paralelo" trend={trend30d} />
+            <Link href="/historico/paralelo" className="underline underline-offset-4 text-sm">
+              Analizar máximos, mínimos e histórico por fecha
+            </Link>
+          </section>
+        ) : null}
 
         <Suspense
           fallback={<div className="card p-5 text-sm text-ink/60">Cargando declarado...</div>}

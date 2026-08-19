@@ -281,6 +281,7 @@ function RatesGrid({
         updatedAt={indexUpdatedAt}
         sourcesCount={indexSources}
         href="/paralelo"
+        actionLabel="Ver dólar paralelo hoy"
         sourceNote={parallelSourceNote}
         shareHref="/compartir?utm_source=home&utm_medium=internal&utm_campaign=tarjeta_diaria&utm_content=kpi_p2p"
         sharePlacement="home_p2p_card"
@@ -441,11 +442,11 @@ export default function HomePage() {
           <div className="grid gap-4">
             <p className="kicker">Actualizado cada 10 minutos</p>
             <h1 className="font-serif text-4xl sm:text-5xl leading-tight">
-              Dólar paralelo y oficial en Bolivia hoy
+              Tipo de cambio en Bolivia hoy
             </h1>
             <p className="text-lg text-ink max-w-2xl">
-              Datos reales, fuentes visibles y series históricas para entender la brecha cambiaria
-              en Bolivia con confianza.
+              Compara el índice P2P, la referencia oficial, USDT/BOB y la brecha cambiaria con
+              fuentes visibles y series históricas.
             </p>
           </div>
 
@@ -467,7 +468,7 @@ export default function HomePage() {
 
         <article className="card p-6 grid gap-4">
           <h2 className="font-serif text-2xl">
-            Cómo interpretar el precio del dólar paralelo en Bolivia
+            Cómo interpretar el tipo de cambio en Bolivia
           </h2>
           <p className="text-ink/70">
             El dólar paralelo es una referencia del precio al que se intercambian dólares o activos
@@ -480,7 +481,7 @@ export default function HomePage() {
             cuánto cuesta adquirirla. El precio final puede cambiar según el monto, medio de pago,
             comisión y plataforma. Antes de operar, compara el{' '}
             <Link href="/paralelo" className="underline underline-offset-4">
-              dólar paralelo de hoy
+              dólar paralelo en Bolivia hoy
             </Link>{' '}
             con el{' '}
             <Link href="/oficial" className="underline underline-offset-4">
@@ -513,7 +514,7 @@ export default function HomePage() {
           <h2 className="font-serif text-2xl">Explora más datos</h2>
           <div className="flex flex-wrap gap-4 text-sm">
             <Link href="/paralelo" className="underline underline-offset-4">
-              Dólar paralelo hoy
+              Dólar paralelo Bolivia hoy
             </Link>
             <Link href="/oficial" className="underline underline-offset-4">
               Dólar oficial hoy
