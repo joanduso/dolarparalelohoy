@@ -85,7 +85,7 @@ export default async function DolarBlueBoliviaPage() {
             <Link href="/brecha" className="underline underline-offset-4">brecha cambiaria</Link> muestra la diferencia entre ambos mercados y ayuda a entender el contexto, no a recomendar una operación.
           </p>
           <p>
-            Para seguir el valor con detalle consulta el <Link href="/paralelo" className="underline underline-offset-4">dólar paralelo de hoy</Link>, la{' '}
+            Para seguir el valor con detalle consulta la <Link href="/paralelo" className="underline underline-offset-4">cotización del dólar paralelo Bolivia hoy</Link>, la{' '}
             <Link href="/historico/paralelo" className="underline underline-offset-4">tendencia histórica con máximos y mínimos</Link>, el{' '}
             <Link href="/usdt-bob" className="underline underline-offset-4">conversor USDT a BOB</Link> y el{' '}
             <Link href="/exchanges" className="underline underline-offset-4">comparador de exchanges P2P</Link>.

@@ -15,6 +15,7 @@ type RateCardProps = {
   sourceNote?: string;
   logoSrc?: string;
   logoAlt?: string;
+  actionLabel?: string;
   shareHref?: string;
   sharePlacement?: string;
 };
@@ -33,6 +34,7 @@ export function RateCard({
   sourceNote,
   logoSrc,
   logoAlt,
+  actionLabel = 'Ver detalle',
   shareHref,
   sharePlacement
 }: RateCardProps) {
@@ -89,7 +91,7 @@ export function RateCard({
       <p className="text-xs text-ink/60">{note}</p>
       <div className="mt-1 flex flex-wrap items-center gap-2">
         <Link href={href} className={`${actionButtonClass} bg-ink text-white hover:bg-ink/90`}>
-          Ver detalle
+          {actionLabel}
         </Link>
         {shareHref ? (
           <ShareCtaLink
