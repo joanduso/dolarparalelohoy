@@ -105,7 +105,7 @@ export default async function UsdtBobPage() {
           </p>
           <p>
             {updatedAt ? `Última actualización de esta referencia: ${formatDateTime(updatedAt)}.` : 'La fuente P2P está temporalmente disponible sin una hora de actualización.'}{' '}
-            Revisa además el <Link href="/paralelo" className="underline underline-offset-4">dólar paralelo</Link>, el{' '}
+            Revisa además el <Link href="/" className="underline underline-offset-4">dólar paralelo</Link>, el{' '}
             <Link href="/dolar-blue-bolivia" className="underline underline-offset-4">dólar blue en Bolivia</Link>, la{' '}
             <Link href="/brecha" className="underline underline-offset-4">brecha cambiaria</Link> y las{' '}
             <Link href="/fuentes" className="underline underline-offset-4">fuentes y metodología</Link>.

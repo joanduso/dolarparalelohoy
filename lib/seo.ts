@@ -1,5 +1,3 @@
-﻿import { HISTORY_PERIODS } from '@/lib/historyPeriods';
-
 export const siteConfig = {
   name: 'Dólar Paralelo Hoy Bolivia',
   shortName: 'Dólar Paralelo Hoy',
@@ -9,7 +7,8 @@ export const siteConfig = {
   url: (() => {
     const rawUrl =
       process.env.NEXT_PUBLIC_SITE_URL ?? process.env.SITE_URL ?? 'https://dolarparalelohoy.com';
-    return rawUrl.startsWith('http') ? rawUrl : `https://${rawUrl}`;
+    const absoluteUrl = rawUrl.startsWith('http') ? rawUrl : `https://${rawUrl}`;
+    return absoluteUrl.replace(/\/+$/, '');
   })(),
   locale: 'es-BO',
   language: 'es'
@@ -27,8 +26,8 @@ export const siteRoutes = [
   '/exchanges',
   '/historico/paralelo',
   '/historico/oficial',
-  ...HISTORY_PERIODS.map((period) => `/historico/paralelo/${period.slug}`),
-  ...HISTORY_PERIODS.map((period) => `/historico/oficial/${period.slug}`),
+  // Period views remain useful filters, but are intentionally noindex and
+  // canonicalized to their parent until they have distinct demand and content.
   '/comprar-usdt-bolivia',
   '/bancos-usdt-bolivia',
   '/que-es-dolar-blue-bolivia',
@@ -40,8 +39,8 @@ export const siteRoutes = [
 ];
 
 export const pageTitles = {
-  home: 'Tipo de Cambio en Bolivia Hoy: Oficial, P2P y USDT',
-  paralelo: 'Dólar Paralelo Bolivia Hoy: Compra y Venta',
+  home: 'Dólar Paralelo Bolivia Hoy: Compra, Venta y Precio',
+  paralelo: 'Índice P2P del Dólar en Bolivia: Cotización y Fuentes',
   oficial: 'Precio Oficial del Dólar en Bolivia Hoy | BCB',
   brecha: 'Brecha dólar oficial vs paralelo Bolivia',
   historicoParalelo: 'Dólar Paralelo Histórico Bolivia: Precios y Variación',
@@ -63,9 +62,9 @@ export const pageTitles = {
 
 export const pageDescriptions = {
   home:
-    'Compara el tipo de cambio en Bolivia hoy: índice P2P, dólar oficial, USDT/BOB, brecha cambiaria, fuentes e históricos actualizados.',
+    'Consulta el dólar paralelo en Bolivia hoy: precio de compra y venta, hora de actualización, variación, fuente, dólar oficial e histórico.',
   paralelo:
-    'Dólar paralelo Bolivia hoy: precio de compra y venta, variación reciente, fuentes públicas y cotización actualizada cada 10 minutos.',
+    'Conoce cómo se calcula el índice P2P del dólar en Bolivia: cotización, muestras, fuentes, filtros, variación reciente y metodología.',
   oficial:
     'Precio del dólar oficial en Bolivia hoy: compra, venta, evolución reciente y referencia publicada por el Banco Central de Bolivia (BCB), actualizada regularmente.',
   brecha:

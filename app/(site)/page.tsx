@@ -10,6 +10,7 @@ import { DeclaredBlock } from '@/app/(site)/_components/DeclaredBlock';
 import { PlatformCards } from '@/app/(site)/_components/PlatformCards';
 import { TrendSummary } from '@/app/(site)/_components/TrendSummary';
 import { ChartCardLazy } from '@/app/(site)/_components/ChartCardLazy';
+import { JsonLd } from '@/app/(site)/_components/JsonLd';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
 import { getSiteData } from '@/lib/siteData';
 import { formatDateTime } from '@/lib/format';
@@ -170,6 +171,25 @@ async function RatesSection() {
 
   return (
     <>
+      <RatesGrid
+        indexBuy={indexBuy}
+        indexSell={indexSell}
+        paraleloDelta={paraleloDelta}
+        indexUpdatedAt={indexUpdatedAt ?? lastUpdated}
+        indexSources={indexSources}
+        parallelSourceNote={parallelSourceNote}
+        oficialBuy={oficial?.buy ?? null}
+        oficialSell={oficial?.sell ?? null}
+        oficialDelta={oficialDelta}
+        lastUpdated={lastUpdated}
+        oficialSourcesCount={oficial?.sources_count ?? null}
+        gapAbs={brecha?.gap_abs ?? null}
+        gapPct={brecha?.gap_pct ?? null}
+        bcbDateText={bcbData?.dateText}
+        bcbCompraText={bcbData?.compraText}
+        bcbVentaText={bcbData?.ventaText}
+        bcbError={bcbResult.ok ? null : bcbResult.error ?? 'fuente_no_disponible'}
+      />
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="font-serif text-2xl">Fuentes y metodología</h2>
         <div className="flex flex-wrap items-center gap-3 text-sm text-ink/70">
@@ -203,25 +223,6 @@ async function RatesSection() {
       {status !== 'OK' && latest?.notes ? (
         <p className="text-xs text-ink/60">Nota técnica: {latest?.notes}</p>
       ) : null}
-      <RatesGrid
-        indexBuy={indexBuy}
-        indexSell={indexSell}
-        paraleloDelta={paraleloDelta}
-        indexUpdatedAt={indexUpdatedAt ?? lastUpdated}
-        indexSources={indexSources}
-        parallelSourceNote={parallelSourceNote}
-        oficialBuy={oficial?.buy ?? null}
-        oficialSell={oficial?.sell ?? null}
-        oficialDelta={oficialDelta}
-        lastUpdated={lastUpdated}
-        oficialSourcesCount={oficial?.sources_count ?? null}
-        gapAbs={brecha?.gap_abs ?? null}
-        gapPct={brecha?.gap_pct ?? null}
-        bcbDateText={bcbData?.dateText}
-        bcbCompraText={bcbData?.compraText}
-        bcbVentaText={bcbData?.ventaText}
-        bcbError={bcbResult.ok ? null : bcbResult.error ?? 'fuente_no_disponible'}
-      />
       <DeclaredBlock />
       {!hasAnyData ? (
         <div className="card p-6 text-sm text-ink/70">
@@ -281,7 +282,7 @@ function RatesGrid({
         updatedAt={indexUpdatedAt}
         sourcesCount={indexSources}
         href="/paralelo"
-        actionLabel="Ver dólar paralelo hoy"
+        actionLabel="Cómo calculamos el índice"
         sourceNote={parallelSourceNote}
         shareHref="/compartir?utm_source=home&utm_medium=internal&utm_campaign=tarjeta_diaria&utm_content=kpi_p2p"
         sharePlacement="home_p2p_card"
@@ -435,18 +436,34 @@ function PlatformCardsFallback() {
 }
 
 export default function HomePage() {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    '@id': `${siteConfig.url}/#webpage`,
+    url: siteConfig.url,
+    name: pageTitles.home,
+    description: pageDescriptions.home,
+    inLanguage: siteConfig.language,
+    isPartOf: { '@id': `${siteConfig.url}/#website` },
+    about: {
+      '@type': 'Thing',
+      name: 'Dólar paralelo en Bolivia'
+    }
+  };
+
   return (
     <main className="pb-16">
+      <JsonLd data={jsonLd} />
       <section className="w-full bg-gradient-to-b from-sand/70 via-sand/30 to-transparent">
         <div className="section-shell py-12 grid gap-6">
           <div className="grid gap-4">
             <p className="kicker">Actualizado cada 10 minutos</p>
             <h1 className="font-serif text-4xl sm:text-5xl leading-tight">
-              Tipo de cambio en Bolivia hoy
+              Dólar paralelo en Bolivia hoy
             </h1>
             <p className="text-lg text-ink max-w-2xl">
-              Compara el índice P2P, la referencia oficial, USDT/BOB y la brecha cambiaria con
-              fuentes visibles y series históricas.
+              Consulta compra, venta, hora de actualización y variación del dólar paralelo.
+              Compara la referencia P2P con el dólar oficial y revisa las fuentes utilizadas.
             </p>
           </div>
 
@@ -468,7 +485,7 @@ export default function HomePage() {
 
         <article className="card p-6 grid gap-4">
           <h2 className="font-serif text-2xl">
-            Cómo interpretar el tipo de cambio en Bolivia
+            Cómo interpretar el dólar paralelo en Bolivia
           </h2>
           <p className="text-ink/70">
             El dólar paralelo es una referencia del precio al que se intercambian dólares o activos
@@ -479,9 +496,9 @@ export default function HomePage() {
           <p className="text-ink/70">
             La compra indica cuánto ofrecen por cada dólar o unidad equivalente; la venta indica
             cuánto cuesta adquirirla. El precio final puede cambiar según el monto, medio de pago,
-            comisión y plataforma. Antes de operar, compara el{' '}
+            comisión y plataforma. Revisa cómo construimos el{' '}
             <Link href="/paralelo" className="underline underline-offset-4">
-              dólar paralelo en Bolivia hoy
+              índice P2P y sus fuentes
             </Link>{' '}
             con el{' '}
             <Link href="/oficial" className="underline underline-offset-4">
@@ -514,7 +531,7 @@ export default function HomePage() {
           <h2 className="font-serif text-2xl">Explora más datos</h2>
           <div className="flex flex-wrap gap-4 text-sm">
             <Link href="/paralelo" className="underline underline-offset-4">
-              Dólar paralelo Bolivia hoy
+              Metodología del índice P2P
             </Link>
             <Link href="/oficial" className="underline underline-offset-4">
               Dólar oficial hoy

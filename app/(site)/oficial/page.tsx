@@ -82,7 +82,8 @@ export default async function OficialPage() {
     name: pageTitles.oficial,
     description: pageDescriptions.oficial,
     url: `${siteConfig.url}/oficial`,
-    inLanguage: siteConfig.language
+    inLanguage: siteConfig.language,
+    dateModified: updatedAt?.toISOString()
   };
 
   const statusLabelValue = status ?? (hasAnyData ? 'DEGRADED' : 'ERROR');
@@ -133,6 +134,9 @@ export default async function OficialPage() {
             </p>
           ) : null}
           <div className="flex flex-wrap gap-4 text-sm">
+            <Link href="/" className="underline underline-offset-4">
+              Ver dólar paralelo Bolivia hoy
+            </Link>
             <Link href="/historico/oficial" className="underline underline-offset-4">
               Ver histórico oficial
             </Link>

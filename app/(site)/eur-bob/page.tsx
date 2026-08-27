@@ -87,7 +87,7 @@ export default async function EurBobPage() {
             A diferencia del dólar, Bolivia no tiene un mercado paralelo de euros documentado
             públicamente. Para euros, la cotización del BCB es la referencia más práctica
             disponible. Si necesitas dólares o USDT, revisa el{' '}
-            <Link href="/paralelo" className="underline underline-offset-4">dólar paralelo hoy</Link>{' '}
+            <Link href="/" className="underline underline-offset-4">dólar paralelo hoy</Link>{' '}
             y el <Link href="/usdt-bob" className="underline underline-offset-4">conversor USDT a BOB</Link>.
           </p>
         </div>

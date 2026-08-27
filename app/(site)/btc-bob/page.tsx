@@ -91,7 +91,7 @@ export default async function BtcBobPage() {
           <p>
             Tomamos el precio de Bitcoin en dólares de mercados globales y lo multiplicamos por
             nuestro propio índice del{' '}
-            <Link href="/paralelo" className="underline underline-offset-4">dólar paralelo en Bolivia</Link>.
+            <Link href="/" className="underline underline-offset-4">dólar paralelo en Bolivia</Link>.
             Es una referencia útil para estimar valor, no el precio exacto al que podrías comprar o
             vender en un exchange. Para operar, revisa la{' '}
             <Link href="/comprar-usdt-bolivia" className="underline underline-offset-4">guía de cómo comprar USDT en Bolivia</Link>{' '}

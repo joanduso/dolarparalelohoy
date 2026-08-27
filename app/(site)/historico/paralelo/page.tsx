@@ -133,7 +133,7 @@ export default async function HistoricoParaleloPage() {
             </p>
           ) : null}
           <div className="flex flex-wrap gap-4 text-sm">
-            <Link href="/paralelo" className="underline underline-offset-4">
+            <Link href="/" className="underline underline-offset-4">
               Ver dólar paralelo Bolivia hoy
             </Link>
             <Link href="/brecha" className="underline underline-offset-4">

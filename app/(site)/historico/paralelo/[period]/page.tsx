@@ -42,7 +42,8 @@ export async function generateMetadata({
   return {
     title,
     description,
-    alternates: { canonical: `/historico/paralelo/${period.slug}` },
+    alternates: { canonical: '/historico/paralelo' },
+    robots: { index: false, follow: true },
     openGraph: { title, description, locale: siteConfig.locale }
   };
 }
@@ -107,7 +108,7 @@ export default async function HistoricoParaleloPeriodPage({
           </p>
           <p className="text-sm text-ink/70">
             Para la referencia vigente, consulta el{' '}
-            <Link href="/paralelo" className="underline underline-offset-4">
+            <Link href="/" className="underline underline-offset-4">
               dólar paralelo Bolivia hoy
             </Link>
             .
