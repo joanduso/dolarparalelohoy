@@ -12,6 +12,7 @@ import { SeoFaq, type SeoFaqItem } from '@/app/(site)/_components/SeoFaq';
 import { TrendSummary } from '@/app/(site)/_components/TrendSummary';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
 import { getSiteData } from '@/lib/siteData';
+import { fetchP2PIndex } from '@/lib/p2pIndex';
 import { formatCurrency, formatDateTime } from '@/lib/format';
 import { computeTrend } from '@/lib/trend';
 import type { Metadata } from 'next';
@@ -54,15 +55,21 @@ export async function generateMetadata(): Promise<Metadata> {
 export const revalidate = 600;
 
 export default async function ParaleloPage() {
-  const [latestResult, historyResult] = await Promise.all([
+  const [latestResult, historyResult, p2pIndex] = await Promise.all([
     getSiteData<CurrentRatesResponse>('/api/rates/current?v=live-20260722'),
-    getSiteData<HistoryResponse<DailyHistoryRow>>('/api/rates/history?kind=PARALELO&days=365')
+    getSiteData<HistoryResponse<DailyHistoryRow>>('/api/rates/history?kind=PARALELO&days=365'),
+    fetchP2PIndex()
   ]);
 
-  const latest = latestResult.data?.paralelo ?? null;
-  const status = latestResult.data?.status ?? null;
+  const fallbackQuote = latestResult.data?.paralelo ?? null;
+  const buy = p2pIndex?.buy ?? fallbackQuote?.buy ?? null;
+  const sell = p2pIndex?.sell ?? fallbackQuote?.sell ?? null;
+  const evidenceCount = p2pIndex?.sourceCount ?? fallbackQuote?.sampleSize ?? 0;
+  const evidenceLabel = p2pIndex ? 'fuentes activas' : 'muestras';
+  const status = p2pIndex ? 'OK' : latestResult.data?.status ?? null;
   const notes = latestResult.data?.notes ?? null;
-  const updatedAt = latestResult.data?.updatedAt ? new Date(latestResult.data.updatedAt) : null;
+  const updatedAtValue = p2pIndex?.timestamp ?? latestResult.data?.updatedAt;
+  const updatedAt = updatedAtValue ? new Date(updatedAtValue) : null;
   const history = historyResult.data?.data ?? [];
   const trendPoints = history.map((row) => ({ date: row.date, value: row.sell_avg }));
   const trend7d = computeTrend(trendPoints, 7);
@@ -72,9 +79,13 @@ export default async function ParaleloPage() {
     date: new Date(row.date)
   }));
 
-  const hasAnyData = Boolean(latest || history.length);
+  const hasAnyData = Boolean((buy !== null && sell !== null) || history.length);
 
-  const sourceNote = (latest?.sampleSize ?? 0) > 0 ? 'Fuente base: Binance P2P (mediana de avisos).' : 'Paralelo sin fuentes activas. Intentaremos actualizar pronto.';
+  const sourceNote = p2pIndex
+    ? `Mediana multi-exchange con ${p2pIndex.sourceCount} fuentes activas. Datos agregados por paralelo.bo.`
+    : (fallbackQuote?.sampleSize ?? 0) > 0
+      ? 'Respaldo temporal: Binance P2P (mediana de anuncios).'
+      : 'Índice sin fuentes activas. Intentaremos actualizar pronto.';
 
   const chartData = {
     paralelo: history.map((row) => ({
@@ -106,15 +117,15 @@ export default async function ParaleloPage() {
 
   const faqItems: SeoFaqItem[] = [
     {
-      question: '¿Cuánto está el dólar paralelo en Bolivia hoy?',
+      question: '¿Cómo se calcula el índice P2P del dólar en Bolivia?',
       answer:
-        typeof latest?.buy === 'number' && typeof latest?.sell === 'number'
-          ? `La referencia actual es ${formatCurrency(latest.buy)} para compra y ${formatCurrency(latest.sell)} para venta. La hora de actualización aparece junto a la cotización.`
-          : 'La cotización aparece en esta página cuando las fuentes activas completan la validación.'
+        typeof buy === 'number' && typeof sell === 'number'
+          ? `La referencia actual de ${formatCurrency(buy)} para compra y ${formatCurrency(sell)} para venta se obtiene de muestras P2P disponibles que pasan filtros de validación.`
+          : 'El índice se publica cuando las muestras P2P disponibles completan los filtros de validación.'
     },
     {
-      question: '¿Cómo se calcula el dólar paralelo?',
-      answer: 'Se calcula con promedios de fuentes públicas y mercados P2P, filtrando valores atípicos antes de publicar la referencia.'
+      question: '¿Qué representan la compra y la venta del índice?',
+      answer: 'La compra refleja cuánto ofrecen por cada unidad equivalente a un dólar; la venta, cuánto cuesta adquirirla en los mercados observados.'
     },
     {
       question: '¿Cada cuánto se actualiza?',
@@ -125,25 +136,28 @@ export default async function ParaleloPage() {
   return (
     <main className="section-shell pb-16">
       <JsonLd data={jsonLd} />
-      <Breadcrumbs items={[{ name: 'Dólar paralelo', href: '/paralelo' }]} />
+      <Breadcrumbs items={[{ name: 'Índice P2P', href: '/paralelo' }]} />
       <section className="grid gap-8">
         <div className="grid gap-3">
-          <p className="kicker">Cotización actualizada cada 10 minutos</p>
+          <p className="kicker">Metodología y detalle de mercado</p>
           <h1 className="font-serif text-3xl sm:text-4xl">
-            Dólar paralelo Bolivia hoy: compra y venta
+            Índice P2P del dólar en Bolivia
           </h1>
           <p className="text-ink/70 max-w-2xl">
-            Consulta el precio del dólar paralelo en Bolivia hoy, cuánto pagan por comprar y cuánto
-            cuesta vender, la variación reciente y la hora de actualización. La referencia usa
-            fuentes públicas y mercados P2P filtrados.
+            Revisa cómo se construye la referencia P2P: cotización observada, cantidad de muestras,
+            filtros, variación reciente y hora de actualización. Esta página explica el detalle del
+            índice que alimenta la cotización principal.
           </p>
-          {typeof latest?.buy === 'number' && typeof latest?.sell === 'number' ? (
+          {typeof buy === 'number' && typeof sell === 'number' ? (
             <p className="text-lg text-ink max-w-2xl">
-              Hoy la referencia es <strong>{formatCurrency(latest.buy)}</strong> para compra y{' '}
-              <strong>{formatCurrency(latest.sell)}</strong> para venta.
+              Hoy la referencia es <strong>{formatCurrency(buy)}</strong> para compra y{' '}
+              <strong>{formatCurrency(sell)}</strong> para venta.
             </p>
           ) : null}
           <div className="flex flex-wrap gap-4 text-sm">
+            <Link href="/" className="underline underline-offset-4">
+              Ver dólar paralelo Bolivia hoy
+            </Link>
             <Link href="/historico/paralelo" className="underline underline-offset-4">
               Analizar tendencia, máximos y mínimos
             </Link>
@@ -175,24 +189,22 @@ export default async function ParaleloPage() {
             <div>
               <p className="text-xs uppercase text-ink/50">Compra</p>
               <p className="text-3xl font-semibold">
-                {typeof latest?.buy === 'number' ? formatCurrency(latest.buy) : <Skeleton className="h-8 w-24" />}
+                {typeof buy === 'number' ? formatCurrency(buy) : <Skeleton className="h-8 w-24" />}
               </p>
             </div>
             <div>
               <p className="text-xs uppercase text-ink/50">Venta</p>
               <p className="text-3xl font-semibold">
-                {typeof latest?.sell === 'number' ? formatCurrency(latest.sell) : <Skeleton className="h-8 w-24" />}
+                {typeof sell === 'number' ? formatCurrency(sell) : <Skeleton className="h-8 w-24" />}
               </p>
             </div>
             <div>
-              <p className="text-xs uppercase text-ink/50">Fuentes</p>
-              <p className="text-3xl font-semibold">
-                {typeof latest?.sampleSize === 'number' ? latest.sampleSize : <Skeleton className="h-8 w-10" />}
-              </p>
+              <p className="text-xs uppercase text-ink/50">{evidenceLabel}</p>
+              <p className="text-3xl font-semibold">{evidenceCount}</p>
             </div>
             <p className="text-sm text-ink/60">
-              {latest?.sampleSize && latest.sampleSize >= 2
-                ? `Confirmado por ${latest.sampleSize} muestras`
+              {evidenceCount >= 2
+                ? `Confirmado por ${evidenceCount} ${evidenceLabel}`
                 : 'Estimación pendiente'}
             </p>
           </div>

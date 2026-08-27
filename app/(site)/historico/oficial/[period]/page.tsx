@@ -41,7 +41,8 @@ export async function generateMetadata({
   return {
     title,
     description,
-    alternates: { canonical: `/historico/oficial/${period.slug}` },
+    alternates: { canonical: '/historico/oficial' },
+    robots: { index: false, follow: true },
     openGraph: { title, description, locale: siteConfig.locale }
   };
 }

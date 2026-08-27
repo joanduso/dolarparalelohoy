@@ -158,7 +158,7 @@ export default function RootLayout({
               </p>
               <nav className="flex flex-wrap gap-4 text-sm">
                 <Link href="/paralelo" className="underline underline-offset-4">
-                  Dólar paralelo
+                  Índice P2P
                 </Link>
                 <Link href="/oficial" className="underline underline-offset-4">
                   Dólar oficial
