@@ -2,11 +2,15 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { Breadcrumbs } from '@/app/(site)/_components/Breadcrumbs';
 import { JsonLd } from '@/app/(site)/_components/JsonLd';
+import { MarketRateComparison } from '@/app/(site)/_components/MarketRateComparison';
 import { P2PCalculator } from '@/app/(site)/_components/P2PCalculator';
 import { SeoFaq, type SeoFaqItem } from '@/app/(site)/_components/SeoFaq';
 import { formatCurrency, formatDateTime } from '@/lib/format';
 import { getParallelQuote } from '@/lib/p2pIndex';
+import { getSiteData } from '@/lib/siteData';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
+
+type CurrentRates = { oficial: { sell: number | null } | null };
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -22,7 +26,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function DolarBlueBoliviaPage() {
-  const quote = await getParallelQuote();
+  const [quote, currentResult] = await Promise.all([
+    getParallelQuote(),
+    getSiteData<CurrentRates>('/api/rates/current?v=blue-comparison-20260827')
+  ]);
+  const officialSell = currentResult.data?.oficial?.sell ?? null;
   const updatedAt = quote ? new Date(quote.updatedAt) : null;
   const faqItems: SeoFaqItem[] = [
     {
@@ -73,6 +81,8 @@ export default async function DolarBlueBoliviaPage() {
           </p>
         </div>
 
+        <MarketRateComparison marketLabel="Dólar blue / paralelo" marketSell={quote?.sell ?? null} officialSell={officialSell} />
+
         <P2PCalculator buy={quote?.buy ?? null} sell={quote?.sell ?? null} />
 
         <article className="card p-6 grid gap-4 text-ink/70">
@@ -89,6 +99,7 @@ export default async function DolarBlueBoliviaPage() {
             <Link href="/historico/paralelo" className="underline underline-offset-4">tendencia histórica con máximos y mínimos</Link>, el{' '}
             <Link href="/usdt-bob" className="underline underline-offset-4">conversor USDT a BOB</Link> y el{' '}
             <Link href="/exchanges" className="underline underline-offset-4">comparador de exchanges P2P</Link>.
+            {' '}También puedes calcular montos en ambos sentidos con la <Link href="/calculadora-dolar-bolivia" className="underline underline-offset-4">calculadora de dólares a bolivianos</Link>.
           </p>
         </article>
 

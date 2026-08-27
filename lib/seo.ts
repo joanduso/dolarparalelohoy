@@ -23,6 +23,8 @@ export const siteRoutes = [
   '/eur-bob',
   '/btc-bob',
   '/dolar-blue-bolivia',
+  '/calculadora-dolar-bolivia',
+  '/binance-p2p-bolivia',
   '/exchanges',
   '/historico/paralelo',
   '/historico/oficial',
@@ -33,6 +35,7 @@ export const siteRoutes = [
   '/que-es-dolar-blue-bolivia',
   '/faq',
   '/fuentes',
+  '/widget',
   '/terminos',
   '/privacidad',
   '/devs'
@@ -49,7 +52,10 @@ export const pageTitles = {
   eurBob: 'Euro a bolivianos hoy: tipo de cambio oficial BCB',
   btcBob: 'Bitcoin a bolivianos hoy: precio BTC en Bs',
   dolarBlue: 'Dólar blue Bolivia hoy: precio y diferencia con el oficial',
+  calculadora: 'Calculadora dólar a bolivianos hoy: oficial y paralelo',
+  binanceP2p: 'Binance P2P Bolivia hoy: precio USDT/BOB y guía',
   exchanges: 'Comparador de exchanges P2P Bolivia',
+  widget: 'Widget del dólar paralelo Bolivia para tu sitio web',
   comprarUsdt: 'Cómo comprar USDT en Bolivia 2026: guía completa paso a paso',
   bancosUsdt: 'Qué bancos venden USDT en Bolivia: BCP, BISA, Ganadero, Unión y FIE',
   queEsDolarBlue: 'Qué es el dólar blue y cómo funciona en Bolivia',
@@ -81,8 +87,14 @@ export const pageDescriptions = {
     'Precio de referencia de Bitcoin en bolivianos hoy, calculado a partir del precio de BTC en dólares y nuestro índice del dólar paralelo en Bolivia.',
   dolarBlue:
     'Precio del dólar blue en Bolivia hoy. Entiende la diferencia entre dólar paralelo, USDT/BOB y tipo de cambio oficial.',
+  calculadora:
+    'Convierte dólares a bolivianos y bolivianos a dólares con las cotizaciones oficial y paralela de Bolivia, actualizadas hoy.',
+  binanceP2p:
+    'Consulta la referencia USDT/BOB de Binance P2P en Bolivia, calcula montos y aprende a comparar anuncios, límites y medios de pago.',
   exchanges:
     'Compara cotizaciones P2P de exchanges y billeteras disponibles para Bolivia: compra, venta, actualización y condiciones.',
+  widget:
+    'Inserta gratis la cotización actualizada del dólar paralelo en Bolivia en tu web mediante un widget ligero y con atribución.',
   comprarUsdt:
     'Guía paso a paso para comprar USDT en Bolivia: elegir plataforma, crear cuenta, verificar identidad, encontrar un anuncio P2P seguro y evitar errores comunes.',
   bancosUsdt:

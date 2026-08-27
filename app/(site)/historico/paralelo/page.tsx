@@ -139,12 +139,16 @@ export default async function HistoricoParaleloPage() {
             <Link href="/brecha" className="underline underline-offset-4">
               Ver brecha cambiaria
             </Link>
+            <Link href="/calculadora-dolar-bolivia" className="underline underline-offset-4">
+              Calcular un monto con la tasa de hoy
+            </Link>
           </div>
         </div>
 
         <HistoryHighlights
           label="El dólar paralelo"
           stats={stats}
+          previousDay={history.length >= 2 ? { date: history.at(-2)!.date, value: history.at(-2)!.sell_avg } : null}
           trends={[
             { label: '7 días', trend: trend7d },
             { label: '30 días', trend: trend30d },

@@ -6,7 +6,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
   const routes = siteRoutes;
 
-  const frequentlyUpdated = ['', '/paralelo', '/oficial', '/brecha', '/usdt-bob', '/dolar-blue-bolivia', '/exchanges'];
+  const frequentlyUpdated = ['', '/paralelo', '/oficial', '/brecha', '/usdt-bob', '/dolar-blue-bolivia', '/calculadora-dolar-bolivia', '/binance-p2p-bolivia', '/exchanges'];
   const dailyUpdated = ['/historico/paralelo', '/historico/oficial'];
   const staticPageModifiedAt = new Date('2026-08-27T00:00:00.000Z');
 

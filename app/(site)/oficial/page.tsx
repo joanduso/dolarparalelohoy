@@ -143,6 +143,9 @@ export default async function OficialPage() {
             <Link href="/brecha" className="underline underline-offset-4">
               Comparar oficial vs. paralelo
             </Link>
+            <Link href="/calculadora-dolar-bolivia" className="underline underline-offset-4">
+              Convertir dólares y bolivianos
+            </Link>
           </div>
         </div>
 
