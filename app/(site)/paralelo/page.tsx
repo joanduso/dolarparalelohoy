@@ -164,6 +164,9 @@ export default async function ParaleloPage() {
             <Link href="/brecha" className="underline underline-offset-4">
               Comparar con el dólar oficial
             </Link>
+            <Link href="/calculadora-dolar-bolivia" className="underline underline-offset-4">
+              Calcular USD a BOB
+            </Link>
           </div>
         </div>
 

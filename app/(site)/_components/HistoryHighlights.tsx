@@ -26,16 +26,33 @@ function trendSentence(label: string, trend: TrendSummaryData | null) {
 export function HistoryHighlights({
   label,
   stats,
-  trends
+  trends,
+  previousDay
 }: {
   label: string;
   stats: HistoryStats | null;
   trends: TrendWindow[];
+  previousDay?: { date: string; value: number } | null;
 }) {
   if (!stats) return null;
 
   const primaryTrend = trends.find(({ trend }) => trend?.days === 30)?.trend ?? trends.find(({ trend }) => trend)?.trend ?? null;
   const interpretation = trendSentence(label, primaryTrend);
+  const comparisonRows = [
+    previousDay
+      ? {
+          label: 'Ayer',
+          firstDate: previousDay.date,
+          firstValue: previousDay.value,
+          lastDate: stats.lastDate,
+          lastValue: stats.lastValue,
+          changePct: ((stats.lastValue - previousDay.value) / previousDay.value) * 100
+        }
+      : null,
+    ...trends
+      .filter(({ trend }) => trend?.days === 7 || trend?.days === 30)
+      .map(({ label: trendLabel, trend }) => trend ? ({ label: trendLabel, ...trend }) : null)
+  ].filter((row): row is NonNullable<typeof row> => Boolean(row));
 
   return (
     <section className="grid gap-4" aria-labelledby="resumen-tendencia">
@@ -92,6 +109,16 @@ export function HistoryHighlights({
           )}
         </div>
       </div>
+
+      {comparisonRows.length ? (
+        <div className="card overflow-x-auto p-5">
+          <h3 className="mb-3 font-serif text-xl">Hoy vs. ayer, 7 y 30 días</h3>
+          <table className="w-full text-sm">
+            <thead className="text-left text-ink/55"><tr><th className="pb-2">Comparación</th><th className="pb-2">Valor anterior</th><th className="pb-2">Último valor</th><th className="pb-2">Variación</th></tr></thead>
+            <tbody>{comparisonRows.map((row) => <tr key={row.label} className="border-t border-black/5"><td className="py-2 font-medium">{row.label}</td><td className="py-2">{formatCurrency(row.firstValue)}<span className="ml-1 text-xs text-ink/45">({formatCalendarDate(row.firstDate)})</span></td><td className="py-2">{formatCurrency(row.lastValue)}</td><td className="py-2">{formatChange(row.changePct)}</td></tr>)}</tbody>
+          </table>
+        </div>
+      ) : null}
     </section>
   );
 }

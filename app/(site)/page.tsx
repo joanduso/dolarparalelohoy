@@ -542,11 +542,17 @@ export default function HomePage() {
             <Link href="/usdt-bob" className="underline underline-offset-4">
               Conversor USDT a BOB
             </Link>
+            <Link href="/calculadora-dolar-bolivia" className="underline underline-offset-4">
+              Calculadora dólar a bolivianos
+            </Link>
             <Link href="/dolar-blue-bolivia" className="underline underline-offset-4">
               Dólar blue Bolivia
             </Link>
             <Link href="/exchanges" className="underline underline-offset-4">
               Comparar exchanges
+            </Link>
+            <Link href="/binance-p2p-bolivia" className="underline underline-offset-4">
+              Binance P2P Bolivia
             </Link>
             <Link href="/historico/paralelo" className="underline underline-offset-4">
               Histórico paralelo
@@ -568,6 +574,9 @@ export default function HomePage() {
             </Link>
             <Link href="/btc-bob" className="underline underline-offset-4">
               Bitcoin a bolivianos
+            </Link>
+            <Link href="/widget" className="underline underline-offset-4">
+              Widget del dólar para tu web
             </Link>
           </div>
         </div>

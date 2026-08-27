@@ -2,11 +2,15 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { Breadcrumbs } from '@/app/(site)/_components/Breadcrumbs';
 import { JsonLd } from '@/app/(site)/_components/JsonLd';
+import { MarketRateComparison } from '@/app/(site)/_components/MarketRateComparison';
 import { P2PCalculator } from '@/app/(site)/_components/P2PCalculator';
 import { SeoFaq, type SeoFaqItem } from '@/app/(site)/_components/SeoFaq';
 import { formatCurrency, formatDateTime } from '@/lib/format';
 import { getParallelQuote } from '@/lib/p2pIndex';
+import { getSiteData } from '@/lib/siteData';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
+
+type CurrentRates = { oficial: { sell: number | null } | null };
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -22,7 +26,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function UsdtBobPage() {
-  const quote = await getParallelQuote();
+  const [quote, currentResult] = await Promise.all([
+    getParallelQuote(),
+    getSiteData<CurrentRates>('/api/rates/current?v=usdt-comparison-20260827')
+  ]);
+  const officialSell = currentResult.data?.oficial?.sell ?? null;
   const updatedAt = quote ? new Date(quote.updatedAt) : null;
   const faqItems: SeoFaqItem[] = [
     {
@@ -98,6 +106,8 @@ export default async function UsdtBobPage() {
 
         <P2PCalculator buy={quote?.buy ?? null} sell={quote?.sell ?? null} assetLabel="USDT" />
 
+        <MarketRateComparison marketLabel="USDT P2P" marketSell={quote?.sell ?? null} officialSell={officialSell} />
+
         <article className="card p-6 grid gap-4 text-ink/70">
           <h2 className="font-serif text-2xl text-ink">Cómo usar esta referencia</h2>
           <p>
@@ -133,6 +143,8 @@ export default async function UsdtBobPage() {
           <Link href="/bancos-usdt-bolivia" className="underline underline-offset-4 text-sm">Qué bancos venden USDT en Bolivia</Link>
           <Link href="/eur-bob" className="underline underline-offset-4 text-sm">Convertir euros a bolivianos</Link>
           <Link href="/btc-bob" className="underline underline-offset-4 text-sm">Convertir Bitcoin a bolivianos</Link>
+          <Link href="/calculadora-dolar-bolivia" className="underline underline-offset-4 text-sm">Calculadora dólar a bolivianos: oficial y paralelo</Link>
+          <Link href="/binance-p2p-bolivia" className="underline underline-offset-4 text-sm">Precio y guía de Binance P2P Bolivia</Link>
         </div>
 
         <SeoFaq items={faqItems} />

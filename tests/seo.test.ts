@@ -18,6 +18,10 @@ describe('SEO configuration', () => {
     expect(new Set(urls).size).toBe(urls.length);
     expect(urls).toContain(siteConfig.url);
     expect(urls.some((url) => /\/historico\/(?:paralelo|oficial)\/(?:7d|30d|90d|1a|todo)$/.test(url))).toBe(false);
+    expect(urls).toContain(`${siteConfig.url}/calculadora-dolar-bolivia`);
+    expect(urls).toContain(`${siteConfig.url}/binance-p2p-bolivia`);
+    expect(urls).toContain(`${siteConfig.url}/widget`);
+    expect(urls).not.toContain(`${siteConfig.url}/widget/embed`);
 
     for (const url of urls) {
       const parsed = new URL(url);

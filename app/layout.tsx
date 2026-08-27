@@ -172,8 +172,14 @@ export default function RootLayout({
                 <Link href="/usdt-bob" className="underline underline-offset-4">
                   Conversor USDT/BOB
                 </Link>
+                <Link href="/calculadora-dolar-bolivia" className="underline underline-offset-4">
+                  Calculadora USD↔BOB
+                </Link>
                 <Link href="/exchanges" className="underline underline-offset-4">
                   Comparar exchanges
+                </Link>
+                <Link href="/binance-p2p-bolivia" className="underline underline-offset-4">
+                  Binance P2P
                 </Link>
                 <Link href="/faq" className="underline underline-offset-4">
                   Metodología
@@ -235,6 +241,12 @@ export default function RootLayout({
                 </Link>
                 <Link href="/fuentes" className="underline underline-offset-4">
                   Fuentes
+                </Link>
+                <Link href="/calculadora-dolar-bolivia" className="underline underline-offset-4">
+                  Calculadora dólar a bolivianos
+                </Link>
+                <Link href="/widget" className="underline underline-offset-4">
+                  Widget para sitios web
                 </Link>
                 <Link href="/terminos" className="underline underline-offset-4">
                   Términos

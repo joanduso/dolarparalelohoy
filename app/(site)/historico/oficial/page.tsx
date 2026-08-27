@@ -130,6 +130,10 @@ export default async function HistoricoOficialPage() {
             </p>
           ) : null}
           <div className="flex flex-wrap gap-4 text-sm">
+            <Link href="/oficial" className="underline underline-offset-4">Ver dólar oficial hoy</Link>
+            <Link href="/calculadora-dolar-bolivia" className="underline underline-offset-4">Convertir dólares y bolivianos</Link>
+          </div>
+          <div className="flex flex-wrap gap-4 text-sm">
             <Link href="/oficial" className="underline underline-offset-4">
               Ver precio de hoy
             </Link>

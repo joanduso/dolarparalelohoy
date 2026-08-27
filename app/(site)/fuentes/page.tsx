@@ -66,6 +66,30 @@ export default function FuentesPage() {
           </p>
         </section>
 
+        <section className="card p-6 grid gap-4">
+          <h2 className="font-serif text-2xl">Cómo calculamos y validamos cada dato</h2>
+          <ol className="grid gap-3 text-ink/70">
+            <li><strong>1. Recolección:</strong> obtenemos cotizaciones públicas con su hora de consulta y conservamos separadas compra y venta.</li>
+            <li><strong>2. Normalización:</strong> expresamos cada muestra en bolivianos por unidad de USD o activo equivalente y descartamos formatos inválidos.</li>
+            <li><strong>3. Validación:</strong> rechazamos precios fuera de rangos plausibles, muestras incompletas y valores atípicos que distorsionarían el centro del mercado.</li>
+            <li><strong>4. Agregación:</strong> usamos la mediana de las muestras válidas para reducir el peso de anuncios extremos.</li>
+            <li><strong>5. Publicación:</strong> mostramos hora, fuentes activas y estado degradado cuando falta una fuente. El histórico consolida promedios diarios.</li>
+          </ol>
+        </section>
+
+        <section className="card p-6 grid gap-4">
+          <h2 className="font-serif text-2xl">Diccionario de datos y frecuencia</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm text-ink/70"><thead className="text-left text-ink/55"><tr><th className="pb-2">Campo</th><th className="pb-2">Significado</th><th className="pb-2">Actualización</th></tr></thead><tbody>
+              <tr className="border-t border-black/5"><td className="py-2 font-medium">Compra</td><td className="py-2">Precio referencial que ofrecen por una unidad.</td><td className="py-2">Durante el día</td></tr>
+              <tr className="border-t border-black/5"><td className="py-2 font-medium">Venta</td><td className="py-2">Precio referencial para adquirir una unidad.</td><td className="py-2">Durante el día</td></tr>
+              <tr className="border-t border-black/5"><td className="py-2 font-medium">Brecha</td><td className="py-2">Diferencia absoluta y porcentual entre venta paralela y oficial.</td><td className="py-2">Con cada cotización válida</td></tr>
+              <tr className="border-t border-black/5"><td className="py-2 font-medium">Histórico</td><td className="py-2">Promedio diario de compra y venta con número de fuentes.</td><td className="py-2">Diaria</td></tr>
+            </tbody></table>
+          </div>
+          <p className="text-sm text-ink/60">Versión metodológica: 27 de agosto de 2026. Los cambios materiales se documentarán en esta página.</p>
+        </section>
+
         <section id="licencia-de-uso-de-datos" className="card p-6 grid gap-3">
           <h2 className="font-serif text-2xl">Licencia de uso de datos</h2>
           <p className="text-ink/70">
@@ -83,6 +107,9 @@ export default function FuentesPage() {
             </a>. Esto aplica a los datos que nosotros calculamos y publicamos; las fuentes
             primarias que citamos (BCB, paralelo.bo, Binance P2P) mantienen sus propios términos.
           </p>
+          <div className="rounded-xl bg-sand/50 p-4 text-sm text-ink/70">
+            <strong>Cita sugerida:</strong> Dólar Paralelo Hoy Bolivia, “Cotización del dólar paralelo en Bolivia”, dato consultado en dolarparalelohoy.com, con fecha y hora de acceso.
+          </div>
           <p className="text-ink/70">
             Para integrar estos datos en un producto, agente o asistente, usa la{' '}
             <Link className="underline underline-offset-4" href="/devs">API pública documentada</Link>{' '}

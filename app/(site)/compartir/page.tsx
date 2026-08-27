@@ -183,6 +183,9 @@ export default async function SharePage({
           <Link href="/" className="justify-self-start underline underline-offset-4">
             Volver a todas las cotizaciones
           </Link>
+          <Link href="/widget" className="justify-self-start underline underline-offset-4">
+            Insertar la cotización en un sitio web
+          </Link>
         </div>
       </section>
     </main>

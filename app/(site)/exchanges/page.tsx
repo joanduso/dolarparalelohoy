@@ -64,6 +64,9 @@ export default function ExchangesPage() {
             No compares únicamente la cifra grande. Revisa la dirección de la operación —compra o venta—, comisión, monto mínimo, banco o QR admitido, velocidad de liquidación y reputación de la contraparte.
           </p>
           <p>
+            Si buscas una sola plataforma, consulta la <Link href="/binance-p2p-bolivia" className="underline underline-offset-4">cotización y guía específica de Binance P2P Bolivia</Link>. Para comparar el resultado oficial y paralelo en cualquier monto, usa la <Link href="/calculadora-dolar-bolivia" className="underline underline-offset-4">calculadora USD↔BOB</Link>.
+          </p>
+          <p>
             Usa el <Link href="/usdt-bob" className="underline underline-offset-4">conversor USDT/BOB</Link> para una estimación y contrasta el resultado con el{' '}
             <Link href="/paralelo" className="underline underline-offset-4">índice paralelo</Link>, el{' '}
             <Link href="/dolar-blue-bolivia" className="underline underline-offset-4">dólar blue en Bolivia</Link> y las{' '}
