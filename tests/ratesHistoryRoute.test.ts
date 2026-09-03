@@ -70,6 +70,7 @@ describe('/api/rates/history parallel history', () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(
       new Response(JSON.stringify({
         points: [
+          { t: '2026-07-19T12:00:00.000Z', v: 0 },
           { t: '2026-07-20T12:00:00.000Z', v: 11.2 },
           { t: '2026-07-21T12:00:00.000Z', v: 11.3 },
           { t: '2026-07-22T10:00:00.000Z', v: 11.35 }
@@ -86,13 +87,36 @@ describe('/api/rates/history parallel history', () => {
     const payload = await response.json();
 
     expect(response.status).toBe(200);
-    expect(payload.count).toBe(3);
-    expect(payload.source).toBe('paralelo.bo (CC-BY-4.0) + local');
-    expect(payload.data.map((row: { date: string }) => row.date.slice(0, 10))).toEqual([
-      '2026-07-20',
-      '2026-07-21',
-      '2026-07-22'
-    ]);
-    expect(payload.data[2].sell_avg).toBe(11.5);
+    expect(payload.count).toBe(31);
+    expect(payload.source).toBe('Dólar Blue Bolivia (respaldo propio) + paralelo.bo (CC-BY-4.0) + local');
+    expect(payload.data[0].date.slice(0, 10)).toBe('2026-07-01');
+    expect(payload.data.at(-1).date.slice(0, 10)).toBe('2026-07-31');
+    expect(payload.data.find((row: { date: string }) => row.date.startsWith('2026-07-20')).sell_avg).toBe(11.2);
+    expect(payload.data.find((row: { date: string }) => row.date.startsWith('2026-07-22')).sell_avg).toBe(11.5);
+    expect(payload.data.every((row: { buy_avg: number; sell_avg: number }) => (
+      row.buy_avg > 0 && row.sell_avg > 0
+    ))).toBe(true);
+  });
+
+  it('uses the archived daily backup when paralelo.bo is unavailable', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(
+      new Response('Payment required', { status: 402 })
+    ));
+
+    const { GET } = await import('../app/(site)/api/rates/history/route');
+    const response = await GET(new Request(
+      'https://example.test/api/rates/history?kind=PARALELO&from=2026-07-01&to=2026-07-31'
+    ));
+    const payload = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(payload.count).toBe(31);
+    expect(payload.source).toBe('Dólar Blue Bolivia (respaldo propio) + local');
+    expect(payload.data[0].date.slice(0, 10)).toBe('2026-07-01');
+    expect(payload.data.at(-1).date.slice(0, 10)).toBe('2026-07-31');
+    expect(payload.data.every((row: { buy_avg: number; sell_avg: number }) => (
+      Number.isFinite(row.buy_avg) && Number.isFinite(row.sell_avg) &&
+      row.buy_avg > 0 && row.sell_avg > 0
+    ))).toBe(true);
   });
 });

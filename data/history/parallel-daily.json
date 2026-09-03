@@ -1,0 +1,4669 @@
+{
+  "metadata": {
+    "source": "https://api.dolarbluebolivia.click/v1/chart/all.csv",
+    "source_page": "https://www.dolarbluebolivia.click/datos/",
+    "raw_file": "7551324fb9dc23994d008ed06c8f3dfba044ab4a05e37645c15c9a2841a1fe5f.csv",
+    "raw_sha256": "7551324fb9dc23994d008ed06c8f3dfba044ab4a05e37645c15c9a2841a1fe5f",
+    "generated_at": "2026-09-03T19:59:17.353Z",
+    "aggregation": "media aritmética diaria de blue_buy y blue_sell válidos",
+    "validation": "valores finitos entre Bs 3 y Bs 30; ceros y filas inválidas rechazados",
+    "license": "Términos de la fuente no especifican una licencia abierta; se conserva atribución y enlace.",
+    "raw_observations": 76051,
+    "rejected_observations": 1,
+    "days": 775,
+    "first_date": "2024-07-21",
+    "last_date": "2026-09-03"
+  },
+  "data": [
+    {
+      "date": "2024-07-21T00:00:00.000Z",
+      "buy_avg": 10.187,
+      "sell_avg": 10.1504,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-07-22T00:00:00.000Z",
+      "buy_avg": 10.1871,
+      "sell_avg": 10.1461,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-07-23T00:00:00.000Z",
+      "buy_avg": 10.1969,
+      "sell_avg": 10.1664,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-07-24T00:00:00.000Z",
+      "buy_avg": 10.3648,
+      "sell_avg": 10.3203,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-07-25T00:00:00.000Z",
+      "buy_avg": 10.6175,
+      "sell_avg": 10.6116,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-07-26T00:00:00.000Z",
+      "buy_avg": 11.0882,
+      "sell_avg": 10.9884,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-07-27T00:00:00.000Z",
+      "buy_avg": 11.2179,
+      "sell_avg": 11.2872,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-07-28T00:00:00.000Z",
+      "buy_avg": 11.2492,
+      "sell_avg": 11.2742,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-07-29T00:00:00.000Z",
+      "buy_avg": 11.2271,
+      "sell_avg": 11.1686,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-07-30T00:00:00.000Z",
+      "buy_avg": 10.7676,
+      "sell_avg": 11.4223,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-07-31T00:00:00.000Z",
+      "buy_avg": 12.6257,
+      "sell_avg": 12.4876,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-01T00:00:00.000Z",
+      "buy_avg": 13.5278,
+      "sell_avg": 13.3549,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-02T00:00:00.000Z",
+      "buy_avg": 13.2975,
+      "sell_avg": 13.1711,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-03T00:00:00.000Z",
+      "buy_avg": 13.1626,
+      "sell_avg": 13.042,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-04T00:00:00.000Z",
+      "buy_avg": 13.1046,
+      "sell_avg": 13.0056,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-05T00:00:00.000Z",
+      "buy_avg": 13.0151,
+      "sell_avg": 12.9359,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-06T00:00:00.000Z",
+      "buy_avg": 12.8923,
+      "sell_avg": 12.8042,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-07T00:00:00.000Z",
+      "buy_avg": 12.6327,
+      "sell_avg": 12.4839,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-08T00:00:00.000Z",
+      "buy_avg": 11.8981,
+      "sell_avg": 11.7009,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-09T00:00:00.000Z",
+      "buy_avg": 11.0309,
+      "sell_avg": 10.7274,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-10T00:00:00.000Z",
+      "buy_avg": 10.9431,
+      "sell_avg": 10.8046,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-11T00:00:00.000Z",
+      "buy_avg": 10.937,
+      "sell_avg": 10.8322,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-12T00:00:00.000Z",
+      "buy_avg": 10.9253,
+      "sell_avg": 10.8511,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-13T00:00:00.000Z",
+      "buy_avg": 10.913,
+      "sell_avg": 10.8442,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-14T00:00:00.000Z",
+      "buy_avg": 10.9164,
+      "sell_avg": 10.8476,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-15T00:00:00.000Z",
+      "buy_avg": 10.9314,
+      "sell_avg": 10.8768,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-16T00:00:00.000Z",
+      "buy_avg": 11.0064,
+      "sell_avg": 10.9449,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-17T00:00:00.000Z",
+      "buy_avg": 11.1955,
+      "sell_avg": 11.0951,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-18T00:00:00.000Z",
+      "buy_avg": 11.0625,
+      "sell_avg": 10.9664,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-19T00:00:00.000Z",
+      "buy_avg": 11.0483,
+      "sell_avg": 10.9711,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-20T00:00:00.000Z",
+      "buy_avg": 11.0375,
+      "sell_avg": 10.9771,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-21T00:00:00.000Z",
+      "buy_avg": 11.0366,
+      "sell_avg": 10.9829,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-22T00:00:00.000Z",
+      "buy_avg": 10.9882,
+      "sell_avg": 10.9261,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-23T00:00:00.000Z",
+      "buy_avg": 10.8763,
+      "sell_avg": 10.7949,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-24T00:00:00.000Z",
+      "buy_avg": 10.8064,
+      "sell_avg": 10.7301,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-25T00:00:00.000Z",
+      "buy_avg": 10.782,
+      "sell_avg": 10.7001,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-26T00:00:00.000Z",
+      "buy_avg": 10.793,
+      "sell_avg": 10.7195,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-27T00:00:00.000Z",
+      "buy_avg": 10.8013,
+      "sell_avg": 10.7422,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-28T00:00:00.000Z",
+      "buy_avg": 10.8591,
+      "sell_avg": 10.7871,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-29T00:00:00.000Z",
+      "buy_avg": 10.8909,
+      "sell_avg": 10.8329,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-30T00:00:00.000Z",
+      "buy_avg": 10.8756,
+      "sell_avg": 10.8055,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-08-31T00:00:00.000Z",
+      "buy_avg": 10.8196,
+      "sell_avg": 10.748,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-01T00:00:00.000Z",
+      "buy_avg": 10.7641,
+      "sell_avg": 10.6911,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-02T00:00:00.000Z",
+      "buy_avg": 10.7484,
+      "sell_avg": 10.6714,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-03T00:00:00.000Z",
+      "buy_avg": 10.7478,
+      "sell_avg": 10.6924,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-04T00:00:00.000Z",
+      "buy_avg": 10.7425,
+      "sell_avg": 10.687,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-05T00:00:00.000Z",
+      "buy_avg": 10.6528,
+      "sell_avg": 10.5849,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-06T00:00:00.000Z",
+      "buy_avg": 10.4894,
+      "sell_avg": 10.4224,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-07T00:00:00.000Z",
+      "buy_avg": 10.2744,
+      "sell_avg": 10.201,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-08T00:00:00.000Z",
+      "buy_avg": 10.1955,
+      "sell_avg": 10.1175,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-09T00:00:00.000Z",
+      "buy_avg": 10.2317,
+      "sell_avg": 10.1959,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-10T00:00:00.000Z",
+      "buy_avg": 10.2171,
+      "sell_avg": 10.1823,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-11T00:00:00.000Z",
+      "buy_avg": 10.4337,
+      "sell_avg": 10.3951,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-12T00:00:00.000Z",
+      "buy_avg": 10.6317,
+      "sell_avg": 10.586,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-13T00:00:00.000Z",
+      "buy_avg": 10.7473,
+      "sell_avg": 10.6971,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-14T00:00:00.000Z",
+      "buy_avg": 10.6208,
+      "sell_avg": 10.5642,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-15T00:00:00.000Z",
+      "buy_avg": 10.5479,
+      "sell_avg": 10.4831,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-16T00:00:00.000Z",
+      "buy_avg": 10.5691,
+      "sell_avg": 10.4977,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-17T00:00:00.000Z",
+      "buy_avg": 10.574,
+      "sell_avg": 10.5132,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-18T00:00:00.000Z",
+      "buy_avg": 10.6032,
+      "sell_avg": 10.5445,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-19T00:00:00.000Z",
+      "buy_avg": 10.587,
+      "sell_avg": 10.5364,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-20T00:00:00.000Z",
+      "buy_avg": 10.5635,
+      "sell_avg": 10.5158,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-21T00:00:00.000Z",
+      "buy_avg": 10.5328,
+      "sell_avg": 10.4875,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-22T00:00:00.000Z",
+      "buy_avg": 10.5297,
+      "sell_avg": 10.4686,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-23T00:00:00.000Z",
+      "buy_avg": 10.5466,
+      "sell_avg": 10.4871,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-24T00:00:00.000Z",
+      "buy_avg": 10.5506,
+      "sell_avg": 10.4994,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-25T00:00:00.000Z",
+      "buy_avg": 10.581,
+      "sell_avg": 10.5319,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-26T00:00:00.000Z",
+      "buy_avg": 10.6219,
+      "sell_avg": 10.576,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-27T00:00:00.000Z",
+      "buy_avg": 10.649,
+      "sell_avg": 10.5928,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-28T00:00:00.000Z",
+      "buy_avg": 10.6038,
+      "sell_avg": 10.5406,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-29T00:00:00.000Z",
+      "buy_avg": 10.5909,
+      "sell_avg": 10.5304,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-09-30T00:00:00.000Z",
+      "buy_avg": 10.5804,
+      "sell_avg": 10.5175,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-01T00:00:00.000Z",
+      "buy_avg": 10.5075,
+      "sell_avg": 10.4319,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-02T00:00:00.000Z",
+      "buy_avg": 10.5167,
+      "sell_avg": 10.4525,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-03T00:00:00.000Z",
+      "buy_avg": 10.5556,
+      "sell_avg": 10.4983,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-04T00:00:00.000Z",
+      "buy_avg": 10.531,
+      "sell_avg": 10.4694,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-05T00:00:00.000Z",
+      "buy_avg": 10.4888,
+      "sell_avg": 10.4267,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-06T00:00:00.000Z",
+      "buy_avg": 10.4775,
+      "sell_avg": 10.4097,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-07T00:00:00.000Z",
+      "buy_avg": 10.4731,
+      "sell_avg": 10.4167,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-08T00:00:00.000Z",
+      "buy_avg": 10.5059,
+      "sell_avg": 10.4549,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-09T00:00:00.000Z",
+      "buy_avg": 10.5588,
+      "sell_avg": 10.505,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-10T00:00:00.000Z",
+      "buy_avg": 10.5858,
+      "sell_avg": 10.5349,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-11T00:00:00.000Z",
+      "buy_avg": 10.5993,
+      "sell_avg": 10.5459,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-12T00:00:00.000Z",
+      "buy_avg": 10.5625,
+      "sell_avg": 10.5007,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-13T00:00:00.000Z",
+      "buy_avg": 10.5452,
+      "sell_avg": 10.4891,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-14T00:00:00.000Z",
+      "buy_avg": 10.5542,
+      "sell_avg": 10.5069,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-15T00:00:00.000Z",
+      "buy_avg": 10.5668,
+      "sell_avg": 10.5201,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-16T00:00:00.000Z",
+      "buy_avg": 10.5774,
+      "sell_avg": 10.5279,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-17T00:00:00.000Z",
+      "buy_avg": 10.599,
+      "sell_avg": 10.5509,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-18T00:00:00.000Z",
+      "buy_avg": 10.6195,
+      "sell_avg": 10.5651,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-19T00:00:00.000Z",
+      "buy_avg": 10.5959,
+      "sell_avg": 10.547,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-20T00:00:00.000Z",
+      "buy_avg": 10.6038,
+      "sell_avg": 10.5524,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-21T00:00:00.000Z",
+      "buy_avg": 10.6306,
+      "sell_avg": 10.5763,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-22T00:00:00.000Z",
+      "buy_avg": 10.6479,
+      "sell_avg": 10.5977,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-23T00:00:00.000Z",
+      "buy_avg": 10.6472,
+      "sell_avg": 10.5988,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-24T00:00:00.000Z",
+      "buy_avg": 10.639,
+      "sell_avg": 10.5942,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-25T00:00:00.000Z",
+      "buy_avg": 10.6476,
+      "sell_avg": 10.6083,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-26T00:00:00.000Z",
+      "buy_avg": 10.6392,
+      "sell_avg": 10.5955,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-27T00:00:00.000Z",
+      "buy_avg": 10.6275,
+      "sell_avg": 10.5766,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-28T00:00:00.000Z",
+      "buy_avg": 10.6157,
+      "sell_avg": 10.5673,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-29T00:00:00.000Z",
+      "buy_avg": 10.6349,
+      "sell_avg": 10.5904,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-30T00:00:00.000Z",
+      "buy_avg": 10.6399,
+      "sell_avg": 10.5986,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-10-31T00:00:00.000Z",
+      "buy_avg": 10.6322,
+      "sell_avg": 10.5876,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-01T00:00:00.000Z",
+      "buy_avg": 10.6094,
+      "sell_avg": 10.5497,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-02T00:00:00.000Z",
+      "buy_avg": 10.5988,
+      "sell_avg": 10.5278,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-03T00:00:00.000Z",
+      "buy_avg": 10.5889,
+      "sell_avg": 10.5245,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-04T00:00:00.000Z",
+      "buy_avg": 10.5609,
+      "sell_avg": 10.5007,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-05T00:00:00.000Z",
+      "buy_avg": 10.5505,
+      "sell_avg": 10.486,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-06T00:00:00.000Z",
+      "buy_avg": 10.542,
+      "sell_avg": 10.4949,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-07T00:00:00.000Z",
+      "buy_avg": 10.5143,
+      "sell_avg": 10.4826,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-08T00:00:00.000Z",
+      "buy_avg": 10.5034,
+      "sell_avg": 10.4765,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-09T00:00:00.000Z",
+      "buy_avg": 10.4897,
+      "sell_avg": 10.4452,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-10T00:00:00.000Z",
+      "buy_avg": 10.4888,
+      "sell_avg": 10.4445,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-11T00:00:00.000Z",
+      "buy_avg": 10.4956,
+      "sell_avg": 10.4583,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-12T00:00:00.000Z",
+      "buy_avg": 10.5104,
+      "sell_avg": 10.4728,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-13T00:00:00.000Z",
+      "buy_avg": 10.5398,
+      "sell_avg": 10.5076,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-14T00:00:00.000Z",
+      "buy_avg": 10.5865,
+      "sell_avg": 10.5541,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-15T00:00:00.000Z",
+      "buy_avg": 10.6232,
+      "sell_avg": 10.5952,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-16T00:00:00.000Z",
+      "buy_avg": 10.6377,
+      "sell_avg": 10.5996,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-17T00:00:00.000Z",
+      "buy_avg": 10.6366,
+      "sell_avg": 10.5937,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-18T00:00:00.000Z",
+      "buy_avg": 10.672,
+      "sell_avg": 10.6336,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-19T00:00:00.000Z",
+      "buy_avg": 10.8051,
+      "sell_avg": 10.7593,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-20T00:00:00.000Z",
+      "buy_avg": 11.0358,
+      "sell_avg": 10.9669,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-21T00:00:00.000Z",
+      "buy_avg": 11.3092,
+      "sell_avg": 11.2548,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-22T00:00:00.000Z",
+      "buy_avg": 11.8779,
+      "sell_avg": 11.7896,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-23T00:00:00.000Z",
+      "buy_avg": 11.9866,
+      "sell_avg": 11.8802,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-24T00:00:00.000Z",
+      "buy_avg": 11.747,
+      "sell_avg": 11.6154,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-25T00:00:00.000Z",
+      "buy_avg": 11.8012,
+      "sell_avg": 11.7075,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-26T00:00:00.000Z",
+      "buy_avg": 11.455,
+      "sell_avg": 11.3818,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-27T00:00:00.000Z",
+      "buy_avg": 11.1908,
+      "sell_avg": 11.1087,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-28T00:00:00.000Z",
+      "buy_avg": 11.1039,
+      "sell_avg": 11.0329,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-29T00:00:00.000Z",
+      "buy_avg": 11.1382,
+      "sell_avg": 11.0736,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-11-30T00:00:00.000Z",
+      "buy_avg": 11.1145,
+      "sell_avg": 11.0477,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-01T00:00:00.000Z",
+      "buy_avg": 11.0881,
+      "sell_avg": 11.0149,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-02T00:00:00.000Z",
+      "buy_avg": 11.0717,
+      "sell_avg": 11.0092,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-03T00:00:00.000Z",
+      "buy_avg": 11.0583,
+      "sell_avg": 11.0131,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-04T00:00:00.000Z",
+      "buy_avg": 11.0771,
+      "sell_avg": 11.04,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-05T00:00:00.000Z",
+      "buy_avg": 11.1191,
+      "sell_avg": 11.0776,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-06T00:00:00.000Z",
+      "buy_avg": 11.1303,
+      "sell_avg": 11.0879,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-07T00:00:00.000Z",
+      "buy_avg": 11.1234,
+      "sell_avg": 11.0717,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-08T00:00:00.000Z",
+      "buy_avg": 11.1007,
+      "sell_avg": 11.0392,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-09T00:00:00.000Z",
+      "buy_avg": 11.0845,
+      "sell_avg": 11.0367,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-10T00:00:00.000Z",
+      "buy_avg": 11.0772,
+      "sell_avg": 11.0332,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-11T00:00:00.000Z",
+      "buy_avg": 11.0829,
+      "sell_avg": 11.0373,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-12T00:00:00.000Z",
+      "buy_avg": 11.086,
+      "sell_avg": 11.0374,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-13T00:00:00.000Z",
+      "buy_avg": 11.0845,
+      "sell_avg": 11.0451,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-14T00:00:00.000Z",
+      "buy_avg": 11.0863,
+      "sell_avg": 11.0421,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-15T00:00:00.000Z",
+      "buy_avg": 11.0877,
+      "sell_avg": 11.0394,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-16T00:00:00.000Z",
+      "buy_avg": 11.0782,
+      "sell_avg": 11.0315,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-17T00:00:00.000Z",
+      "buy_avg": 11.0753,
+      "sell_avg": 11.0306,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-18T00:00:00.000Z",
+      "buy_avg": 11.1294,
+      "sell_avg": 11.0879,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-19T00:00:00.000Z",
+      "buy_avg": 11.2403,
+      "sell_avg": 11.1835,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-20T00:00:00.000Z",
+      "buy_avg": 11.248,
+      "sell_avg": 11.1896,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-21T00:00:00.000Z",
+      "buy_avg": 11.2038,
+      "sell_avg": 11.1493,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-22T00:00:00.000Z",
+      "buy_avg": 11.1338,
+      "sell_avg": 11.073,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-23T00:00:00.000Z",
+      "buy_avg": 11.1228,
+      "sell_avg": 11.0715,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-24T00:00:00.000Z",
+      "buy_avg": 11.1097,
+      "sell_avg": 11.0579,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-25T00:00:00.000Z",
+      "buy_avg": 11.1067,
+      "sell_avg": 11.0537,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-26T00:00:00.000Z",
+      "buy_avg": 11.1008,
+      "sell_avg": 11.0579,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-27T00:00:00.000Z",
+      "buy_avg": 11.1045,
+      "sell_avg": 11.0655,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-28T00:00:00.000Z",
+      "buy_avg": 11.1078,
+      "sell_avg": 11.065,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-29T00:00:00.000Z",
+      "buy_avg": 11.1039,
+      "sell_avg": 11.0619,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-30T00:00:00.000Z",
+      "buy_avg": 11.0985,
+      "sell_avg": 11.0571,
+      "sources_count": 1
+    },
+    {
+      "date": "2024-12-31T00:00:00.000Z",
+      "buy_avg": 11.099,
+      "sell_avg": 11.0552,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-01T00:00:00.000Z",
+      "buy_avg": 11.101,
+      "sell_avg": 11.0549,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-02T00:00:00.000Z",
+      "buy_avg": 11.1016,
+      "sell_avg": 11.0611,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-03T00:00:00.000Z",
+      "buy_avg": 11.0981,
+      "sell_avg": 11.0605,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-04T00:00:00.000Z",
+      "buy_avg": 11.0978,
+      "sell_avg": 11.0571,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-05T00:00:00.000Z",
+      "buy_avg": 11.1003,
+      "sell_avg": 11.0582,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-06T00:00:00.000Z",
+      "buy_avg": 11.0926,
+      "sell_avg": 11.0495,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-07T00:00:00.000Z",
+      "buy_avg": 11.1009,
+      "sell_avg": 11.0604,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-08T00:00:00.000Z",
+      "buy_avg": 11.164,
+      "sell_avg": 11.1283,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-09T00:00:00.000Z",
+      "buy_avg": 11.2441,
+      "sell_avg": 11.2076,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-10T00:00:00.000Z",
+      "buy_avg": 11.232,
+      "sell_avg": 11.188,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-11T00:00:00.000Z",
+      "buy_avg": 11.1835,
+      "sell_avg": 11.1262,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-12T00:00:00.000Z",
+      "buy_avg": 11.1745,
+      "sell_avg": 11.125,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-13T00:00:00.000Z",
+      "buy_avg": 11.2067,
+      "sell_avg": 11.1654,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-14T00:00:00.000Z",
+      "buy_avg": 11.2252,
+      "sell_avg": 11.1893,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-15T00:00:00.000Z",
+      "buy_avg": 11.2447,
+      "sell_avg": 11.2083,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-16T00:00:00.000Z",
+      "buy_avg": 11.2929,
+      "sell_avg": 11.2543,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-17T00:00:00.000Z",
+      "buy_avg": 11.3122,
+      "sell_avg": 11.2728,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-18T00:00:00.000Z",
+      "buy_avg": 11.3037,
+      "sell_avg": 11.2474,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-19T00:00:00.000Z",
+      "buy_avg": 11.3528,
+      "sell_avg": 11.3004,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-20T00:00:00.000Z",
+      "buy_avg": 11.4163,
+      "sell_avg": 11.3447,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-21T00:00:00.000Z",
+      "buy_avg": 11.3721,
+      "sell_avg": 11.318,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-22T00:00:00.000Z",
+      "buy_avg": 11.3442,
+      "sell_avg": 11.2886,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-23T00:00:00.000Z",
+      "buy_avg": 11.3083,
+      "sell_avg": 11.2571,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-24T00:00:00.000Z",
+      "buy_avg": 11.3209,
+      "sell_avg": 11.2732,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-25T00:00:00.000Z",
+      "buy_avg": 11.3018,
+      "sell_avg": 11.2606,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-26T00:00:00.000Z",
+      "buy_avg": 11.3089,
+      "sell_avg": 11.2626,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-27T00:00:00.000Z",
+      "buy_avg": 11.3065,
+      "sell_avg": 11.2642,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-28T00:00:00.000Z",
+      "buy_avg": 11.2985,
+      "sell_avg": 11.2559,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-29T00:00:00.000Z",
+      "buy_avg": 11.2904,
+      "sell_avg": 11.2531,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-30T00:00:00.000Z",
+      "buy_avg": 11.2773,
+      "sell_avg": 11.2377,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-01-31T00:00:00.000Z",
+      "buy_avg": 11.2557,
+      "sell_avg": 11.2102,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-02-01T00:00:00.000Z",
+      "buy_avg": 11.2029,
+      "sell_avg": 11.1416,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-02-02T00:00:00.000Z",
+      "buy_avg": 11.1904,
+      "sell_avg": 11.1267,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-02-03T00:00:00.000Z",
+      "buy_avg": 11.2295,
+      "sell_avg": 11.1585,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-02-04T00:00:00.000Z",
+      "buy_avg": 11.1902,
+      "sell_avg": 11.1384,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-02-05T00:00:00.000Z",
+      "buy_avg": 11.1858,
+      "sell_avg": 11.1399,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-02-06T00:00:00.000Z",
+      "buy_avg": 11.1989,
+      "sell_avg": 11.1582,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-02-07T00:00:00.000Z",
+      "buy_avg": 11.1988,
+      "sell_avg": 11.1633,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-02-08T00:00:00.000Z",
+      "buy_avg": 11.1898,
+      "sell_avg": 11.1494,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-02-09T00:00:00.000Z",
+      "buy_avg": 11.1846,
+      "sell_avg": 11.1446,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-02-10T00:00:00.000Z",
+      "buy_avg": 11.1872,
+      "sell_avg": 11.1494,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-02-11T00:00:00.000Z",
+      "buy_avg": 11.1857,
+      "sell_avg": 11.1484,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-02-12T00:00:00.000Z",
+      "buy_avg": 11.1958,
+      "sell_avg": 11.1631,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-02-13T00:00:00.000Z",
+      "buy_avg": 11.2214,
+      "sell_avg": 11.1838,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-02-14T00:00:00.000Z",
+      "buy_avg": 11.2246,
+      "sell_avg": 11.1819,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-02-15T00:00:00.000Z",
+      "buy_avg": 11.2032,
+      "sell_avg": 11.1579,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-02-16T00:00:00.000Z",
+      "buy_avg": 11.2028,
+      "sell_avg": 11.1559,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-02-17T00:00:00.000Z",
+      "buy_avg": 11.1987,
+      "sell_avg": 11.1578,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-02-18T00:00:00.000Z",
+      "buy_avg": 11.2177,
+      "sell_avg": 11.1753,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-02-19T00:00:00.000Z",
+      "buy_avg": 11.2258,
+      "sell_avg": 11.1918,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-02-20T00:00:00.000Z",
+      "buy_avg": 11.2605,
+      "sell_avg": 11.2179,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-02-21T00:00:00.000Z",
+      "buy_avg": 11.282,
+      "sell_avg": 11.2413,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-02-22T00:00:00.000Z",
+      "buy_avg": 11.2793,
+      "sell_avg": 11.2379,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-02-23T00:00:00.000Z",
+      "buy_avg": 11.2692,
+      "sell_avg": 11.2246,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-02-24T00:00:00.000Z",
+      "buy_avg": 11.2645,
+      "sell_avg": 11.2254,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-02-25T00:00:00.000Z",
+      "buy_avg": 11.284,
+      "sell_avg": 11.2507,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-02-26T00:00:00.000Z",
+      "buy_avg": 11.3137,
+      "sell_avg": 11.2793,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-02-27T00:00:00.000Z",
+      "buy_avg": 11.3641,
+      "sell_avg": 11.3202,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-02-28T00:00:00.000Z",
+      "buy_avg": 11.3869,
+      "sell_avg": 11.3348,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-01T00:00:00.000Z",
+      "buy_avg": 11.347,
+      "sell_avg": 11.2955,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-02T00:00:00.000Z",
+      "buy_avg": 11.3292,
+      "sell_avg": 11.2818,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-03T00:00:00.000Z",
+      "buy_avg": 11.3075,
+      "sell_avg": 11.2597,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-04T00:00:00.000Z",
+      "buy_avg": 11.288,
+      "sell_avg": 11.2395,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-05T00:00:00.000Z",
+      "buy_avg": 11.2851,
+      "sell_avg": 11.2427,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-06T00:00:00.000Z",
+      "buy_avg": 11.2917,
+      "sell_avg": 11.25,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-07T00:00:00.000Z",
+      "buy_avg": 11.292,
+      "sell_avg": 11.2522,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-08T00:00:00.000Z",
+      "buy_avg": 11.2744,
+      "sell_avg": 11.2344,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-09T00:00:00.000Z",
+      "buy_avg": 11.2669,
+      "sell_avg": 11.2198,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-10T00:00:00.000Z",
+      "buy_avg": 11.2885,
+      "sell_avg": 11.2474,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-11T00:00:00.000Z",
+      "buy_avg": 11.4016,
+      "sell_avg": 11.3538,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-12T00:00:00.000Z",
+      "buy_avg": 11.7364,
+      "sell_avg": 11.6816,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-13T00:00:00.000Z",
+      "buy_avg": 12.2074,
+      "sell_avg": 12.1357,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-14T00:00:00.000Z",
+      "buy_avg": 12.0318,
+      "sell_avg": 11.9279,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-15T00:00:00.000Z",
+      "buy_avg": 11.7454,
+      "sell_avg": 11.6541,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-16T00:00:00.000Z",
+      "buy_avg": 11.7929,
+      "sell_avg": 11.7104,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-17T00:00:00.000Z",
+      "buy_avg": 11.8536,
+      "sell_avg": 11.7733,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-18T00:00:00.000Z",
+      "buy_avg": 11.8496,
+      "sell_avg": 11.8031,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-19T00:00:00.000Z",
+      "buy_avg": 11.9291,
+      "sell_avg": 11.8814,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-20T00:00:00.000Z",
+      "buy_avg": 12.0062,
+      "sell_avg": 11.9623,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-21T00:00:00.000Z",
+      "buy_avg": 12.0372,
+      "sell_avg": 11.9919,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-22T00:00:00.000Z",
+      "buy_avg": 12.0276,
+      "sell_avg": 11.9819,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-23T00:00:00.000Z",
+      "buy_avg": 12.0335,
+      "sell_avg": 11.9793,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-24T00:00:00.000Z",
+      "buy_avg": 12.0507,
+      "sell_avg": 12.0054,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-25T00:00:00.000Z",
+      "buy_avg": 12.1249,
+      "sell_avg": 12.0717,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-26T00:00:00.000Z",
+      "buy_avg": 12.265,
+      "sell_avg": 12.2064,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-27T00:00:00.000Z",
+      "buy_avg": 12.4108,
+      "sell_avg": 12.3489,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-28T00:00:00.000Z",
+      "buy_avg": 12.4088,
+      "sell_avg": 12.3587,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-29T00:00:00.000Z",
+      "buy_avg": 12.3942,
+      "sell_avg": 12.3411,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-30T00:00:00.000Z",
+      "buy_avg": 12.3929,
+      "sell_avg": 12.3455,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-03-31T00:00:00.000Z",
+      "buy_avg": 12.4061,
+      "sell_avg": 12.3629,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-01T00:00:00.000Z",
+      "buy_avg": 12.4393,
+      "sell_avg": 12.3934,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-02T00:00:00.000Z",
+      "buy_avg": 12.5592,
+      "sell_avg": 12.5102,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-03T00:00:00.000Z",
+      "buy_avg": 12.7542,
+      "sell_avg": 12.6907,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-04T00:00:00.000Z",
+      "buy_avg": 12.8478,
+      "sell_avg": 12.7856,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-05T00:00:00.000Z",
+      "buy_avg": 12.8643,
+      "sell_avg": 12.8136,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-06T00:00:00.000Z",
+      "buy_avg": 12.8742,
+      "sell_avg": 12.8205,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-07T00:00:00.000Z",
+      "buy_avg": 12.9514,
+      "sell_avg": 12.8789,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-08T00:00:00.000Z",
+      "buy_avg": 13.0155,
+      "sell_avg": 12.9623,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-09T00:00:00.000Z",
+      "buy_avg": 13.278,
+      "sell_avg": 13.2193,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-10T00:00:00.000Z",
+      "buy_avg": 13.4204,
+      "sell_avg": 13.3455,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-11T00:00:00.000Z",
+      "buy_avg": 13.5216,
+      "sell_avg": 13.4545,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-12T00:00:00.000Z",
+      "buy_avg": 13.4012,
+      "sell_avg": 13.3305,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-13T00:00:00.000Z",
+      "buy_avg": 13.3871,
+      "sell_avg": 13.3252,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-14T00:00:00.000Z",
+      "buy_avg": 13.4331,
+      "sell_avg": 13.3745,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-15T00:00:00.000Z",
+      "buy_avg": 13.4289,
+      "sell_avg": 13.3686,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-16T00:00:00.000Z",
+      "buy_avg": 13.4414,
+      "sell_avg": 13.3891,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-17T00:00:00.000Z",
+      "buy_avg": 13.4972,
+      "sell_avg": 13.4489,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-18T00:00:00.000Z",
+      "buy_avg": 13.5126,
+      "sell_avg": 13.4589,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-19T00:00:00.000Z",
+      "buy_avg": 13.4858,
+      "sell_avg": 13.4324,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-20T00:00:00.000Z",
+      "buy_avg": 13.4903,
+      "sell_avg": 13.4397,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-21T00:00:00.000Z",
+      "buy_avg": 13.5142,
+      "sell_avg": 13.4591,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-22T00:00:00.000Z",
+      "buy_avg": 13.5224,
+      "sell_avg": 13.4743,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-23T00:00:00.000Z",
+      "buy_avg": 13.5934,
+      "sell_avg": 13.5428,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-24T00:00:00.000Z",
+      "buy_avg": 14.0872,
+      "sell_avg": 13.7157,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-25T00:00:00.000Z",
+      "buy_avg": 14.1795,
+      "sell_avg": 14.0618,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-26T00:00:00.000Z",
+      "buy_avg": 14.2251,
+      "sell_avg": 14.1485,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-27T00:00:00.000Z",
+      "buy_avg": 14.3322,
+      "sell_avg": 14.2706,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-28T00:00:00.000Z",
+      "buy_avg": 14.6272,
+      "sell_avg": 14.5501,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-29T00:00:00.000Z",
+      "buy_avg": 15.125,
+      "sell_avg": 15.0194,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-04-30T00:00:00.000Z",
+      "buy_avg": 15.2529,
+      "sell_avg": 15.1792,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-01T00:00:00.000Z",
+      "buy_avg": 15.321,
+      "sell_avg": 15.2408,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-02T00:00:00.000Z",
+      "buy_avg": 15.2821,
+      "sell_avg": 15.1949,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-03T00:00:00.000Z",
+      "buy_avg": 15.2017,
+      "sell_avg": 15.1373,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-04T00:00:00.000Z",
+      "buy_avg": 15.1976,
+      "sell_avg": 15.1211,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-05T00:00:00.000Z",
+      "buy_avg": 15.1989,
+      "sell_avg": 15.1408,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-06T00:00:00.000Z",
+      "buy_avg": 15.2211,
+      "sell_avg": 15.1656,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-07T00:00:00.000Z",
+      "buy_avg": 15.2952,
+      "sell_avg": 15.2404,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-08T00:00:00.000Z",
+      "buy_avg": 15.4091,
+      "sell_avg": 15.3493,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-09T00:00:00.000Z",
+      "buy_avg": 15.4762,
+      "sell_avg": 15.4077,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-10T00:00:00.000Z",
+      "buy_avg": 15.4655,
+      "sell_avg": 15.4011,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-11T00:00:00.000Z",
+      "buy_avg": 15.4569,
+      "sell_avg": 15.3991,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-12T00:00:00.000Z",
+      "buy_avg": 15.5358,
+      "sell_avg": 15.4821,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-13T00:00:00.000Z",
+      "buy_avg": 15.8282,
+      "sell_avg": 15.757,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-14T00:00:00.000Z",
+      "buy_avg": 16.5389,
+      "sell_avg": 16.4471,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-15T00:00:00.000Z",
+      "buy_avg": 17.8858,
+      "sell_avg": 17.7404,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-16T00:00:00.000Z",
+      "buy_avg": 17.9675,
+      "sell_avg": 17.7883,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-17T00:00:00.000Z",
+      "buy_avg": 17.5907,
+      "sell_avg": 17.4579,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-18T00:00:00.000Z",
+      "buy_avg": 17.6262,
+      "sell_avg": 17.4863,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-19T00:00:00.000Z",
+      "buy_avg": 17.6533,
+      "sell_avg": 17.5394,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-20T00:00:00.000Z",
+      "buy_avg": 17.4916,
+      "sell_avg": 17.392,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-21T00:00:00.000Z",
+      "buy_avg": 17.4716,
+      "sell_avg": 17.3945,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-22T00:00:00.000Z",
+      "buy_avg": 17.467,
+      "sell_avg": 17.3969,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-23T00:00:00.000Z",
+      "buy_avg": 17.3118,
+      "sell_avg": 17.2091,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-24T00:00:00.000Z",
+      "buy_avg": 16.6205,
+      "sell_avg": 16.4087,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-25T00:00:00.000Z",
+      "buy_avg": 16.5643,
+      "sell_avg": 16.4327,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-26T00:00:00.000Z",
+      "buy_avg": 16.4698,
+      "sell_avg": 16.3636,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-27T00:00:00.000Z",
+      "buy_avg": 16.3066,
+      "sell_avg": 16.2179,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-28T00:00:00.000Z",
+      "buy_avg": 16.3454,
+      "sell_avg": 16.268,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-29T00:00:00.000Z",
+      "buy_avg": 16.5099,
+      "sell_avg": 16.4305,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-30T00:00:00.000Z",
+      "buy_avg": 16.4896,
+      "sell_avg": 16.4051,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-05-31T00:00:00.000Z",
+      "buy_avg": 16.3837,
+      "sell_avg": 16.3118,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-01T00:00:00.000Z",
+      "buy_avg": 16.3833,
+      "sell_avg": 16.3076,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-02T00:00:00.000Z",
+      "buy_avg": 16.3657,
+      "sell_avg": 16.3002,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-03T00:00:00.000Z",
+      "buy_avg": 16.3511,
+      "sell_avg": 16.2907,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-04T00:00:00.000Z",
+      "buy_avg": 16.3463,
+      "sell_avg": 16.2908,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-05T00:00:00.000Z",
+      "buy_avg": 16.3681,
+      "sell_avg": 16.3161,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-06T00:00:00.000Z",
+      "buy_avg": 16.3619,
+      "sell_avg": 16.31,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-07T00:00:00.000Z",
+      "buy_avg": 16.3452,
+      "sell_avg": 16.2952,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-08T00:00:00.000Z",
+      "buy_avg": 16.3275,
+      "sell_avg": 16.2715,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-09T00:00:00.000Z",
+      "buy_avg": 16.3044,
+      "sell_avg": 16.248,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-10T00:00:00.000Z",
+      "buy_avg": 16.2949,
+      "sell_avg": 16.2443,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-11T00:00:00.000Z",
+      "buy_avg": 16.31,
+      "sell_avg": 16.269,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-12T00:00:00.000Z",
+      "buy_avg": 16.3462,
+      "sell_avg": 16.3045,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-13T00:00:00.000Z",
+      "buy_avg": 16.3586,
+      "sell_avg": 16.3132,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-14T00:00:00.000Z",
+      "buy_avg": 16.3217,
+      "sell_avg": 16.2722,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-15T00:00:00.000Z",
+      "buy_avg": 16.3106,
+      "sell_avg": 16.254,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-16T00:00:00.000Z",
+      "buy_avg": 16.3161,
+      "sell_avg": 16.2614,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-17T00:00:00.000Z",
+      "buy_avg": 16.3095,
+      "sell_avg": 16.2589,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-18T00:00:00.000Z",
+      "buy_avg": 16.2996,
+      "sell_avg": 16.2489,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-19T00:00:00.000Z",
+      "buy_avg": 16.2839,
+      "sell_avg": 16.2313,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-20T00:00:00.000Z",
+      "buy_avg": 16.126,
+      "sell_avg": 16.0439,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-21T00:00:00.000Z",
+      "buy_avg": 16.0247,
+      "sell_avg": 15.9298,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-22T00:00:00.000Z",
+      "buy_avg": 16.0042,
+      "sell_avg": 15.9242,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-23T00:00:00.000Z",
+      "buy_avg": 16.0517,
+      "sell_avg": 15.9771,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-24T00:00:00.000Z",
+      "buy_avg": 16.0306,
+      "sell_avg": 15.9739,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-25T00:00:00.000Z",
+      "buy_avg": 16.0256,
+      "sell_avg": 15.9735,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-26T00:00:00.000Z",
+      "buy_avg": 16.0189,
+      "sell_avg": 15.9716,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-27T00:00:00.000Z",
+      "buy_avg": 15.9358,
+      "sell_avg": 15.8755,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-28T00:00:00.000Z",
+      "buy_avg": 15.763,
+      "sell_avg": 15.6757,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-29T00:00:00.000Z",
+      "buy_avg": 15.5762,
+      "sell_avg": 15.493,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-06-30T00:00:00.000Z",
+      "buy_avg": 15.2995,
+      "sell_avg": 15.2086,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-01T00:00:00.000Z",
+      "buy_avg": 14.6577,
+      "sell_avg": 14.5339,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-02T00:00:00.000Z",
+      "buy_avg": 14.5593,
+      "sell_avg": 14.4333,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-03T00:00:00.000Z",
+      "buy_avg": 15.1979,
+      "sell_avg": 15.0814,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-04T00:00:00.000Z",
+      "buy_avg": 15.2014,
+      "sell_avg": 15.1183,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-05T00:00:00.000Z",
+      "buy_avg": 15.0857,
+      "sell_avg": 15.0002,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-06T00:00:00.000Z",
+      "buy_avg": 15.0667,
+      "sell_avg": 14.986,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-07T00:00:00.000Z",
+      "buy_avg": 15.1083,
+      "sell_avg": 15.0305,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-08T00:00:00.000Z",
+      "buy_avg": 15.0779,
+      "sell_avg": 15.0361,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-09T00:00:00.000Z",
+      "buy_avg": 15.0802,
+      "sell_avg": 15.0209,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-10T00:00:00.000Z",
+      "buy_avg": 15.0445,
+      "sell_avg": 14.9838,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-11T00:00:00.000Z",
+      "buy_avg": 14.8865,
+      "sell_avg": 14.8179,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-12T00:00:00.000Z",
+      "buy_avg": 14.7388,
+      "sell_avg": 14.6674,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-13T00:00:00.000Z",
+      "buy_avg": 14.7302,
+      "sell_avg": 14.6601,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-14T00:00:00.000Z",
+      "buy_avg": 14.7998,
+      "sell_avg": 14.6932,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-15T00:00:00.000Z",
+      "buy_avg": 14.6814,
+      "sell_avg": 14.6215,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-16T00:00:00.000Z",
+      "buy_avg": 14.65,
+      "sell_avg": 14.5902,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-17T00:00:00.000Z",
+      "buy_avg": 14.6266,
+      "sell_avg": 14.5692,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-18T00:00:00.000Z",
+      "buy_avg": 14.5048,
+      "sell_avg": 14.438,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-19T00:00:00.000Z",
+      "buy_avg": 14.3305,
+      "sell_avg": 14.2649,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-20T00:00:00.000Z",
+      "buy_avg": 14.3592,
+      "sell_avg": 14.2926,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-21T00:00:00.000Z",
+      "buy_avg": 14.2877,
+      "sell_avg": 14.2229,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-22T00:00:00.000Z",
+      "buy_avg": 14.1168,
+      "sell_avg": 14.0548,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-23T00:00:00.000Z",
+      "buy_avg": 13.7533,
+      "sell_avg": 13.6612,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-24T00:00:00.000Z",
+      "buy_avg": 13.3882,
+      "sell_avg": 13.3105,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-25T00:00:00.000Z",
+      "buy_avg": 13.1245,
+      "sell_avg": 13.0386,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-26T00:00:00.000Z",
+      "buy_avg": 13.1027,
+      "sell_avg": 13.0269,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-27T00:00:00.000Z",
+      "buy_avg": 13.1219,
+      "sell_avg": 13.0644,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-28T00:00:00.000Z",
+      "buy_avg": 13.4216,
+      "sell_avg": 13.3254,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-29T00:00:00.000Z",
+      "buy_avg": 13.9067,
+      "sell_avg": 13.8911,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-30T00:00:00.000Z",
+      "buy_avg": 13.859,
+      "sell_avg": 13.7882,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-07-31T00:00:00.000Z",
+      "buy_avg": 13.9017,
+      "sell_avg": 13.8383,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-01T00:00:00.000Z",
+      "buy_avg": 13.8775,
+      "sell_avg": 13.8052,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-02T00:00:00.000Z",
+      "buy_avg": 13.8157,
+      "sell_avg": 13.749,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-03T00:00:00.000Z",
+      "buy_avg": 13.8096,
+      "sell_avg": 13.7515,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-04T00:00:00.000Z",
+      "buy_avg": 13.7898,
+      "sell_avg": 13.7258,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-05T00:00:00.000Z",
+      "buy_avg": 13.6841,
+      "sell_avg": 13.613,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-06T00:00:00.000Z",
+      "buy_avg": 13.5893,
+      "sell_avg": 13.5103,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-07T00:00:00.000Z",
+      "buy_avg": 13.4067,
+      "sell_avg": 13.3261,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-08T00:00:00.000Z",
+      "buy_avg": 13.2894,
+      "sell_avg": 13.2183,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-09T00:00:00.000Z",
+      "buy_avg": 13.2294,
+      "sell_avg": 13.1599,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-10T00:00:00.000Z",
+      "buy_avg": 13.2779,
+      "sell_avg": 13.2128,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-11T00:00:00.000Z",
+      "buy_avg": 13.35,
+      "sell_avg": 13.2764,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-12T00:00:00.000Z",
+      "buy_avg": 13.4171,
+      "sell_avg": 13.3625,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-13T00:00:00.000Z",
+      "buy_avg": 13.5713,
+      "sell_avg": 13.5033,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-14T00:00:00.000Z",
+      "buy_avg": 13.5206,
+      "sell_avg": 13.4484,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-15T00:00:00.000Z",
+      "buy_avg": 13.5365,
+      "sell_avg": 13.475,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-16T00:00:00.000Z",
+      "buy_avg": 13.6222,
+      "sell_avg": 13.5601,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-17T00:00:00.000Z",
+      "buy_avg": 13.7835,
+      "sell_avg": 13.6973,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-18T00:00:00.000Z",
+      "buy_avg": 13.534,
+      "sell_avg": 13.4354,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-19T00:00:00.000Z",
+      "buy_avg": 13.4571,
+      "sell_avg": 13.3998,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-20T00:00:00.000Z",
+      "buy_avg": 13.4114,
+      "sell_avg": 13.3564,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-21T00:00:00.000Z",
+      "buy_avg": 13.383,
+      "sell_avg": 13.3343,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-22T00:00:00.000Z",
+      "buy_avg": 13.3315,
+      "sell_avg": 13.2827,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-23T00:00:00.000Z",
+      "buy_avg": 13.2966,
+      "sell_avg": 13.2458,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-24T00:00:00.000Z",
+      "buy_avg": 13.2607,
+      "sell_avg": 13.1995,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-25T00:00:00.000Z",
+      "buy_avg": 13.2584,
+      "sell_avg": 13.2039,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-26T00:00:00.000Z",
+      "buy_avg": 13.2405,
+      "sell_avg": 13.1917,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-27T00:00:00.000Z",
+      "buy_avg": 13.1416,
+      "sell_avg": 13.0918,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-28T00:00:00.000Z",
+      "buy_avg": 12.8536,
+      "sell_avg": 12.782,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-29T00:00:00.000Z",
+      "buy_avg": 12.4517,
+      "sell_avg": 12.3612,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-30T00:00:00.000Z",
+      "buy_avg": 12.3005,
+      "sell_avg": 12.2285,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-08-31T00:00:00.000Z",
+      "buy_avg": 12.1226,
+      "sell_avg": 12.0471,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-01T00:00:00.000Z",
+      "buy_avg": 11.9814,
+      "sell_avg": 11.9123,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-02T00:00:00.000Z",
+      "buy_avg": 11.3557,
+      "sell_avg": 11.2611,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-03T00:00:00.000Z",
+      "buy_avg": 11.6419,
+      "sell_avg": 11.5318,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-04T00:00:00.000Z",
+      "buy_avg": 12.5962,
+      "sell_avg": 12.4609,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-05T00:00:00.000Z",
+      "buy_avg": 12.4248,
+      "sell_avg": 12.3423,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-06T00:00:00.000Z",
+      "buy_avg": 12.116,
+      "sell_avg": 12.0374,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-07T00:00:00.000Z",
+      "buy_avg": 12.154,
+      "sell_avg": 12.096,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-08T00:00:00.000Z",
+      "buy_avg": 12.2572,
+      "sell_avg": 12.1918,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-09T00:00:00.000Z",
+      "buy_avg": 12.3685,
+      "sell_avg": 12.3074,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-10T00:00:00.000Z",
+      "buy_avg": 12.3535,
+      "sell_avg": 12.308,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-11T00:00:00.000Z",
+      "buy_avg": 12.5985,
+      "sell_avg": 12.5423,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-12T00:00:00.000Z",
+      "buy_avg": 12.7514,
+      "sell_avg": 12.6777,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-13T00:00:00.000Z",
+      "buy_avg": 12.6706,
+      "sell_avg": 12.6001,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-14T00:00:00.000Z",
+      "buy_avg": 12.6832,
+      "sell_avg": 12.6174,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-15T00:00:00.000Z",
+      "buy_avg": 12.7229,
+      "sell_avg": 12.6666,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-16T00:00:00.000Z",
+      "buy_avg": 12.7575,
+      "sell_avg": 12.707,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-17T00:00:00.000Z",
+      "buy_avg": 12.748,
+      "sell_avg": 12.704,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-18T00:00:00.000Z",
+      "buy_avg": 12.682,
+      "sell_avg": 12.628,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-19T00:00:00.000Z",
+      "buy_avg": 12.6061,
+      "sell_avg": 12.5509,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-20T00:00:00.000Z",
+      "buy_avg": 12.5405,
+      "sell_avg": 12.4808,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-21T00:00:00.000Z",
+      "buy_avg": 12.5647,
+      "sell_avg": 12.4983,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-22T00:00:00.000Z",
+      "buy_avg": 12.6446,
+      "sell_avg": 12.5873,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-23T00:00:00.000Z",
+      "buy_avg": 12.6143,
+      "sell_avg": 12.5671,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-24T00:00:00.000Z",
+      "buy_avg": 12.5822,
+      "sell_avg": 12.5366,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-25T00:00:00.000Z",
+      "buy_avg": 12.5615,
+      "sell_avg": 12.514,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-26T00:00:00.000Z",
+      "buy_avg": 12.587,
+      "sell_avg": 12.5391,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-27T00:00:00.000Z",
+      "buy_avg": 12.5847,
+      "sell_avg": 12.5377,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-28T00:00:00.000Z",
+      "buy_avg": 12.5843,
+      "sell_avg": 12.541,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-29T00:00:00.000Z",
+      "buy_avg": 12.5892,
+      "sell_avg": 12.5468,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-09-30T00:00:00.000Z",
+      "buy_avg": 12.584,
+      "sell_avg": 12.542,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-01T00:00:00.000Z",
+      "buy_avg": 12.5617,
+      "sell_avg": 12.5152,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-02T00:00:00.000Z",
+      "buy_avg": 12.5575,
+      "sell_avg": 12.5111,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-03T00:00:00.000Z",
+      "buy_avg": 12.5274,
+      "sell_avg": 12.4839,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-04T00:00:00.000Z",
+      "buy_avg": 12.44,
+      "sell_avg": 12.3891,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-05T00:00:00.000Z",
+      "buy_avg": 12.4099,
+      "sell_avg": 12.3559,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-06T00:00:00.000Z",
+      "buy_avg": 12.3579,
+      "sell_avg": 12.3097,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-07T00:00:00.000Z",
+      "buy_avg": 12.3854,
+      "sell_avg": 12.3327,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-08T00:00:00.000Z",
+      "buy_avg": 12.6012,
+      "sell_avg": 12.5435,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-09T00:00:00.000Z",
+      "buy_avg": 12.6174,
+      "sell_avg": 12.5622,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-10T00:00:00.000Z",
+      "buy_avg": 12.7497,
+      "sell_avg": 12.6908,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-11T00:00:00.000Z",
+      "buy_avg": 12.9474,
+      "sell_avg": 12.8593,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-12T00:00:00.000Z",
+      "buy_avg": 12.9631,
+      "sell_avg": 12.898,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-13T00:00:00.000Z",
+      "buy_avg": 12.9554,
+      "sell_avg": 12.8997,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-14T00:00:00.000Z",
+      "buy_avg": 12.9347,
+      "sell_avg": 12.8852,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-15T00:00:00.000Z",
+      "buy_avg": 12.908,
+      "sell_avg": 12.8548,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-16T00:00:00.000Z",
+      "buy_avg": 12.8529,
+      "sell_avg": 12.8047,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-17T00:00:00.000Z",
+      "buy_avg": 12.8432,
+      "sell_avg": 12.7864,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-18T00:00:00.000Z",
+      "buy_avg": 12.8014,
+      "sell_avg": 12.7351,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-19T00:00:00.000Z",
+      "buy_avg": 12.989,
+      "sell_avg": 12.9077,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-20T00:00:00.000Z",
+      "buy_avg": 12.9574,
+      "sell_avg": 12.8728,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-21T00:00:00.000Z",
+      "buy_avg": 12.8065,
+      "sell_avg": 12.7566,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-22T00:00:00.000Z",
+      "buy_avg": 12.8185,
+      "sell_avg": 12.7729,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-23T00:00:00.000Z",
+      "buy_avg": 12.7466,
+      "sell_avg": 12.6948,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-24T00:00:00.000Z",
+      "buy_avg": 12.6414,
+      "sell_avg": 12.5803,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-25T00:00:00.000Z",
+      "buy_avg": 12.563,
+      "sell_avg": 12.5117,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-26T00:00:00.000Z",
+      "buy_avg": 12.5893,
+      "sell_avg": 12.5375,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-27T00:00:00.000Z",
+      "buy_avg": 12.5794,
+      "sell_avg": 12.5105,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-28T00:00:00.000Z",
+      "buy_avg": 12.4359,
+      "sell_avg": 12.374,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-29T00:00:00.000Z",
+      "buy_avg": 12.165,
+      "sell_avg": 12.0967,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-30T00:00:00.000Z",
+      "buy_avg": 12.0407,
+      "sell_avg": 11.9768,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-10-31T00:00:00.000Z",
+      "buy_avg": 11.6392,
+      "sell_avg": 11.5412,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-01T00:00:00.000Z",
+      "buy_avg": 11.4291,
+      "sell_avg": 11.3356,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-02T00:00:00.000Z",
+      "buy_avg": 11.4325,
+      "sell_avg": 11.3524,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-03T00:00:00.000Z",
+      "buy_avg": 11.4882,
+      "sell_avg": 11.4129,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-04T00:00:00.000Z",
+      "buy_avg": 11.4547,
+      "sell_avg": 11.3857,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-05T00:00:00.000Z",
+      "buy_avg": 11.3593,
+      "sell_avg": 11.3034,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-06T00:00:00.000Z",
+      "buy_avg": 10.8981,
+      "sell_avg": 10.8236,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-07T00:00:00.000Z",
+      "buy_avg": 10.6623,
+      "sell_avg": 10.5904,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-08T00:00:00.000Z",
+      "buy_avg": 10.6497,
+      "sell_avg": 10.5955,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-09T00:00:00.000Z",
+      "buy_avg": 10.5268,
+      "sell_avg": 10.4666,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-10T00:00:00.000Z",
+      "buy_avg": 10.3841,
+      "sell_avg": 10.3092,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-11T00:00:00.000Z",
+      "buy_avg": 10.1305,
+      "sell_avg": 10.0621,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-12T00:00:00.000Z",
+      "buy_avg": 10.1011,
+      "sell_avg": 10.043,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-13T00:00:00.000Z",
+      "buy_avg": 10.2934,
+      "sell_avg": 10.2293,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-14T00:00:00.000Z",
+      "buy_avg": 10.6279,
+      "sell_avg": 10.5549,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-15T00:00:00.000Z",
+      "buy_avg": 10.4733,
+      "sell_avg": 10.407,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-16T00:00:00.000Z",
+      "buy_avg": 10.4118,
+      "sell_avg": 10.345,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-17T00:00:00.000Z",
+      "buy_avg": 10.5004,
+      "sell_avg": 10.4302,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-18T00:00:00.000Z",
+      "buy_avg": 10.4172,
+      "sell_avg": 10.3559,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-19T00:00:00.000Z",
+      "buy_avg": 10.2746,
+      "sell_avg": 10.2044,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-20T00:00:00.000Z",
+      "buy_avg": 10.4177,
+      "sell_avg": 10.3572,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-21T00:00:00.000Z",
+      "buy_avg": 10.4071,
+      "sell_avg": 10.3576,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-22T00:00:00.000Z",
+      "buy_avg": 10.3927,
+      "sell_avg": 10.3421,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-23T00:00:00.000Z",
+      "buy_avg": 10.386,
+      "sell_avg": 10.3377,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-24T00:00:00.000Z",
+      "buy_avg": 10.4209,
+      "sell_avg": 10.3753,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-25T00:00:00.000Z",
+      "buy_avg": 10.4316,
+      "sell_avg": 10.3882,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-26T00:00:00.000Z",
+      "buy_avg": 10.3751,
+      "sell_avg": 10.3327,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-27T00:00:00.000Z",
+      "buy_avg": 10.2836,
+      "sell_avg": 10.2408,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-28T00:00:00.000Z",
+      "buy_avg": 10.2249,
+      "sell_avg": 10.1804,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-29T00:00:00.000Z",
+      "buy_avg": 10.1575,
+      "sell_avg": 10.1155,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-11-30T00:00:00.000Z",
+      "buy_avg": 10.126,
+      "sell_avg": 10.0871,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-01T00:00:00.000Z",
+      "buy_avg": 10.1315,
+      "sell_avg": 10.0822,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-02T00:00:00.000Z",
+      "buy_avg": 9.8468,
+      "sell_avg": 9.7928,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-03T00:00:00.000Z",
+      "buy_avg": 9.71,
+      "sell_avg": 9.6606,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-04T00:00:00.000Z",
+      "buy_avg": 9.7028,
+      "sell_avg": 9.6527,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-05T00:00:00.000Z",
+      "buy_avg": 9.5925,
+      "sell_avg": 9.5509,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-06T00:00:00.000Z",
+      "buy_avg": 9.5202,
+      "sell_avg": 9.4767,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-07T00:00:00.000Z",
+      "buy_avg": 9.5259,
+      "sell_avg": 9.4813,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-08T00:00:00.000Z",
+      "buy_avg": 9.5401,
+      "sell_avg": 9.4954,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-09T00:00:00.000Z",
+      "buy_avg": 9.4612,
+      "sell_avg": 9.4173,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-10T00:00:00.000Z",
+      "buy_avg": 9.3849,
+      "sell_avg": 9.3407,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-11T00:00:00.000Z",
+      "buy_avg": 9.2312,
+      "sell_avg": 9.1835,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-12T00:00:00.000Z",
+      "buy_avg": 9.1599,
+      "sell_avg": 9.1116,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-13T00:00:00.000Z",
+      "buy_avg": 9.1855,
+      "sell_avg": 9.1377,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-14T00:00:00.000Z",
+      "buy_avg": 9.1984,
+      "sell_avg": 9.1525,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-15T00:00:00.000Z",
+      "buy_avg": 9.1706,
+      "sell_avg": 9.1328,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-16T00:00:00.000Z",
+      "buy_avg": 9.1994,
+      "sell_avg": 9.1581,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-17T00:00:00.000Z",
+      "buy_avg": 9.363,
+      "sell_avg": 9.2894,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-18T00:00:00.000Z",
+      "buy_avg": 10.2018,
+      "sell_avg": 10.0936,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-19T00:00:00.000Z",
+      "buy_avg": 9.9461,
+      "sell_avg": 9.8736,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-20T00:00:00.000Z",
+      "buy_avg": 9.6776,
+      "sell_avg": 9.6138,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-21T00:00:00.000Z",
+      "buy_avg": 9.6523,
+      "sell_avg": 9.5974,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-22T00:00:00.000Z",
+      "buy_avg": 9.6336,
+      "sell_avg": 9.5853,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-23T00:00:00.000Z",
+      "buy_avg": 9.5308,
+      "sell_avg": 9.4845,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-24T00:00:00.000Z",
+      "buy_avg": 9.4719,
+      "sell_avg": 9.4286,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-25T00:00:00.000Z",
+      "buy_avg": 9.499,
+      "sell_avg": 9.4522,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-26T00:00:00.000Z",
+      "buy_avg": 9.5512,
+      "sell_avg": 9.507,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-27T00:00:00.000Z",
+      "buy_avg": 9.5504,
+      "sell_avg": 9.5132,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-28T00:00:00.000Z",
+      "buy_avg": 9.5903,
+      "sell_avg": 9.5532,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-29T00:00:00.000Z",
+      "buy_avg": 9.6072,
+      "sell_avg": 9.5646,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-30T00:00:00.000Z",
+      "buy_avg": 9.6139,
+      "sell_avg": 9.5798,
+      "sources_count": 1
+    },
+    {
+      "date": "2025-12-31T00:00:00.000Z",
+      "buy_avg": 9.6376,
+      "sell_avg": 9.5973,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-01T00:00:00.000Z",
+      "buy_avg": 9.6758,
+      "sell_avg": 9.6295,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-02T00:00:00.000Z",
+      "buy_avg": 9.6671,
+      "sell_avg": 9.6256,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-03T00:00:00.000Z",
+      "buy_avg": 9.6321,
+      "sell_avg": 9.5936,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-04T00:00:00.000Z",
+      "buy_avg": 9.6492,
+      "sell_avg": 9.6172,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-05T00:00:00.000Z",
+      "buy_avg": 9.6653,
+      "sell_avg": 9.6311,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-06T00:00:00.000Z",
+      "buy_avg": 9.6667,
+      "sell_avg": 9.6336,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-07T00:00:00.000Z",
+      "buy_avg": 9.6601,
+      "sell_avg": 9.6267,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-08T00:00:00.000Z",
+      "buy_avg": 9.6506,
+      "sell_avg": 9.6216,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-09T00:00:00.000Z",
+      "buy_avg": 9.6348,
+      "sell_avg": 9.6049,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-10T00:00:00.000Z",
+      "buy_avg": 9.6685,
+      "sell_avg": 9.639,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-11T00:00:00.000Z",
+      "buy_avg": 9.6791,
+      "sell_avg": 9.6473,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-12T00:00:00.000Z",
+      "buy_avg": 9.6534,
+      "sell_avg": 9.6271,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-13T00:00:00.000Z",
+      "buy_avg": 9.6132,
+      "sell_avg": 9.5817,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-14T00:00:00.000Z",
+      "buy_avg": 9.6139,
+      "sell_avg": 9.5828,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-15T00:00:00.000Z",
+      "buy_avg": 9.5938,
+      "sell_avg": 9.5614,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-16T00:00:00.000Z",
+      "buy_avg": 9.5649,
+      "sell_avg": 9.5331,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-17T00:00:00.000Z",
+      "buy_avg": 9.5351,
+      "sell_avg": 9.5026,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-18T00:00:00.000Z",
+      "buy_avg": 9.5766,
+      "sell_avg": 9.5446,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-19T00:00:00.000Z",
+      "buy_avg": 9.5811,
+      "sell_avg": 9.5507,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-20T00:00:00.000Z",
+      "buy_avg": 9.6084,
+      "sell_avg": 9.5766,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-21T00:00:00.000Z",
+      "buy_avg": 9.5707,
+      "sell_avg": 9.541,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-22T00:00:00.000Z",
+      "buy_avg": 9.5505,
+      "sell_avg": 9.5211,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-23T00:00:00.000Z",
+      "buy_avg": 9.5403,
+      "sell_avg": 9.5061,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-24T00:00:00.000Z",
+      "buy_avg": 9.5439,
+      "sell_avg": 9.5119,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-25T00:00:00.000Z",
+      "buy_avg": 9.554,
+      "sell_avg": 9.5186,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-26T00:00:00.000Z",
+      "buy_avg": 9.5268,
+      "sell_avg": 9.491,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-27T00:00:00.000Z",
+      "buy_avg": 9.3302,
+      "sell_avg": 9.2877,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-28T00:00:00.000Z",
+      "buy_avg": 9.1984,
+      "sell_avg": 9.1557,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-29T00:00:00.000Z",
+      "buy_avg": 9.0249,
+      "sell_avg": 8.9741,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-30T00:00:00.000Z",
+      "buy_avg": 9.0849,
+      "sell_avg": 9.0435,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-01-31T00:00:00.000Z",
+      "buy_avg": 9.1422,
+      "sell_avg": 9.1047,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-02-01T00:00:00.000Z",
+      "buy_avg": 9.1307,
+      "sell_avg": 9.093,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-02-02T00:00:00.000Z",
+      "buy_avg": 9.1287,
+      "sell_avg": 9.0957,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-02-03T00:00:00.000Z",
+      "buy_avg": 9.137,
+      "sell_avg": 9.1064,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-02-04T00:00:00.000Z",
+      "buy_avg": 9.2022,
+      "sell_avg": 9.1717,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-02-05T00:00:00.000Z",
+      "buy_avg": 9.2825,
+      "sell_avg": 9.2467,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-02-06T00:00:00.000Z",
+      "buy_avg": 9.2643,
+      "sell_avg": 9.232,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-02-07T00:00:00.000Z",
+      "buy_avg": 9.2356,
+      "sell_avg": 9.1973,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-02-08T00:00:00.000Z",
+      "buy_avg": 9.2145,
+      "sell_avg": 9.179,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-02-09T00:00:00.000Z",
+      "buy_avg": 9.192,
+      "sell_avg": 9.1594,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-02-10T00:00:00.000Z",
+      "buy_avg": 9.1499,
+      "sell_avg": 9.1168,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-02-11T00:00:00.000Z",
+      "buy_avg": 9.1381,
+      "sell_avg": 9.1061,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-02-12T00:00:00.000Z",
+      "buy_avg": 9.1666,
+      "sell_avg": 9.1359,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-02-13T00:00:00.000Z",
+      "buy_avg": 9.1735,
+      "sell_avg": 9.1393,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-02-14T00:00:00.000Z",
+      "buy_avg": 9.1461,
+      "sell_avg": 9.1119,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-02-15T00:00:00.000Z",
+      "buy_avg": 9.1339,
+      "sell_avg": 9.0958,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-02-16T00:00:00.000Z",
+      "buy_avg": 9.0964,
+      "sell_avg": 9.0566,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-02-17T00:00:00.000Z",
+      "buy_avg": 9.0934,
+      "sell_avg": 9.0494,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-02-18T00:00:00.000Z",
+      "buy_avg": 9.1103,
+      "sell_avg": 9.0672,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-02-19T00:00:00.000Z",
+      "buy_avg": 9.0959,
+      "sell_avg": 9.0579,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-02-20T00:00:00.000Z",
+      "buy_avg": 9.0857,
+      "sell_avg": 9.0514,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-02-21T00:00:00.000Z",
+      "buy_avg": 9.0961,
+      "sell_avg": 9.0647,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-02-22T00:00:00.000Z",
+      "buy_avg": 9.0881,
+      "sell_avg": 9.0543,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-02-23T00:00:00.000Z",
+      "buy_avg": 9.0695,
+      "sell_avg": 9.0341,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-02-24T00:00:00.000Z",
+      "buy_avg": 9.0415,
+      "sell_avg": 9.009,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-02-25T00:00:00.000Z",
+      "buy_avg": 9.0392,
+      "sell_avg": 9.0053,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-02-26T00:00:00.000Z",
+      "buy_avg": 9.0377,
+      "sell_avg": 9.0072,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-02-27T00:00:00.000Z",
+      "buy_avg": 9.0342,
+      "sell_avg": 9.0032,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-02-28T00:00:00.000Z",
+      "buy_avg": 9.0474,
+      "sell_avg": 9.0142,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-01T00:00:00.000Z",
+      "buy_avg": 9.0541,
+      "sell_avg": 9.0201,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-02T00:00:00.000Z",
+      "buy_avg": 9.0665,
+      "sell_avg": 9.0321,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-03T00:00:00.000Z",
+      "buy_avg": 9.1072,
+      "sell_avg": 9.0742,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-04T00:00:00.000Z",
+      "buy_avg": 9.1852,
+      "sell_avg": 9.1459,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-05T00:00:00.000Z",
+      "buy_avg": 9.2109,
+      "sell_avg": 9.1724,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-06T00:00:00.000Z",
+      "buy_avg": 9.3223,
+      "sell_avg": 9.2817,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-07T00:00:00.000Z",
+      "buy_avg": 9.4351,
+      "sell_avg": 9.3981,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-08T00:00:00.000Z",
+      "buy_avg": 9.5049,
+      "sell_avg": 9.4641,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-09T00:00:00.000Z",
+      "buy_avg": 9.5259,
+      "sell_avg": 9.4783,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-10T00:00:00.000Z",
+      "buy_avg": 9.3773,
+      "sell_avg": 9.3348,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-11T00:00:00.000Z",
+      "buy_avg": 9.272,
+      "sell_avg": 9.2319,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-12T00:00:00.000Z",
+      "buy_avg": 9.2756,
+      "sell_avg": 9.2408,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-13T00:00:00.000Z",
+      "buy_avg": 9.3043,
+      "sell_avg": 9.2659,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-14T00:00:00.000Z",
+      "buy_avg": 9.36,
+      "sell_avg": 9.3264,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-15T00:00:00.000Z",
+      "buy_avg": 9.406,
+      "sell_avg": 9.3665,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-16T00:00:00.000Z",
+      "buy_avg": 9.3465,
+      "sell_avg": 9.3049,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-17T00:00:00.000Z",
+      "buy_avg": 9.2878,
+      "sell_avg": 9.2509,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-18T00:00:00.000Z",
+      "buy_avg": 9.2901,
+      "sell_avg": 9.2503,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-19T00:00:00.000Z",
+      "buy_avg": 9.3008,
+      "sell_avg": 9.2644,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-20T00:00:00.000Z",
+      "buy_avg": 9.3047,
+      "sell_avg": 9.2723,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-21T00:00:00.000Z",
+      "buy_avg": 9.3546,
+      "sell_avg": 9.324,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-22T00:00:00.000Z",
+      "buy_avg": 9.401,
+      "sell_avg": 9.3689,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-23T00:00:00.000Z",
+      "buy_avg": 9.3373,
+      "sell_avg": 9.3008,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-24T00:00:00.000Z",
+      "buy_avg": 9.3044,
+      "sell_avg": 9.2723,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-25T00:00:00.000Z",
+      "buy_avg": 9.3041,
+      "sell_avg": 9.2714,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-26T00:00:00.000Z",
+      "buy_avg": 9.311,
+      "sell_avg": 9.2772,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-27T00:00:00.000Z",
+      "buy_avg": 9.3324,
+      "sell_avg": 9.2964,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-28T00:00:00.000Z",
+      "buy_avg": 9.3581,
+      "sell_avg": 9.3256,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-29T00:00:00.000Z",
+      "buy_avg": 9.3471,
+      "sell_avg": 9.3072,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-30T00:00:00.000Z",
+      "buy_avg": 9.3299,
+      "sell_avg": 9.2933,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-03-31T00:00:00.000Z",
+      "buy_avg": 9.3297,
+      "sell_avg": 9.296,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-01T00:00:00.000Z",
+      "buy_avg": 9.3359,
+      "sell_avg": 9.2975,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-02T00:00:00.000Z",
+      "buy_avg": 9.3221,
+      "sell_avg": 9.2877,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-03T00:00:00.000Z",
+      "buy_avg": 9.3283,
+      "sell_avg": 9.2945,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-04T00:00:00.000Z",
+      "buy_avg": 9.328,
+      "sell_avg": 9.2971,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-05T00:00:00.000Z",
+      "buy_avg": 9.329,
+      "sell_avg": 9.2962,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-06T00:00:00.000Z",
+      "buy_avg": 9.2961,
+      "sell_avg": 9.2618,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-07T00:00:00.000Z",
+      "buy_avg": 9.2836,
+      "sell_avg": 9.2503,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-08T00:00:00.000Z",
+      "buy_avg": 9.2862,
+      "sell_avg": 9.2488,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-09T00:00:00.000Z",
+      "buy_avg": 9.2995,
+      "sell_avg": 9.2658,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-10T00:00:00.000Z",
+      "buy_avg": 9.3147,
+      "sell_avg": 9.2785,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-11T00:00:00.000Z",
+      "buy_avg": 9.3219,
+      "sell_avg": 9.2877,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-12T00:00:00.000Z",
+      "buy_avg": 9.3202,
+      "sell_avg": 9.2844,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-13T00:00:00.000Z",
+      "buy_avg": 9.324,
+      "sell_avg": 9.289,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-14T00:00:00.000Z",
+      "buy_avg": 9.3478,
+      "sell_avg": 9.3168,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-15T00:00:00.000Z",
+      "buy_avg": 9.3941,
+      "sell_avg": 9.3602,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-16T00:00:00.000Z",
+      "buy_avg": 9.408,
+      "sell_avg": 9.3735,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-17T00:00:00.000Z",
+      "buy_avg": 9.4377,
+      "sell_avg": 9.4062,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-18T00:00:00.000Z",
+      "buy_avg": 9.5069,
+      "sell_avg": 9.47,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-19T00:00:00.000Z",
+      "buy_avg": 9.5068,
+      "sell_avg": 9.474,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-20T00:00:00.000Z",
+      "buy_avg": 9.4973,
+      "sell_avg": 9.4634,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-21T00:00:00.000Z",
+      "buy_avg": 9.5058,
+      "sell_avg": 9.4738,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-22T00:00:00.000Z",
+      "buy_avg": 9.5568,
+      "sell_avg": 9.526,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-23T00:00:00.000Z",
+      "buy_avg": 9.6659,
+      "sell_avg": 9.6244,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-24T00:00:00.000Z",
+      "buy_avg": 9.7474,
+      "sell_avg": 9.7019,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-25T00:00:00.000Z",
+      "buy_avg": 9.7487,
+      "sell_avg": 9.7155,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-26T00:00:00.000Z",
+      "buy_avg": 9.7609,
+      "sell_avg": 9.7318,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-27T00:00:00.000Z",
+      "buy_avg": 9.7936,
+      "sell_avg": 9.7569,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-28T00:00:00.000Z",
+      "buy_avg": 9.9539,
+      "sell_avg": 9.918,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-29T00:00:00.000Z",
+      "buy_avg": 10.2216,
+      "sell_avg": 10.1889,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-04-30T00:00:00.000Z",
+      "buy_avg": 10.0157,
+      "sell_avg": 10.0964,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-01T00:00:00.000Z",
+      "buy_avg": 9.832,
+      "sell_avg": 9.9011,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-02T00:00:00.000Z",
+      "buy_avg": 9.851,
+      "sell_avg": 9.9103,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-03T00:00:00.000Z",
+      "buy_avg": 9.8093,
+      "sell_avg": 9.8586,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-04T00:00:00.000Z",
+      "buy_avg": 9.8416,
+      "sell_avg": 9.8967,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-05T00:00:00.000Z",
+      "buy_avg": 9.9253,
+      "sell_avg": 9.97,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-06T00:00:00.000Z",
+      "buy_avg": 9.9531,
+      "sell_avg": 10.0012,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-07T00:00:00.000Z",
+      "buy_avg": 9.9769,
+      "sell_avg": 10.023,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-08T00:00:00.000Z",
+      "buy_avg": 10.0049,
+      "sell_avg": 10.0456,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-09T00:00:00.000Z",
+      "buy_avg": 9.9425,
+      "sell_avg": 9.9954,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-10T00:00:00.000Z",
+      "buy_avg": 9.9072,
+      "sell_avg": 9.9565,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-11T00:00:00.000Z",
+      "buy_avg": 9.9515,
+      "sell_avg": 9.999,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-12T00:00:00.000Z",
+      "buy_avg": 10.0045,
+      "sell_avg": 10.0465,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-13T00:00:00.000Z",
+      "buy_avg": 9.9783,
+      "sell_avg": 10.0208,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-14T00:00:00.000Z",
+      "buy_avg": 9.9981,
+      "sell_avg": 10.0358,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-15T00:00:00.000Z",
+      "buy_avg": 10.0371,
+      "sell_avg": 10.0836,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-16T00:00:00.000Z",
+      "buy_avg": 10.0056,
+      "sell_avg": 10.0534,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-17T00:00:00.000Z",
+      "buy_avg": 10.0016,
+      "sell_avg": 10.0456,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-18T00:00:00.000Z",
+      "buy_avg": 10.0211,
+      "sell_avg": 10.0676,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-19T00:00:00.000Z",
+      "buy_avg": 10.0278,
+      "sell_avg": 10.0696,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-20T00:00:00.000Z",
+      "buy_avg": 10.0388,
+      "sell_avg": 10.0802,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-21T00:00:00.000Z",
+      "buy_avg": 10.0141,
+      "sell_avg": 10.0556,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-22T00:00:00.000Z",
+      "buy_avg": 9.9728,
+      "sell_avg": 10.0155,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-23T00:00:00.000Z",
+      "buy_avg": 9.9653,
+      "sell_avg": 10.0027,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-24T00:00:00.000Z",
+      "buy_avg": 9.9691,
+      "sell_avg": 10.0069,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-25T00:00:00.000Z",
+      "buy_avg": 9.9802,
+      "sell_avg": 10.0183,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-26T00:00:00.000Z",
+      "buy_avg": 9.9721,
+      "sell_avg": 10.0094,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-27T00:00:00.000Z",
+      "buy_avg": 9.9272,
+      "sell_avg": 9.9691,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-28T00:00:00.000Z",
+      "buy_avg": 9.9457,
+      "sell_avg": 9.9851,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-29T00:00:00.000Z",
+      "buy_avg": 9.9417,
+      "sell_avg": 9.9782,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-30T00:00:00.000Z",
+      "buy_avg": 9.9324,
+      "sell_avg": 9.9727,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-05-31T00:00:00.000Z",
+      "buy_avg": 9.9115,
+      "sell_avg": 9.9524,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-01T00:00:00.000Z",
+      "buy_avg": 9.901,
+      "sell_avg": 9.941,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-02T00:00:00.000Z",
+      "buy_avg": 9.9014,
+      "sell_avg": 9.9412,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-03T00:00:00.000Z",
+      "buy_avg": 9.922,
+      "sell_avg": 9.9603,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-04T00:00:00.000Z",
+      "buy_avg": 9.942,
+      "sell_avg": 9.9854,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-05T00:00:00.000Z",
+      "buy_avg": 9.935,
+      "sell_avg": 9.9734,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-06T00:00:00.000Z",
+      "buy_avg": 9.9354,
+      "sell_avg": 9.9744,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-07T00:00:00.000Z",
+      "buy_avg": 9.93,
+      "sell_avg": 9.9681,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-08T00:00:00.000Z",
+      "buy_avg": 9.9297,
+      "sell_avg": 9.9658,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-09T00:00:00.000Z",
+      "buy_avg": 9.9298,
+      "sell_avg": 9.9674,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-10T00:00:00.000Z",
+      "buy_avg": 9.9195,
+      "sell_avg": 9.957,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-11T00:00:00.000Z",
+      "buy_avg": 9.9023,
+      "sell_avg": 9.9396,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-12T00:00:00.000Z",
+      "buy_avg": 9.8891,
+      "sell_avg": 9.9268,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-13T00:00:00.000Z",
+      "buy_avg": 9.8809,
+      "sell_avg": 9.92,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-14T00:00:00.000Z",
+      "buy_avg": 9.8894,
+      "sell_avg": 9.922,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-15T00:00:00.000Z",
+      "buy_avg": 9.8861,
+      "sell_avg": 9.9223,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-16T00:00:00.000Z",
+      "buy_avg": 9.8798,
+      "sell_avg": 9.9154,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-17T00:00:00.000Z",
+      "buy_avg": 9.8557,
+      "sell_avg": 9.8936,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-18T00:00:00.000Z",
+      "buy_avg": 9.8455,
+      "sell_avg": 9.8799,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-19T00:00:00.000Z",
+      "buy_avg": 9.8638,
+      "sell_avg": 9.8992,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-20T00:00:00.000Z",
+      "buy_avg": 9.9655,
+      "sell_avg": 10.0055,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-21T00:00:00.000Z",
+      "buy_avg": 9.9189,
+      "sell_avg": 9.9593,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-22T00:00:00.000Z",
+      "buy_avg": 9.9355,
+      "sell_avg": 9.9724,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-23T00:00:00.000Z",
+      "buy_avg": 9.9155,
+      "sell_avg": 9.9523,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-24T00:00:00.000Z",
+      "buy_avg": 9.884,
+      "sell_avg": 9.9199,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-25T00:00:00.000Z",
+      "buy_avg": 9.8649,
+      "sell_avg": 9.9002,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-26T00:00:00.000Z",
+      "buy_avg": 9.8668,
+      "sell_avg": 9.9031,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-27T00:00:00.000Z",
+      "buy_avg": 9.9085,
+      "sell_avg": 9.9539,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-28T00:00:00.000Z",
+      "buy_avg": 9.8842,
+      "sell_avg": 9.9216,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-29T00:00:00.000Z",
+      "buy_avg": 9.8585,
+      "sell_avg": 9.8955,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-06-30T00:00:00.000Z",
+      "buy_avg": 9.9051,
+      "sell_avg": 9.9425,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-01T00:00:00.000Z",
+      "buy_avg": 9.9517,
+      "sell_avg": 9.9895,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-02T00:00:00.000Z",
+      "buy_avg": 9.9698,
+      "sell_avg": 10.0099,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-03T00:00:00.000Z",
+      "buy_avg": 9.9461,
+      "sell_avg": 9.9903,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-04T00:00:00.000Z",
+      "buy_avg": 9.9712,
+      "sell_avg": 10.0145,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-05T00:00:00.000Z",
+      "buy_avg": 9.9666,
+      "sell_avg": 10.0105,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-06T00:00:00.000Z",
+      "buy_avg": 9.9747,
+      "sell_avg": 10.0175,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-07T00:00:00.000Z",
+      "buy_avg": 10.0168,
+      "sell_avg": 10.0561,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-08T00:00:00.000Z",
+      "buy_avg": 10.1838,
+      "sell_avg": 10.2408,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-09T00:00:00.000Z",
+      "buy_avg": 10.3775,
+      "sell_avg": 10.4409,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-10T00:00:00.000Z",
+      "buy_avg": 10.5447,
+      "sell_avg": 10.5966,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-11T00:00:00.000Z",
+      "buy_avg": 10.5654,
+      "sell_avg": 10.6204,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-12T00:00:00.000Z",
+      "buy_avg": 10.403,
+      "sell_avg": 10.4675,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-13T00:00:00.000Z",
+      "buy_avg": 10.4648,
+      "sell_avg": 10.5194,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-14T00:00:00.000Z",
+      "buy_avg": 10.5154,
+      "sell_avg": 10.5724,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-15T00:00:00.000Z",
+      "buy_avg": 10.6332,
+      "sell_avg": 10.6899,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-16T00:00:00.000Z",
+      "buy_avg": 10.6947,
+      "sell_avg": 10.7464,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-17T00:00:00.000Z",
+      "buy_avg": 10.6849,
+      "sell_avg": 10.7352,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-18T00:00:00.000Z",
+      "buy_avg": 10.7406,
+      "sell_avg": 10.7895,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-19T00:00:00.000Z",
+      "buy_avg": 10.733,
+      "sell_avg": 10.7872,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-20T00:00:00.000Z",
+      "buy_avg": 10.8114,
+      "sell_avg": 10.8566,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-21T00:00:00.000Z",
+      "buy_avg": 11.0896,
+      "sell_avg": 11.1565,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-22T00:00:00.000Z",
+      "buy_avg": 11.3666,
+      "sell_avg": 11.4315,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-23T00:00:00.000Z",
+      "buy_avg": 11.5267,
+      "sell_avg": 11.5885,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-24T00:00:00.000Z",
+      "buy_avg": 11.7205,
+      "sell_avg": 11.7696,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-25T00:00:00.000Z",
+      "buy_avg": 11.7041,
+      "sell_avg": 11.7602,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-26T00:00:00.000Z",
+      "buy_avg": 11.528,
+      "sell_avg": 11.6097,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-27T00:00:00.000Z",
+      "buy_avg": 11.5966,
+      "sell_avg": 11.6629,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-28T00:00:00.000Z",
+      "buy_avg": 11.6279,
+      "sell_avg": 11.6801,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-29T00:00:00.000Z",
+      "buy_avg": 11.8495,
+      "sell_avg": 11.9083,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-30T00:00:00.000Z",
+      "buy_avg": 11.8637,
+      "sell_avg": 11.9098,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-07-31T00:00:00.000Z",
+      "buy_avg": 11.9789,
+      "sell_avg": 12.0282,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-01T00:00:00.000Z",
+      "buy_avg": 11.6649,
+      "sell_avg": 11.7449,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-02T00:00:00.000Z",
+      "buy_avg": 11.6499,
+      "sell_avg": 11.7298,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-03T00:00:00.000Z",
+      "buy_avg": 11.7695,
+      "sell_avg": 11.8369,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-04T00:00:00.000Z",
+      "buy_avg": 11.7309,
+      "sell_avg": 11.7944,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-05T00:00:00.000Z",
+      "buy_avg": 11.5888,
+      "sell_avg": 11.6481,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-06T00:00:00.000Z",
+      "buy_avg": 11.206,
+      "sell_avg": 11.2902,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-07T00:00:00.000Z",
+      "buy_avg": 11.1265,
+      "sell_avg": 11.1983,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-08T00:00:00.000Z",
+      "buy_avg": 11.1101,
+      "sell_avg": 11.1621,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-09T00:00:00.000Z",
+      "buy_avg": 11.1623,
+      "sell_avg": 11.2114,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-10T00:00:00.000Z",
+      "buy_avg": 11.3171,
+      "sell_avg": 11.3777,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-11T00:00:00.000Z",
+      "buy_avg": 11.4971,
+      "sell_avg": 11.5481,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-12T00:00:00.000Z",
+      "buy_avg": 11.5077,
+      "sell_avg": 11.5562,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-13T00:00:00.000Z",
+      "buy_avg": 11.4945,
+      "sell_avg": 11.5415,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-14T00:00:00.000Z",
+      "buy_avg": 11.4938,
+      "sell_avg": 11.5443,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-15T00:00:00.000Z",
+      "buy_avg": 11.4142,
+      "sell_avg": 11.4708,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-16T00:00:00.000Z",
+      "buy_avg": 11.438,
+      "sell_avg": 11.4868,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-17T00:00:00.000Z",
+      "buy_avg": 11.528,
+      "sell_avg": 11.597,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-18T00:00:00.000Z",
+      "buy_avg": 11.5595,
+      "sell_avg": 11.6109,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-19T00:00:00.000Z",
+      "buy_avg": 11.5702,
+      "sell_avg": 11.624,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-20T00:00:00.000Z",
+      "buy_avg": 11.5881,
+      "sell_avg": 11.6357,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-21T00:00:00.000Z",
+      "buy_avg": 11.6082,
+      "sell_avg": 11.6542,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-22T00:00:00.000Z",
+      "buy_avg": 11.5855,
+      "sell_avg": 11.6313,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-23T00:00:00.000Z",
+      "buy_avg": 11.5968,
+      "sell_avg": 11.6419,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-24T00:00:00.000Z",
+      "buy_avg": 11.6268,
+      "sell_avg": 11.673,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-25T00:00:00.000Z",
+      "buy_avg": 11.698,
+      "sell_avg": 11.7495,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-26T00:00:00.000Z",
+      "buy_avg": 11.8265,
+      "sell_avg": 11.8715,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-27T00:00:00.000Z",
+      "buy_avg": 11.962,
+      "sell_avg": 12.0216,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-28T00:00:00.000Z",
+      "buy_avg": 12.0187,
+      "sell_avg": 12.0706,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-29T00:00:00.000Z",
+      "buy_avg": 11.8864,
+      "sell_avg": 11.9526,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-30T00:00:00.000Z",
+      "buy_avg": 11.912,
+      "sell_avg": 11.9705,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-08-31T00:00:00.000Z",
+      "buy_avg": 11.9566,
+      "sell_avg": 12.0148,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-09-01T00:00:00.000Z",
+      "buy_avg": 12.0108,
+      "sell_avg": 12.0689,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-09-02T00:00:00.000Z",
+      "buy_avg": 12.2635,
+      "sell_avg": 12.3226,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-09-03T00:00:00.000Z",
+      "buy_avg": 12.3524,
+      "sell_avg": 12.4154,
+      "sources_count": 1
+    }
+  ]
+}

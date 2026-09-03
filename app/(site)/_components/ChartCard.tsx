@@ -197,7 +197,9 @@ export function ChartCard({
       )}
       {series === 'paralelo' ? (
         <p className="text-xs text-ink/50">
-          Histórico diario: <a className="underline underline-offset-2" href="https://paralelo.bo" target="_blank" rel="noreferrer">paralelo.bo</a> (CC BY 4.0), desde agosto de 2024. Cotización actual: cálculo propio con anuncios P2P.
+          Histórico diario respaldado desde julio de 2024 con datos de{' '}
+          <a className="underline underline-offset-2" href="https://www.dolarbluebolivia.click/datos/" target="_blank" rel="noreferrer">Dólar Blue Bolivia</a>
+          {' '}y fuentes propias disponibles. Se descartan ceros y valores inválidos. Cotización actual: cálculo propio con anuncios P2P.
         </p>
       ) : null}
     </div>

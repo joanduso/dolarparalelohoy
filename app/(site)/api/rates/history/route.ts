@@ -20,7 +20,7 @@ export const maxDuration = 30;
 function dailyRows(rows: HistoryDataRow[]) {
   const byDay = new Map<string, HistoryDataRow>();
   for (const row of rows) {
-    if (row.buy_avg <= 0 || row.sell_avg <= 0) continue;
+    if (!Number.isFinite(row.buy_avg) || !Number.isFinite(row.sell_avg) || row.buy_avg <= 0 || row.sell_avg <= 0) continue;
     byDay.set(row.date.slice(0, 10), row);
   }
   return Array.from(byDay.values()).sort((a, b) => a.date.localeCompare(b.date));
@@ -129,7 +129,9 @@ export async function GET(request: Request) {
     count: data.length,
     data,
     source: (() => {
-      const publicLabel = kindParam === 'PARALELO' ? 'paralelo.bo (CC-BY-4.0)' : 'bcb.gob.bo';
+      const publicLabel = kindParam === 'PARALELO'
+        ? Array.from(new Set(publicHistory.map((row) => row.source).filter(Boolean))).join(' + ')
+        : 'bcb.gob.bo';
       if (publicHistory.length > 0 && storedData.length > 0) return `${publicLabel} + local`;
       if (publicHistory.length > 0) return publicLabel;
       return 'local';

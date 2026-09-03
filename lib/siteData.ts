@@ -61,7 +61,7 @@ export type SiteDataResult<T> = {
 function dailyRows(rows: HistoryDataRow[]) {
   const byDay = new Map<string, HistoryDataRow>();
   for (const row of rows) {
-    if (row.buy_avg <= 0 || row.sell_avg <= 0) continue;
+    if (!Number.isFinite(row.buy_avg) || !Number.isFinite(row.sell_avg) || row.buy_avg <= 0 || row.sell_avg <= 0) continue;
     byDay.set(row.date.slice(0, 10), row);
   }
   return Array.from(byDay.values()).sort((a, b) => a.date.localeCompare(b.date));

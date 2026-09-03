@@ -6,7 +6,7 @@ export type HistoryPeriod = {
 };
 
 // days for "todo" matches the anonymous API ceiling (see lib/apiTiers.ts) —
-// enough to cover the full paralelo.bo-backed history since Aug 2024.
+// enough to cover the complete archived parallel history since July 2024.
 //
 // No "24h" period: our history data is daily averages (one row/day), so a
 // 24h window returns ~1-2 rows — genuinely thin and redundant with the

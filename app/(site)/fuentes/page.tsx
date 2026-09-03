@@ -64,6 +64,12 @@ export default function FuentesPage() {
             Las cotizaciones son referenciales: el precio final depende del medio de pago, límites,
             comisiones y condiciones de cada contraparte.
           </p>
+          <p className="text-ink/70">
+            Para que una caída externa no borre la tendencia, conservamos un respaldo verificable
+            del histórico público de <a className="underline underline-offset-4" href="https://www.dolarbluebolivia.click/datos/" target="_blank" rel="noreferrer">Dólar Blue Bolivia</a>.
+            La copia actual cubre desde el 21 de julio de 2024. Generamos un promedio por día y
+            excluimos filas incompletas, ceros y cotizaciones fuera del rango de validación.
+          </p>
         </section>
 
         <section className="card p-6 grid gap-4">
@@ -87,7 +93,7 @@ export default function FuentesPage() {
               <tr className="border-t border-black/5"><td className="py-2 font-medium">Histórico</td><td className="py-2">Promedio diario de compra y venta con número de fuentes.</td><td className="py-2">Diaria</td></tr>
             </tbody></table>
           </div>
-          <p className="text-sm text-ink/60">Versión metodológica: 27 de agosto de 2026. Los cambios materiales se documentarán en esta página.</p>
+          <p className="text-sm text-ink/60">Versión metodológica: 3 de septiembre de 2026. Los cambios materiales se documentarán en esta página.</p>
         </section>
 
         <section id="licencia-de-uso-de-datos" className="card p-6 grid gap-3">
@@ -105,7 +111,7 @@ export default function FuentesPage() {
             >
               Creative Commons BY 4.0
             </a>. Esto aplica a los datos que nosotros calculamos y publicamos; las fuentes
-            primarias que citamos (BCB, paralelo.bo, Binance P2P) mantienen sus propios términos.
+            primarias que citamos (BCB, paralelo.bo, Dólar Blue Bolivia y Binance P2P) mantienen sus propios términos.
           </p>
           <div className="rounded-xl bg-sand/50 p-4 text-sm text-ink/70">
             <strong>Cita sugerida:</strong> Dólar Paralelo Hoy Bolivia, “Cotización del dólar paralelo en Bolivia”, dato consultado en dolarparalelohoy.com, con fecha y hora de acceso.

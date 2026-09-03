@@ -1,22 +1,44 @@
+import parallelDailyArchive from '@/data/history/parallel-daily.json';
+
 export type HistoryDataRow = {
   date: string;
   buy_avg: number;
   sell_avg: number;
   sources_count: number;
+  source?: string;
 };
 
 type PublicParallelHistory = {
   points?: Array<{ t: string; v: number }>;
 };
 
+const ARCHIVE_SOURCE = 'Dólar Blue Bolivia (respaldo propio)';
+const PARALELO_BO_SOURCE = 'paralelo.bo (CC-BY-4.0)';
+
+function validHistoryRow(row: HistoryDataRow, from: Date, to: Date) {
+  const timestamp = new Date(row.date).getTime();
+  return Number.isFinite(timestamp) &&
+    Number.isFinite(row.buy_avg) && Number.isFinite(row.sell_avg) &&
+    row.buy_avg > 0 && row.sell_avg > 0 &&
+    timestamp >= from.getTime() && timestamp <= to.getTime();
+}
+
+function archivedParallelHistory(from: Date, to: Date): HistoryDataRow[] {
+  return parallelDailyArchive.data
+    .map((row) => ({ ...row, source: ARCHIVE_SOURCE }))
+    .filter((row) => validHistoryRow(row, from, to));
+}
+
 export async function getPublicParallelHistory(from: Date, to: Date): Promise<HistoryDataRow[]> {
+  const archived = archivedParallelHistory(from, to);
+
   try {
     const response = await fetch('https://paralelo.bo/api/v1/historical.json', {
       next: { revalidate: 60 * 60 }
     });
-    if (!response.ok) return [];
+    if (!response.ok) return archived;
     const payload = (await response.json()) as PublicParallelHistory;
-    return (payload.points ?? [])
+    const remote = (payload.points ?? [])
       .filter((point) => {
         const timestamp = new Date(point.t).getTime();
         return Number.isFinite(point.v) && point.v > 0 && timestamp >= from.getTime() && timestamp <= to.getTime();
@@ -25,11 +47,16 @@ export async function getPublicParallelHistory(from: Date, to: Date): Promise<Hi
         date: point.t,
         buy_avg: point.v,
         sell_avg: point.v,
-        sources_count: 1
+        sources_count: 1,
+        source: PARALELO_BO_SOURCE
       }));
+
+    const byDay = new Map<string, HistoryDataRow>();
+    for (const row of [...archived, ...remote]) byDay.set(row.date.slice(0, 10), row);
+    return Array.from(byDay.values()).sort((a, b) => a.date.localeCompare(b.date));
   } catch (error) {
     console.warn('[public-history] parallel history unavailable', String(error));
-    return [];
+    return archived;
   }
 }
 

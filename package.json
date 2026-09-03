@@ -15,6 +15,7 @@
     "prisma:migrate:deploy": "prisma migrate deploy",
     "ingest": "tsx scripts/ingest.ts",
     "backfill": "tsx scripts/backfill.ts",
+    "build:parallel-history": "node scripts/build-parallel-history.mjs",
     "run-engine": "tsx scripts/run-engine.ts",
     "test": "vitest run"
   },
