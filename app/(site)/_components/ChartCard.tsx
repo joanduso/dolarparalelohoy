@@ -12,6 +12,7 @@ import {
 import { Line } from 'react-chartjs-2';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { computeParallelBenchmarks } from '@/lib/parallelBenchmarks';
 
 ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, Tooltip);
 
@@ -33,6 +34,14 @@ const ranges = [
   { label: 'Todo', days: 0 }
 ];
 
+function signedNumber(value: number, digits = 1) {
+  const sign = value > 0 ? '+' : '';
+  return `${sign}${new Intl.NumberFormat('es-BO', {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits
+  }).format(value)}`;
+}
+
 export function ChartCard({
   data,
   title,
@@ -52,6 +61,10 @@ export function ChartCard({
     : (availableSeries[0] ?? initialSeries);
   const [series, setSeries] = useState<SeriesKey>(startingSeries);
   const [range, setRange] = useState(initialRange);
+  const parallelBenchmarks = useMemo(
+    () => computeParallelBenchmarks(data.paralelo, data.oficial),
+    [data.oficial, data.paralelo]
+  );
 
   const selected = data[series];
 
@@ -195,6 +208,31 @@ export function ChartCard({
           }}
         />
       )}
+      {series === 'paralelo' && parallelBenchmarks ? (
+        <div className="grid gap-3 sm:grid-cols-2" aria-label="Comparaciones de la cotización paralela actual">
+          <div className="rounded-xl border border-black/10 bg-sand/35 p-4">
+            <p className="text-xs uppercase tracking-wide text-ink/55">Vs. Bs 6,96 histórico</p>
+            <p className="mt-1 text-xl font-semibold text-ink">
+              {signedNumber(parallelBenchmarks.historic.percent)}%
+            </p>
+            <p className="mt-1 text-xs text-ink/60">
+              {signedNumber(parallelBenchmarks.historic.delta, 2)} Bs frente al tipo oficial histórico de referencia.
+            </p>
+          </div>
+          {parallelBenchmarks.official ? (
+            <div className="rounded-xl border border-black/10 bg-sand/35 p-4">
+              <p className="text-xs uppercase tracking-wide text-ink/55">Vs. oficial vigente</p>
+              <p className="mt-1 text-xl font-semibold text-ink">
+                {signedNumber(parallelBenchmarks.official.percent)}%
+              </p>
+              <p className="mt-1 text-xs text-ink/60">
+                {signedNumber(parallelBenchmarks.official.delta, 2)} Bs frente al último oficial disponible de Bs{' '}
+                {new Intl.NumberFormat('es-BO', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(parallelBenchmarks.official.baseline)}.
+              </p>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
       {series === 'paralelo' ? (
         <p className="text-xs text-ink/50">
           Histórico diario respaldado desde julio de 2024 con datos de{' '}

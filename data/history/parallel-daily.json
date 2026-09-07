@@ -2,17 +2,17 @@
   "metadata": {
     "source": "https://api.dolarbluebolivia.click/v1/chart/all.csv",
     "source_page": "https://www.dolarbluebolivia.click/datos/",
-    "raw_file": "7551324fb9dc23994d008ed06c8f3dfba044ab4a05e37645c15c9a2841a1fe5f.csv",
-    "raw_sha256": "7551324fb9dc23994d008ed06c8f3dfba044ab4a05e37645c15c9a2841a1fe5f",
-    "generated_at": "2026-09-03T19:59:17.353Z",
+    "raw_file": "99f8ff7c3d2bc94fd2fca09588aab20f3bf2378d568836904b2db5f1f0c422cf.csv",
+    "raw_sha256": "99f8ff7c3d2bc94fd2fca09588aab20f3bf2378d568836904b2db5f1f0c422cf",
+    "generated_at": "2026-09-07T19:22:36.038Z",
     "aggregation": "media aritmética diaria de blue_buy y blue_sell válidos",
     "validation": "valores finitos entre Bs 3 y Bs 30; ceros y filas inválidas rechazados",
     "license": "Términos de la fuente no especifican una licencia abierta; se conserva atribución y enlace.",
-    "raw_observations": 76051,
+    "raw_observations": 76432,
     "rejected_observations": 1,
-    "days": 775,
+    "days": 779,
     "first_date": "2024-07-21",
-    "last_date": "2026-09-03"
+    "last_date": "2026-09-07"
   },
   "data": [
     {
@@ -4661,8 +4661,32 @@
     },
     {
       "date": "2026-09-03T00:00:00.000Z",
-      "buy_avg": 12.3524,
-      "sell_avg": 12.4154,
+      "buy_avg": 12.3592,
+      "sell_avg": 12.4178,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-09-04T00:00:00.000Z",
+      "buy_avg": 12.386,
+      "sell_avg": 12.4408,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-09-05T00:00:00.000Z",
+      "buy_avg": 12.3841,
+      "sell_avg": 12.4394,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-09-06T00:00:00.000Z",
+      "buy_avg": 12.3728,
+      "sell_avg": 12.4258,
+      "sources_count": 1
+    },
+    {
+      "date": "2026-09-07T00:00:00.000Z",
+      "buy_avg": 12.4179,
+      "sell_avg": 12.4804,
       "sources_count": 1
     }
   ]
