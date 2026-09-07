@@ -55,9 +55,10 @@ export async function generateMetadata(): Promise<Metadata> {
 export const revalidate = 600;
 
 export default async function ParaleloPage() {
-  const [latestResult, historyResult, p2pIndex] = await Promise.all([
+  const [latestResult, historyResult, officialHistoryResult, p2pIndex] = await Promise.all([
     getSiteData<CurrentRatesResponse>('/api/rates/current?v=live-20260722'),
     getSiteData<HistoryResponse<DailyHistoryRow>>('/api/rates/history?kind=PARALELO&days=365'),
+    getSiteData<HistoryResponse<DailyHistoryRow>>('/api/rates/history?kind=OFICIAL&days=365'),
     fetchP2PIndex()
   ]);
 
@@ -71,6 +72,7 @@ export default async function ParaleloPage() {
   const updatedAtValue = p2pIndex?.timestamp ?? latestResult.data?.updatedAt;
   const updatedAt = updatedAtValue ? new Date(updatedAtValue) : null;
   const history = historyResult.data?.data ?? [];
+  const officialHistory = officialHistoryResult.data?.data ?? [];
   const trendPoints = history.map((row) => ({ date: row.date, value: row.sell_avg }));
   const trend7d = computeTrend(trendPoints, 7);
   const trend30d = computeTrend(trendPoints, 30);
@@ -92,7 +94,10 @@ export default async function ParaleloPage() {
       date: row.date,
       value: row.sell_avg
     })),
-    oficial: [],
+    oficial: officialHistory.map((row) => ({
+      date: row.date,
+      value: row.sell_avg
+    })),
     brecha: []
   };
 

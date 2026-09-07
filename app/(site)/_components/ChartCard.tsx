@@ -42,6 +42,10 @@ function signedNumber(value: number, digits = 1) {
   }).format(value)}`;
 }
 
+function calendarDate(value: string) {
+  return new Date(`${value.slice(0, 10)}T12:00:00`);
+}
+
 export function ChartCard({
   data,
   title,
@@ -61,10 +65,24 @@ export function ChartCard({
     : (availableSeries[0] ?? initialSeries);
   const [series, setSeries] = useState<SeriesKey>(startingSeries);
   const [range, setRange] = useState(initialRange);
-  const parallelBenchmarks = useMemo(
+  const latestParallelBenchmarks = useMemo(
     () => computeParallelBenchmarks(data.paralelo, data.oficial),
     [data.oficial, data.paralelo]
   );
+  const [benchmarkDate, setBenchmarkDate] = useState(
+    latestParallelBenchmarks?.parallel.date.slice(0, 10) ?? ''
+  );
+  const parallelBenchmarks = useMemo(
+    () => computeParallelBenchmarks(data.paralelo, data.oficial, benchmarkDate || undefined),
+    [benchmarkDate, data.oficial, data.paralelo]
+  );
+  const benchmarkBounds = useMemo(() => {
+    const days = data.paralelo
+      .filter((point) => Number.isFinite(point.value) && point.value > 0)
+      .map((point) => point.date.slice(0, 10))
+      .sort();
+    return { min: days[0] ?? '', max: days.at(-1) ?? '' };
+  }, [data.paralelo]);
 
   const selected = data[series];
 
@@ -99,8 +117,8 @@ export function ChartCard({
 
   const coverage = useMemo(() => {
     if (filtered.length === 0) return null;
-    const first = new Date(filtered[0].date);
-    const last = new Date(filtered[filtered.length - 1].date);
+    const first = calendarDate(filtered[0].date);
+    const last = calendarDate(filtered[filtered.length - 1].date);
     return `${filtered.length} días · ${format(first, 'd MMM yyyy', { locale: es })} – ${format(last, 'd MMM yyyy', { locale: es })}`;
   }, [filtered]);
 
@@ -124,7 +142,7 @@ export function ChartCard({
   const chartData = useMemo(() => {
     return {
       labels: filtered.map((point) =>
-        format(new Date(point.date), 'd MMM', { locale: es })
+        format(calendarDate(point.date), 'd MMM', { locale: es })
       ),
       datasets: [
         {
@@ -132,11 +150,24 @@ export function ChartCard({
           borderColor: series === 'brecha' ? '#2f5d50' : '#0f172a',
           backgroundColor: 'rgba(15, 23, 42, 0.08)',
           tension: 0.3,
-          pointRadius: 2
+          pointRadius: filtered.map((point) => (
+            series === 'paralelo' && point.date.slice(0, 10) === benchmarkDate ? 5 : 2
+          )),
+          pointBackgroundColor: filtered.map((point) => (
+            series === 'paralelo' && point.date.slice(0, 10) === benchmarkDate ? '#f5b82e' : '#0f172a'
+          ))
         }
       ]
     };
-  }, [filtered, series]);
+  }, [benchmarkDate, filtered, series]);
+
+  const selectBenchmarkDate = (day: string) => {
+    if (!day) return;
+    setBenchmarkDate(day);
+    const ageInDays = Math.max(0, Math.ceil((Date.now() - calendarDate(day).getTime()) / 86_400_000));
+    const smallestRange = ranges.find((option) => option.days > 0 && ageInDays <= option.days);
+    setRange(smallestRange?.days ?? 0);
+  };
 
   return (
     <div className="card p-5 flex flex-col gap-4">
@@ -190,6 +221,11 @@ export function ChartCard({
           data={chartData}
           options={{
             responsive: true,
+            onClick: (_event, elements) => {
+              const clicked = elements[0];
+              const point = clicked ? filtered[clicked.index] : null;
+              if (series === 'paralelo' && point) setBenchmarkDate(point.date.slice(0, 10));
+            },
             plugins: { legend: { display: false } },
             scales: {
               x: { display: true, ticks: { maxTicksLimit: 8 } },
@@ -209,28 +245,52 @@ export function ChartCard({
         />
       )}
       {series === 'paralelo' && parallelBenchmarks ? (
-        <div className="grid gap-3 sm:grid-cols-2" aria-label="Comparaciones de la cotización paralela actual">
-          <div className="rounded-xl border border-black/10 bg-sand/35 p-4">
-            <p className="text-xs uppercase tracking-wide text-ink/55">Vs. Bs 6,96 histórico</p>
-            <p className="mt-1 text-xl font-semibold text-ink">
-              {signedNumber(parallelBenchmarks.historic.percent)}%
-            </p>
-            <p className="mt-1 text-xs text-ink/60">
-              {signedNumber(parallelBenchmarks.historic.delta, 2)} Bs frente al tipo oficial histórico de referencia.
-            </p>
+        <div className="grid gap-3" aria-label="Comparaciones de la cotización paralela por fecha">
+          <div className="flex flex-wrap items-end justify-between gap-3 rounded-xl bg-black/[0.03] p-4">
+            <div>
+              <p className="text-sm font-medium text-ink">Comparación por fecha</p>
+              <p className="text-xs text-ink/60">Elige un día o haz clic en un punto del gráfico.</p>
+            </div>
+            <label className="grid gap-1 text-xs uppercase tracking-wide text-ink/55">
+              Fecha
+              <input
+                type="date"
+                min={benchmarkBounds.min}
+                max={benchmarkBounds.max}
+                value={benchmarkDate}
+                onChange={(event) => selectBenchmarkDate(event.target.value)}
+                className="rounded-lg border border-black/15 bg-white px-3 py-2 text-sm font-medium normal-case tracking-normal text-ink"
+              />
+            </label>
           </div>
-          {parallelBenchmarks.official ? (
+          <p className="text-sm text-ink/70">
+            Cotización paralela del <strong>{format(calendarDate(parallelBenchmarks.parallel.date), 'd MMMM yyyy', { locale: es })}</strong>:{' '}
+            <strong>Bs {new Intl.NumberFormat('es-BO', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(parallelBenchmarks.parallel.value)}</strong>
+          </p>
+          <div className="grid gap-3 sm:grid-cols-2">
             <div className="rounded-xl border border-black/10 bg-sand/35 p-4">
-              <p className="text-xs uppercase tracking-wide text-ink/55">Vs. oficial vigente</p>
+              <p className="text-xs uppercase tracking-wide text-ink/55">Vs. Bs 6,96 histórico</p>
               <p className="mt-1 text-xl font-semibold text-ink">
-                {signedNumber(parallelBenchmarks.official.percent)}%
+                {signedNumber(parallelBenchmarks.historic.percent)}%
               </p>
               <p className="mt-1 text-xs text-ink/60">
-                {signedNumber(parallelBenchmarks.official.delta, 2)} Bs frente al último oficial disponible de Bs{' '}
-                {new Intl.NumberFormat('es-BO', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(parallelBenchmarks.official.baseline)}.
+                {signedNumber(parallelBenchmarks.historic.delta, 2)} Bs frente al tipo oficial histórico de referencia.
               </p>
             </div>
-          ) : null}
+            {parallelBenchmarks.official ? (
+              <div className="rounded-xl border border-black/10 bg-sand/35 p-4">
+                <p className="text-xs uppercase tracking-wide text-ink/55">Vs. oficial de la fecha</p>
+                <p className="mt-1 text-xl font-semibold text-ink">
+                  {signedNumber(parallelBenchmarks.official.percent)}%
+                </p>
+                <p className="mt-1 text-xs text-ink/60">
+                  {signedNumber(parallelBenchmarks.official.delta, 2)} Bs frente al último oficial disponible hasta ese día: Bs{' '}
+                  {new Intl.NumberFormat('es-BO', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(parallelBenchmarks.official.baseline)}
+                  {' '}({format(calendarDate(parallelBenchmarks.official.date), 'd MMM yyyy', { locale: es })}).
+                </p>
+              </div>
+            ) : null}
+          </div>
         </div>
       ) : null}
       {series === 'paralelo' ? (

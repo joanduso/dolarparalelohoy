@@ -38,4 +38,32 @@ describe('computeParallelBenchmarks', () => {
     expect(result?.parallel.value).toBe(12.4);
     expect(result?.official).toBeNull();
   });
+
+  it('calculates both comparisons for a selected historical date', () => {
+    const result = computeParallelBenchmarks(
+      [
+        { date: '2026-01-23T00:00:00.000Z', value: 9.5 },
+        { date: '2026-01-24T00:00:00.000Z', value: 9 },
+        { date: '2026-03-11T00:00:00.000Z', value: 9.4 }
+      ],
+      [
+        { date: '2026-01-23T00:00:00.000Z', value: 6.96 },
+        { date: '2026-03-11T00:00:00.000Z', value: 7.1 }
+      ],
+      '2026-01-24'
+    );
+
+    expect(result?.parallel.date.slice(0, 10)).toBe('2026-01-24');
+    expect(result?.historic.percent).toBeCloseTo(29.3103);
+    expect(result?.official?.date.slice(0, 10)).toBe('2026-01-23');
+    expect(result?.official?.percent).toBeCloseTo(29.3103);
+  });
+
+  it('returns null when the selected date is before the available history', () => {
+    expect(computeParallelBenchmarks(
+      [{ date: '2026-01-24T00:00:00.000Z', value: 9 }],
+      [],
+      '2025-01-24'
+    )).toBeNull();
+  });
 });
