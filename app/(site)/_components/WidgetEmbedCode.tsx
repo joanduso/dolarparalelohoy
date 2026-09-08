@@ -9,6 +9,12 @@ export function WidgetEmbedCode({ embedUrl }: { embedUrl: string }) {
   async function copyCode() {
     await navigator.clipboard.writeText(code);
     setCopied(true);
+    const analyticsWindow = window as typeof window & {
+      gtag?: (...args: unknown[]) => void;
+    };
+    analyticsWindow.gtag?.('event', 'widget_embed_copy', {
+      content_type: 'rate_widget'
+    });
     window.setTimeout(() => setCopied(false), 2000);
   }
 

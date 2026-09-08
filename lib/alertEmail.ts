@@ -12,9 +12,23 @@ export type EmailDeliveryResult =
   | { sent: false; reason: 'not_configured' | 'provider_error' };
 
 function emailConfig() {
-  const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.ALERTS_FROM_EMAIL;
-  return apiKey && from ? { apiKey, from } : null;
+  if (!from) return null;
+
+  if (process.env.BREVO_API_KEY) {
+    return { provider: 'brevo' as const, apiKey: process.env.BREVO_API_KEY, from };
+  }
+  if (process.env.RESEND_API_KEY) {
+    return { provider: 'resend' as const, apiKey: process.env.RESEND_API_KEY, from };
+  }
+  return null;
+}
+
+function brevoSender(value: string) {
+  const match = value.match(/^\s*(.*?)\s*<([^<>]+)>\s*$/);
+  return match
+    ? { name: match[1].trim(), email: match[2].trim() }
+    : { email: value.trim() };
 }
 
 function escapeHtml(value: string) {
@@ -69,20 +83,33 @@ export async function sendAlertEmail(message: EmailMessage): Promise<EmailDelive
   if (!config) return { sent: false, reason: 'not_configured' };
 
   try {
-    const response = await fetch('https://api.resend.com/emails', {
+    const isBrevo = config.provider === 'brevo';
+    const response = await fetch(isBrevo
+      ? 'https://api.brevo.com/v3/smtp/email'
+      : 'https://api.resend.com/emails', {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${config.apiKey}`,
+        ...(isBrevo
+          ? { 'api-key': config.apiKey }
+          : { Authorization: `Bearer ${config.apiKey}` }),
         'Content-Type': 'application/json',
         'Idempotency-Key': message.idempotencyKey
       },
-      body: JSON.stringify({
-        from: message.from ?? config.from,
-        to: [message.to],
-        subject: message.subject,
-        html: message.html,
-        text: message.text
-      })
+      body: JSON.stringify(isBrevo
+        ? {
+            sender: brevoSender(message.from ?? config.from),
+            to: [{ email: message.to }],
+            subject: message.subject,
+            htmlContent: message.html,
+            textContent: message.text
+          }
+        : {
+            from: message.from ?? config.from,
+            to: [message.to],
+            subject: message.subject,
+            html: message.html,
+            text: message.text
+          })
     });
 
     if (!response.ok) {
@@ -90,8 +117,8 @@ export async function sendAlertEmail(message: EmailMessage): Promise<EmailDelive
       return { sent: false, reason: 'provider_error' };
     }
 
-    const data = (await response.json()) as { id?: string };
-    return { sent: true, id: data.id };
+    const data = (await response.json()) as { id?: string; messageId?: string };
+    return { sent: true, id: data.messageId ?? data.id };
   } catch (error) {
     console.error('[alerts/email] provider unavailable', String(error));
     return { sent: false, reason: 'provider_error' };
@@ -104,20 +131,40 @@ export async function sendAlertEmailBatch(messages: EmailMessage[]): Promise<Ema
   if (!config) return { sent: false, reason: 'not_configured' };
 
   try {
-    const response = await fetch('https://api.resend.com/emails/batch', {
+    const isBrevo = config.provider === 'brevo';
+    const batch = messages.slice(0, 100);
+    const first = batch[0];
+    const response = await fetch(isBrevo
+      ? 'https://api.brevo.com/v3/smtp/email'
+      : 'https://api.resend.com/emails/batch', {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${config.apiKey}`,
+        ...(isBrevo
+          ? { 'api-key': config.apiKey }
+          : { Authorization: `Bearer ${config.apiKey}` }),
         'Content-Type': 'application/json',
         'Idempotency-Key': `alerts-${messages[0].idempotencyKey}`.slice(0, 256)
       },
-      body: JSON.stringify(messages.slice(0, 100).map((message) => ({
-        from: message.from ?? config.from,
-        to: [message.to],
-        subject: message.subject,
-        html: message.html,
-        text: message.text
-      })))
+      body: JSON.stringify(isBrevo
+        ? {
+            sender: brevoSender(first.from ?? config.from),
+            subject: first.subject,
+            htmlContent: first.html,
+            textContent: first.text,
+            messageVersions: batch.map((message) => ({
+              to: [{ email: message.to }],
+              subject: message.subject,
+              htmlContent: message.html,
+              textContent: message.text
+            }))
+          }
+        : batch.map((message) => ({
+            from: message.from ?? config.from,
+            to: [message.to],
+            subject: message.subject,
+            html: message.html,
+            text: message.text
+          })))
     });
 
     if (!response.ok) {

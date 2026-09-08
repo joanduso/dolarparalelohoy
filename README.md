@@ -59,7 +59,8 @@ npm run dev
 - `DECLARED_SALT`: secreto para hashear IP y user-agent en reportes declarados
 - `ADMIN_KEY`: clave para el endpoint `/api/rates/refresh`
 - `CRON_SECRET`: secreto para el endpoint `/api/cron/refresh`
-- `RESEND_API_KEY`: clave del proveedor de correo para confirmaciones y alertas
+- `BREVO_API_KEY`: clave de Brevo para confirmaciones y alertas
+- `RESEND_API_KEY`: respaldo temporal opcional; Brevo tiene prioridad cuando ambas claves existen
 - `ALERTS_FROM_EMAIL`: remitente de un dominio verificado, por ejemplo `Dólar Paralelo Hoy <alertas@dolarparalelohoy.com>`
 - `ALERT_TOKEN_SALT`: secreto separado para proteger tokens de confirmación
 
@@ -129,8 +130,9 @@ El endpoint interno est? en `/api/cron/refresh` y requiere `CRON_SECRET`.
 En Vercel Hobby la cadencia automática es diaria a las 12:00 UTC (08:00 en Bolivia), que es el máximo permitido por ese plan. En Pro puede configurarse una frecuencia mayor.
 
 El mismo cron envía el resumen diario a suscripciones confirmadas después de actualizar las
-cotizaciones. Antes de activarlo, verifica `dolarparalelohoy.com` en Resend y configura
-`RESEND_API_KEY`, `ALERTS_FROM_EMAIL` y `ALERT_TOKEN_SALT` en Vercel. Sin estas variables, las
+cotizaciones. Antes de activarlo, autentica `dolarparalelohoy.com` en Brevo y configura
+`BREVO_API_KEY`, `ALERTS_FROM_EMAIL` y `ALERT_TOKEN_SALT` en Vercel. Durante la migración,
+`RESEND_API_KEY` puede mantenerse como respaldo. Sin un proveedor y remitente configurados, las
 solicitudes se guardan como pendientes y no se envían correos.
 
 ## Tests
