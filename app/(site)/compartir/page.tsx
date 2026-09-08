@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { AlertSubscriptionForm } from '@/app/(site)/_components/AlertSubscriptionForm';
+import { AlertStatusTracker } from '@/app/(site)/_components/AlertStatusTracker';
 import { ShareRateActions } from '@/app/(site)/_components/ShareRateActions';
 import { formatDateTime, formatNumber } from '@/lib/format';
 import { getShareSnapshot } from '@/lib/shareRate';
@@ -60,6 +61,7 @@ export default async function SharePage({
 
   return (
     <main className="pb-16">
+      <AlertStatusTracker status={searchParams?.alert} />
       <section className="section-shell py-8 sm:py-12">
         <div className="mx-auto grid max-w-5xl gap-6">
           <div className="grid gap-3">

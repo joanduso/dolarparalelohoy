@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { JsonLd } from '@/app/(site)/_components/JsonLd';
 import { Breadcrumbs } from '@/app/(site)/_components/Breadcrumbs';
+import { ApiTryLink } from '@/app/(site)/_components/ApiTryLink';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
 import type { Metadata } from 'next';
 
@@ -74,6 +75,7 @@ export default function DevsPage() {
           <pre className="rounded-xl bg-ink text-sand text-xs sm:text-sm p-4 overflow-x-auto">
 {`curl "${baseUrl}/rates/current"`}
           </pre>
+          <ApiTryLink href={`${baseUrl}/rates/current`} />
         </div>
 
         <div className="card p-6 grid gap-4">

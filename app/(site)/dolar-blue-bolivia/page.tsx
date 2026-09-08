@@ -14,7 +14,7 @@ type CurrentRates = { oficial: { sell: number | null } | null };
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: pageTitles.dolarBlue,
+    title: { absolute: pageTitles.dolarBlue },
     description: pageDescriptions.dolarBlue,
     alternates: { canonical: '/dolar-blue-bolivia' },
     openGraph: {
@@ -64,7 +64,9 @@ export default async function DolarBlueBoliviaPage() {
       <section className="grid gap-8">
         <div className="grid gap-3 max-w-3xl">
           <p className="kicker">Referencia de mercado</p>
-          <h1 className="font-serif text-3xl sm:text-4xl">Dólar blue Bolivia hoy</h1>
+          <h1 className="font-serif text-3xl sm:text-4xl">
+            Dólar blue Bolivia hoy: precio de compra y venta
+          </h1>
           <p className="text-ink/70">
             En Bolivia, “dólar blue” suele referirse al precio paralelo o de mercado. Aquí lo explicamos con una referencia P2P visible, separada de la cotización oficial.
           </p>
