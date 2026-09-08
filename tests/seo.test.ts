@@ -6,6 +6,7 @@ import { pageTitles, siteConfig, siteRoutes } from '@/lib/seo';
 describe('SEO configuration', () => {
   it('assigns distinct search intents to home and the P2P detail page', () => {
     expect(pageTitles.home).toContain('Dólar Paralelo Bolivia Hoy');
+    expect(pageTitles.paralelo).toContain('Precio del Dólar Paralelo');
     expect(pageTitles.paralelo).toContain('Índice P2P');
     expect(pageTitles.paralelo).not.toBe(pageTitles.home);
   });

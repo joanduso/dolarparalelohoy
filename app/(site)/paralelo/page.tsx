@@ -41,7 +41,7 @@ type HistoryResponse<T> = {
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: pageTitles.paralelo,
+    title: { absolute: pageTitles.paralelo },
     description: pageDescriptions.paralelo,
     alternates: { canonical: '/paralelo' },
     openGraph: {
@@ -146,12 +146,12 @@ export default async function ParaleloPage() {
         <div className="grid gap-3">
           <p className="kicker">Metodología y detalle de mercado</p>
           <h1 className="font-serif text-3xl sm:text-4xl">
-            Índice P2P del dólar en Bolivia
+            Precio del dólar paralelo en Bolivia hoy
           </h1>
           <p className="text-ink/70 max-w-2xl">
-            Revisa cómo se construye la referencia P2P: cotización observada, cantidad de muestras,
-            filtros, variación reciente y hora de actualización. Esta página explica el detalle del
-            índice que alimenta la cotización principal.
+            Consulta la compra, venta, variación y hora de actualización del índice P2P. También
+            puedes revisar cómo se construye la referencia: fuentes activas, muestras y filtros que
+            alimentan la cotización principal.
           </p>
           {typeof buy === 'number' && typeof sell === 'number' ? (
             <p className="text-lg text-ink max-w-2xl">

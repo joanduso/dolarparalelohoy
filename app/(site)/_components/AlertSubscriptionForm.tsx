@@ -37,7 +37,14 @@ export function AlertSubscriptionForm() {
       analyticsWindow.gtag?.('event', 'sign_up', {
         method: 'email',
         content_type: 'rate_alert',
-        alert_frequency: frequency.toLowerCase()
+        alert_frequency: frequency.toLowerCase(),
+        delivery: data.delivery ?? 'unknown'
+      });
+      analyticsWindow.gtag?.('event', 'generate_lead', {
+        method: 'email',
+        content_type: 'rate_alert',
+        alert_frequency: frequency.toLowerCase(),
+        delivery: data.delivery ?? 'unknown'
       });
     } catch {
       setStatus('error');
