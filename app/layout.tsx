@@ -4,7 +4,6 @@ import Script from 'next/script';
 import { Alegreya, Commissioner } from 'next/font/google';
 import './globals.css';
 import { siteConfig } from '@/lib/seo';
-import { StickyAd } from '@/app/(site)/_components/StickyAd';
 import { Logo } from '@/components/Logo';
 
 const GA_MEASUREMENT_ID = 'G-H4XPR5K4NT';
@@ -191,7 +190,6 @@ export default function RootLayout({
             </div>
           </header>
           {children}
-          <StickyAd />
           <footer className="section-shell py-10 text-sm text-ink/70">
             <div className="flex flex-col gap-2">
               <p>
