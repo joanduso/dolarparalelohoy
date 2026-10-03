@@ -10,6 +10,10 @@ import { DeclaredBlock } from '@/app/(site)/_components/DeclaredBlock';
 import { PlatformCards } from '@/app/(site)/_components/PlatformCards';
 import { TrendSummary } from '@/app/(site)/_components/TrendSummary';
 import { ChartCardLazy } from '@/app/(site)/_components/ChartCardLazy';
+import {
+  BcbTcoBankFallback,
+  BcbTcoBankSection
+} from '@/app/(site)/_components/BcbTcoBankSection';
 import { JsonLd } from '@/app/(site)/_components/JsonLd';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
 import { getSiteData } from '@/lib/siteData';
@@ -496,6 +500,10 @@ export default function HomePage() {
 
       <section className="section-shell grid gap-10 pt-10 sm:pt-14">
         <AdSlot label="Debajo del hero" />
+
+        <Suspense fallback={<BcbTcoBankFallback />}>
+          <BcbTcoBankSection />
+        </Suspense>
 
         <section className="grid gap-5" aria-labelledby="tendencia-mercado">
           <div className="section-heading">
