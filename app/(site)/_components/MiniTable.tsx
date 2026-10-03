@@ -17,10 +17,10 @@ export function MiniTable({
   href: string;
 }) {
   return (
-    <div className="card p-5">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="font-serif text-lg">{title}</h3>
-        <Link className="text-sm underline underline-offset-4" href={href}>
+    <div className="card overflow-hidden p-5 sm:p-6">
+      <div className="mb-5 flex items-center justify-between gap-4 border-b border-black/10 pb-4">
+        <h3 className="text-lg font-semibold tracking-tight">{title}</h3>
+        <Link className="text-link shrink-0 text-sm" href={href}>
           Ver histórico
         </Link>
       </div>
@@ -29,10 +29,10 @@ export function MiniTable({
         {rows.map((row) => (
           <div
             key={row.date.toISOString()}
-            className="flex items-center justify-between border-b border-black/5 pb-2"
+            className="flex items-center justify-between border-b border-black/5 py-1.5 last:border-0"
           >
             <span>{formatCalendarDate(row.date)}</span>
-            <span className="font-medium">{formatCurrency(row.sell_avg)}</span>
+            <span className="font-semibold tabular-nums">{formatCurrency(row.sell_avg)}</span>
           </div>
         ))}
       </div>

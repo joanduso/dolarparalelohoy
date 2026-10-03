@@ -170,17 +170,25 @@ export function ChartCard({
   };
 
   return (
-    <div className="card p-5 flex flex-col gap-4">
-      {title ? <h2 className="font-serif text-2xl">{title}</h2> : null}
-      <div className="flex flex-wrap items-center justify-between gap-2">
+    <div className="card flex flex-col gap-5 overflow-hidden p-5 sm:p-7">
+      {title ? (
+        <div className="flex flex-wrap items-end justify-between gap-3 border-b border-black/10 pb-5">
+          <div>
+            <p className="kicker">Serie histórica</p>
+            <h2 className="mt-1 font-serif text-3xl">{title}</h2>
+          </div>
+          {coverage ? <p className="text-xs text-ink/50">{coverage}</p> : null}
+        </div>
+      ) : null}
+      <div className="flex flex-wrap items-center gap-3">
         {availableSeries.length > 1 ? (
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-1 rounded-full bg-black/[0.045] p-1">
             {availableSeries.map((option) => (
               <button
                 key={option}
                 onClick={() => setSeries(option)}
-                className={`px-3 py-1 rounded-full text-xs uppercase tracking-wide ${
-                  series === option ? 'bg-ink text-white' : 'bg-black/5'
+                className={`rounded-full px-3 py-1.5 text-xs font-semibold capitalize transition ${
+                  series === option ? 'bg-night text-white shadow-sm' : 'text-ink/60 hover:text-ink'
                 }`}
               >
                 {option}
@@ -190,13 +198,13 @@ export function ChartCard({
         ) : (
           <p className="text-xs uppercase tracking-wide text-ink/50">{series}</p>
         )}
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1 rounded-full bg-black/[0.045] p-1">
           {ranges.map((option) => (
             <button
               key={option.label}
               onClick={() => setRange(option.days)}
-              className={`px-3 py-1 rounded-full text-xs uppercase tracking-wide ${
-                range === option.days ? 'bg-sun text-ink' : 'bg-black/5'
+              className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
+                range === option.days ? 'bg-sun text-ink shadow-sm' : 'text-ink/60 hover:text-ink'
               }`}
             >
               {option.label}
@@ -206,43 +214,58 @@ export function ChartCard({
         <button
           onClick={handleDownloadCsv}
           disabled={filtered.length === 0}
-          className="px-3 py-1 rounded-full text-xs uppercase tracking-wide bg-black/5 hover:bg-black/10 disabled:opacity-40 disabled:cursor-not-allowed"
+          className="ml-auto rounded-full border border-black/10 px-3 py-2 text-xs font-semibold text-ink/60 transition hover:border-black/20 hover:text-ink disabled:cursor-not-allowed disabled:opacity-40"
         >
           Descargar CSV
         </button>
       </div>
-      {coverage ? (
-        <p className="text-xs text-ink/50">Cobertura visible: {coverage}</p>
-      ) : null}
       {filtered.length < 2 ? (
         <p className="text-sm text-ink/60">Sin datos suficientes para el rango seleccionado.</p>
       ) : (
-        <Line
-          data={chartData}
-          options={{
-            responsive: true,
-            onClick: (_event, elements) => {
-              const clicked = elements[0];
-              const point = clicked ? filtered[clicked.index] : null;
-              if (series === 'paralelo' && point) setBenchmarkDate(point.date.slice(0, 10));
-            },
-            plugins: { legend: { display: false } },
-            scales: {
-              x: { display: true, ticks: { maxTicksLimit: 8 } },
-              y: {
-                display: true,
-                min: yBounds?.min,
-                max: yBounds?.max,
-                ticks: {
-                  callback: (value) => {
-                    const rounded = Number(value).toFixed(2);
-                    return series === 'brecha' ? `${rounded}%` : `Bs ${rounded}`;
+        <div className="h-[280px] border-t border-black/5 pt-5 sm:h-[360px]">
+          <Line
+            data={chartData}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              onClick: (_event, elements) => {
+                const clicked = elements[0];
+                const point = clicked ? filtered[clicked.index] : null;
+                if (series === 'paralelo' && point) setBenchmarkDate(point.date.slice(0, 10));
+              },
+              plugins: {
+                legend: { display: false },
+                tooltip: {
+                  backgroundColor: '#0b1220',
+                  padding: 12,
+                  displayColors: false
+                }
+              },
+              scales: {
+                x: {
+                  display: true,
+                  grid: { display: false },
+                  ticks: { maxTicksLimit: 8, color: '#6b7280' },
+                  border: { display: false }
+                },
+                y: {
+                  display: true,
+                  min: yBounds?.min,
+                  max: yBounds?.max,
+                  grid: { color: 'rgba(17, 24, 39, 0.08)' },
+                  border: { display: false },
+                  ticks: {
+                    color: '#6b7280',
+                    callback: (value) => {
+                      const rounded = Number(value).toFixed(2);
+                      return series === 'brecha' ? `${rounded}%` : `Bs ${rounded}`;
+                    }
                   }
                 }
               }
-            }
-          }}
-        />
+            }}
+          />
+        </div>
       )}
       {series === 'paralelo' && parallelBenchmarks ? (
         <div className="grid gap-3" aria-label="Comparaciones de la cotización paralela por fecha">

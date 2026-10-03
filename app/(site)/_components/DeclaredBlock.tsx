@@ -7,9 +7,9 @@ export async function DeclaredBlock() {
   const show = declared.sampleSize >= 5 && declared.sell !== null;
 
   return (
-    <div className="card p-5 flex flex-col gap-4 overflow-hidden">
+    <div className="flex flex-col gap-4 overflow-hidden rounded-[1.25rem] border border-dashed border-black/15 bg-sand/50 p-5 shadow-none">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h3 className="font-serif text-xl">Dólar declarado (24h)</h3>
+        <h3 className="text-lg font-semibold tracking-tight">Dólar declarado por usuarios · 24h</h3>
         <span className="shrink-0 rounded-full bg-black/5 px-3 py-1 text-xs text-ink/60">
           Indicador secundario
         </span>

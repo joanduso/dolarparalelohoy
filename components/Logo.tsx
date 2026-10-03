@@ -7,8 +7,8 @@ type LogoProps = {
 
 export function Logo({ className = '', href = '/' }: LogoProps) {
   return (
-    <Link href={href} className={`flex items-center gap-3 ${className}`}>
-      <span className="inline-flex h-10 w-10 items-center justify-center rounded-[0.6rem] bg-ink text-sun">
+    <Link href={href} className={`group flex items-center gap-3 ${className}`}>
+      <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-night text-sun shadow-sm transition-transform group-hover:-rotate-3">
         <svg
           viewBox="0 0 40 40"
           aria-hidden="true"
@@ -31,9 +31,13 @@ export function Logo({ className = '', href = '/' }: LogoProps) {
           />
         </svg>
       </span>
-      <span className="flex flex-col leading-tight">
-        <span className="font-serif text-2xl text-ink">Dólar Paralelo Hoy</span>
-        <span className="text-xs text-ink/60">Datos diarios en Bolivia</span>
+      <span className="flex flex-col leading-none">
+        <span className="text-base font-bold tracking-[-0.02em] text-ink sm:text-lg">
+          Dólar Paralelo
+        </span>
+        <span className="mt-1 text-[10px] font-bold uppercase tracking-[0.2em] text-ink/50">
+          Bolivia · Hoy
+        </span>
       </span>
     </Link>
   );

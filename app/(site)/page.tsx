@@ -171,6 +171,38 @@ async function RatesSection() {
 
   return (
     <>
+      <div className="section-heading">
+        <div>
+          <p className="kicker">Mercado en vivo</p>
+          <h2>Cotización de hoy</h2>
+        </div>
+        <div className="flex flex-wrap items-center gap-3 text-sm text-ink/65">
+          <span>Actualizado {lastUpdated ? formatDateTime(lastUpdated) : '—'}</span>
+          <span className={`px-2 py-1 rounded-full border text-xs ${statusClass}`}>
+            {statusLabel}
+          </span>
+        </div>
+      </div>
+      <div className="flex flex-wrap items-center justify-between gap-4 text-sm text-ink/65">
+        <span>{activeSources} fuentes activas</span>
+        <div className="flex flex-wrap gap-2">
+          {sourceBadges.map((source) => (
+            <span
+              key={source.name}
+              className={`px-2 py-1 rounded-full border text-xs ${
+                source.active
+                  ? 'border-emerald-200 text-emerald-700 bg-emerald-50'
+                  : 'border-ink/10 text-ink/50'
+              }`}
+            >
+              {source.name}
+            </span>
+          ))}
+        </div>
+      </div>
+      {status !== 'OK' && latest?.notes ? (
+        <p className="text-xs text-ink/60">Nota técnica: {latest?.notes}</p>
+      ) : null}
       <RatesGrid
         indexBuy={indexBuy}
         indexSell={indexSell}
@@ -190,40 +222,11 @@ async function RatesSection() {
         bcbVentaText={bcbData?.ventaText}
         bcbError={bcbResult.ok ? null : bcbResult.error ?? 'fuente_no_disponible'}
       />
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="font-serif text-2xl">Fuentes y metodología</h2>
-        <div className="flex flex-wrap items-center gap-3 text-sm text-ink/70">
-          <span>Última actualización: {lastUpdated ? formatDateTime(lastUpdated) : '—'}</span>
-          <span className={`px-2 py-1 rounded-full border text-xs ${statusClass}`}>
-            Estado: {statusLabel}
-          </span>
-        </div>
-      </div>
-      <div className="flex flex-wrap items-center gap-4 text-sm text-ink/70">
-        <span>Fuentes activas: {activeSources}</span>
-        <div className="flex flex-wrap gap-2">
-          {sourceBadges.map((source) => (
-            <span
-              key={source.name}
-              className={`px-2 py-1 rounded-full border text-xs ${
-                source.active
-                  ? 'border-emerald-200 text-emerald-700 bg-emerald-50'
-                  : 'border-ink/10 text-ink/50'
-              }`}
-            >
-              {source.name}
-            </span>
-          ))}
-        </div>
-      </div>
-      <p className="text-xs text-ink/60">
-        La información es referencial y se basa en múltiples fuentes públicas. No constituye
-        una recomendación financiera.
-      </p>
-      {status !== 'OK' && latest?.notes ? (
-        <p className="text-xs text-ink/60">Nota técnica: {latest?.notes}</p>
-      ) : null}
       <DeclaredBlock />
+      <p className="text-xs leading-relaxed text-ink/50">
+        Información referencial basada en fuentes públicas y cálculos propios. No constituye una
+        recomendación financiera.
+      </p>
       {!hasAnyData ? (
         <div className="card p-6 text-sm text-ink/70">
           No pudimos actualizar las fuentes. Intentaremos nuevamente en unos minutos.
@@ -273,7 +276,7 @@ function RatesGrid({
   bcbError
 }: RatesGridProps) {
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 items-stretch">
+    <div className="grid items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-5">
       <RateCard
         title="Índice P2P Bolivia"
         buy={indexBuy}
@@ -286,6 +289,7 @@ function RatesGrid({
         sourceNote={parallelSourceNote}
         shareHref="/compartir?utm_source=home&utm_medium=internal&utm_campaign=tarjeta_diaria&utm_content=kpi_p2p"
         sharePlacement="home_p2p_card"
+        featured
       />
       <RateCard
         title="Dólar oficial"
@@ -312,8 +316,11 @@ function RatesGrid({
 function RatesSectionFallback() {
   return (
     <>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="font-serif text-2xl">Fuentes y metodología</h2>
+      <div className="section-heading">
+        <div>
+          <p className="kicker">Mercado en vivo</p>
+          <h2>Cotización de hoy</h2>
+        </div>
       </div>
       <p className="text-xs text-ink/60">
         La información es referencial y se basa en múltiples fuentes públicas. No constituye
@@ -360,7 +367,7 @@ async function ChartAndTrendSection() {
   return (
     <>
       <TrendSummary label="El dólar paralelo" trend={paraleloTrend30d} />
-      <ChartCardLazy data={chartData} />
+      <ChartCardLazy data={chartData} title="Evolución del mercado" />
     </>
   );
 }
@@ -454,20 +461,31 @@ export default function HomePage() {
   return (
     <main className="pb-16">
       <JsonLd data={jsonLd} />
-      <section className="w-full bg-gradient-to-b from-sand/70 via-sand/30 to-transparent">
-        <div className="section-shell py-12 grid gap-6">
-          <div className="grid gap-4">
-            <p className="kicker">Actualizado cada 10 minutos</p>
-            <h1 className="font-serif text-4xl sm:text-5xl leading-tight">
-              Dólar paralelo en Bolivia hoy
-            </h1>
-            <p className="text-lg text-ink max-w-2xl">
-              Consulta compra, venta, hora de actualización y variación del dólar paralelo.
-              Compara la referencia P2P con el dólar oficial y revisa las fuentes utilizadas.
-            </p>
+      <section className="home-hero">
+        <div className="section-shell grid gap-8 py-12 sm:py-16 lg:gap-10 lg:py-20">
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-end">
+            <div className="grid max-w-4xl gap-5">
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-sun">
+                Datos de Bolivia · Actualización cada 10 minutos
+              </p>
+              <h1 className="font-serif text-5xl leading-[0.96] tracking-[-0.035em] sm:text-6xl lg:text-7xl">
+                Dólar paralelo en Bolivia hoy
+              </h1>
+              <p className="max-w-2xl text-lg leading-relaxed text-white/65 sm:text-xl">
+                Consulta compra, venta, variación y hora de actualización. Compara la referencia
+                P2P con el dólar oficial y revisa las fuentes utilizadas.
+              </p>
+            </div>
+            <div className="border-l border-white/15 pl-5 text-sm leading-relaxed text-white/55 lg:pb-2">
+              <p className="font-semibold text-white">Sin ruido. Sin una cifra aislada.</p>
+              <p className="mt-2">
+                Comparamos referencias P2P con el tipo de cambio oficial y conservamos el
+                histórico para que puedas entender el contexto.
+              </p>
+            </div>
           </div>
 
-          <div className="card p-5 grid gap-4">
+          <div className="market-surface grid gap-5">
             <Suspense fallback={<RatesSectionFallback />}>
               <RatesSection />
             </Suspense>
@@ -476,108 +494,95 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section-shell grid gap-8">
+      <section className="section-shell grid gap-10 pt-10 sm:pt-14">
         <AdSlot label="Debajo del hero" />
+
+        <section className="grid gap-5" aria-labelledby="tendencia-mercado">
+          <div className="section-heading">
+            <div>
+              <p className="kicker">Contexto</p>
+              <h2 id="tendencia-mercado">Más que el precio de hoy</h2>
+            </div>
+            <p className="max-w-xl text-sm leading-relaxed text-ink/60">
+              Cambia el rango y compara el paralelo, el oficial y la brecha. El histórico ayuda a
+              distinguir un movimiento puntual de una tendencia.
+            </p>
+          </div>
+          <Suspense fallback={<ChartAndTrendFallback />}>
+            <ChartAndTrendSection />
+          </Suspense>
+        </section>
 
         <Suspense fallback={<PlatformCardsFallback />}>
           <PlatformCards />
         </Suspense>
 
-        <article className="card p-6 grid gap-4">
-          <h2 className="font-serif text-2xl">
-            Cómo interpretar el dólar paralelo en Bolivia
-          </h2>
-          <p className="text-ink/70">
-            El dólar paralelo es una referencia del precio al que se intercambian dólares o activos
-            digitales fuera del canal oficial. En Bolivia, una parte importante de esa referencia
-            se observa en mercados P2P de USDT/BOB. Por eso comparamos precios de compra y venta,
-            descartamos valores extremos y mostramos cuándo fue actualizado cada dato.
-          </p>
-          <p className="text-ink/70">
-            La compra indica cuánto ofrecen por cada dólar o unidad equivalente; la venta indica
-            cuánto cuesta adquirirla. El precio final puede cambiar según el monto, medio de pago,
-            comisión y plataforma. Revisa cómo construimos el{' '}
-            <Link href="/paralelo" className="underline underline-offset-4">
-              índice P2P y sus fuentes
-            </Link>{' '}
-            con el{' '}
-            <Link href="/oficial" className="underline underline-offset-4">
-              dólar oficial
-            </Link>{' '}
-            y revisa la{' '}
-            <Link href="/brecha" className="underline underline-offset-4">
-              brecha cambiaria
-            </Link>
-            .
-          </p>
-          <p className="text-ink/70">
-            Para entender la tendencia y no depender de una sola lectura, consulta el{' '}
-            <Link href="/historico/paralelo" className="underline underline-offset-4">
-              histórico del dólar paralelo
-            </Link>{' '}
-            y nuestra página de{' '}
-            <Link href="/fuentes" className="underline underline-offset-4">
-              fuentes y metodología
-            </Link>
-            . Toda la información es referencial y no constituye asesoramiento financiero.
-          </p>
+        <article className="grid gap-8 rounded-[1.75rem] bg-night p-6 text-white shadow-lift sm:p-8 lg:grid-cols-[0.8fr_1.2fr] lg:p-10">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-sun">Guía rápida</p>
+            <h2 className="mt-3 font-serif text-3xl leading-tight sm:text-4xl">
+              Cómo leer el dólar paralelo sin perder el contexto
+            </h2>
+          </div>
+          <div className="grid gap-5 leading-relaxed text-white/65">
+            <p>
+              El dólar paralelo es una referencia del precio al que se intercambian dólares o
+              activos digitales fuera del canal oficial. En Bolivia, una parte importante se
+              observa en mercados P2P de USDT/BOB; por eso comparamos precios, descartamos extremos
+              y mostramos cuándo fue actualizado cada dato.
+            </p>
+            <p>
+              La compra indica cuánto ofrecen por cada dólar o unidad equivalente; la venta indica
+              cuánto cuesta adquirirla. El precio final puede variar por monto, medio de pago,
+              comisión y plataforma. Contrasta el{' '}
+              <Link href="/paralelo" className="font-semibold text-white underline decoration-white/30 underline-offset-4">
+                dólar paralelo de hoy
+              </Link>{' '}
+              con el{' '}
+              <Link href="/oficial" className="font-semibold text-white underline decoration-white/30 underline-offset-4">
+                dólar oficial
+              </Link>{' '}
+              y revisa la{' '}
+              <Link href="/brecha" className="font-semibold text-white underline decoration-white/30 underline-offset-4">
+                brecha cambiaria
+              </Link>
+              .
+            </p>
+            <div className="flex flex-wrap gap-3 pt-1">
+              <Link href="/historico/paralelo" className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-night">
+                Ver histórico
+              </Link>
+              <Link href="/fuentes" className="rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white">
+                Revisar fuentes
+              </Link>
+            </div>
+          </div>
         </article>
 
-        <Suspense fallback={<ChartAndTrendFallback />}>
-          <ChartAndTrendSection />
-        </Suspense>
-
-        <div className="card p-5 flex flex-col gap-3">
-          <h2 className="font-serif text-2xl">Explora más datos</h2>
-          <div className="flex flex-wrap gap-4 text-sm">
-            <Link href="/paralelo" className="underline underline-offset-4">
-              Metodología del índice P2P
-            </Link>
-            <Link href="/oficial" className="underline underline-offset-4">
-              Dólar oficial hoy
-            </Link>
-            <Link href="/brecha" className="underline underline-offset-4">
-              Brecha cambiaria
-            </Link>
-            <Link href="/usdt-bob" className="underline underline-offset-4">
-              Conversor USDT a BOB
-            </Link>
-            <Link href="/calculadora-dolar-bolivia" className="underline underline-offset-4">
-              Calculadora dólar a bolivianos
-            </Link>
-            <Link href="/dolar-blue-bolivia" className="underline underline-offset-4">
-              Dólar blue Bolivia
-            </Link>
-            <Link href="/exchanges" className="underline underline-offset-4">
-              Comparar exchanges
-            </Link>
-            <Link href="/binance-p2p-bolivia" className="underline underline-offset-4">
-              Binance P2P Bolivia
-            </Link>
-            <Link href="/historico/paralelo" className="underline underline-offset-4">
-              Histórico paralelo
-            </Link>
-            <Link href="/historico/oficial" className="underline underline-offset-4">
-              Histórico oficial
-            </Link>
-            <Link href="/comprar-usdt-bolivia" className="underline underline-offset-4">
-              Cómo comprar USDT
-            </Link>
-            <Link href="/bancos-usdt-bolivia" className="underline underline-offset-4">
-              Bancos con USDT
-            </Link>
-            <Link href="/que-es-dolar-blue-bolivia" className="underline underline-offset-4">
-              Qué es el dólar blue
-            </Link>
-            <Link href="/eur-bob" className="underline underline-offset-4">
-              Euro a bolivianos
-            </Link>
-            <Link href="/btc-bob" className="underline underline-offset-4">
-              Bitcoin a bolivianos
-            </Link>
-            <Link href="/widget" className="underline underline-offset-4">
-              Widget del dólar para tu web
-            </Link>
+        <div className="card flex flex-col gap-5 p-6 sm:p-8">
+          <div className="section-heading">
+            <div>
+              <p className="kicker">Directorio</p>
+              <h2>Explora más datos</h2>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-x-5 gap-y-3 text-sm">
+            <Link href="/paralelo" className="text-link">Dólar paralelo hoy</Link>
+            <Link href="/oficial" className="text-link">Dólar oficial hoy</Link>
+            <Link href="/brecha" className="text-link">Brecha cambiaria</Link>
+            <Link href="/usdt-bob" className="text-link">Conversor USDT a BOB</Link>
+            <Link href="/calculadora-dolar-bolivia" className="text-link">Calculadora dólar a bolivianos</Link>
+            <Link href="/dolar-blue-bolivia" className="text-link">Dólar blue Bolivia</Link>
+            <Link href="/exchanges" className="text-link">Comparar exchanges</Link>
+            <Link href="/binance-p2p-bolivia" className="text-link">Binance P2P Bolivia</Link>
+            <Link href="/historico/paralelo" className="text-link">Histórico paralelo</Link>
+            <Link href="/historico/oficial" className="text-link">Histórico oficial</Link>
+            <Link href="/comprar-usdt-bolivia" className="text-link">Cómo comprar USDT</Link>
+            <Link href="/bancos-usdt-bolivia" className="text-link">Bancos con USDT</Link>
+            <Link href="/que-es-dolar-blue-bolivia" className="text-link">Qué es el dólar blue</Link>
+            <Link href="/eur-bob" className="text-link">Euro a bolivianos</Link>
+            <Link href="/btc-bob" className="text-link">Bitcoin a bolivianos</Link>
+            <Link href="/widget" className="text-link">Widget del dólar para tu web</Link>
           </div>
         </div>
 
@@ -585,20 +590,21 @@ export default function HomePage() {
           <MiniTablesSection />
         </Suspense>
 
-        <div className="card p-6 flex flex-col gap-3">
-          <h2 className="font-serif text-2xl">Metodología rápida</h2>
-          <p className="text-ink/70">
-            Publicamos promedios diarios basados en múltiples fuentes disponibles públicamente. Los
-            valores se actualizan durante el día y pasan por filtros de validación para detectar
-            outliers.
-          </p>
-          <div className="flex flex-wrap gap-4 text-sm">
-            <Link href="/faq" className="underline underline-offset-4">
-              Ver metodología completa
-            </Link>
-            <Link href="/brecha" className="underline underline-offset-4">
-              ¿Qué es la brecha cambiaria?
-            </Link>
+        <div className="card grid gap-5 p-6 sm:p-8 lg:grid-cols-[0.7fr_1.3fr]">
+          <div>
+            <p className="kicker">Transparencia</p>
+            <h2 className="mt-2 font-serif text-3xl">Metodología rápida</h2>
+          </div>
+          <div className="grid gap-4">
+            <p className="leading-relaxed text-ink/70">
+              Publicamos promedios diarios basados en múltiples fuentes disponibles públicamente.
+              Los valores se actualizan durante el día y pasan por filtros de validación para
+              detectar valores extremos.
+            </p>
+            <div className="flex flex-wrap gap-4 text-sm">
+              <Link href="/faq" className="text-link">Ver metodología completa</Link>
+              <Link href="/brecha" className="text-link">¿Qué es la brecha cambiaria?</Link>
+            </div>
           </div>
         </div>
 

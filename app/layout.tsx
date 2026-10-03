@@ -148,55 +148,70 @@ export default function RootLayout({
           }}
         />
         <div className="gradient-panel min-h-screen">
-          <header className="section-shell py-6">
-            <div className="flex flex-col gap-3">
-              <Logo />
-              <p className="text-sm text-ink/70 max-w-2xl">
-                Seguimiento diario del dólar paralelo y oficial en Bolivia con metodología
-                transparente y datos agregados de múltiples fuentes.
-              </p>
-              <nav className="flex flex-wrap gap-4 text-sm">
-                <Link href="/paralelo" className="underline underline-offset-4">
-                  Índice P2P
+          <div className="data-rule" aria-hidden="true" />
+          <header className="sticky top-0 z-40 border-b border-black/10 bg-sand/90 backdrop-blur-xl">
+            <div className="section-shell flex min-h-[74px] items-center justify-between gap-6 py-3">
+              <Logo className="shrink-0" />
+              <nav
+                aria-label="Navegación principal"
+                className="hidden items-center gap-1 lg:flex"
+              >
+                <Link href="/paralelo" className="nav-link">
+                  Paralelo
                 </Link>
-                <Link href="/oficial" className="underline underline-offset-4">
-                  Dólar oficial
+                <Link href="/oficial" className="nav-link">
+                  Oficial
                 </Link>
-                <Link href="/brecha" className="underline underline-offset-4">
+                <Link href="/brecha" className="nav-link">
                   Brecha
                 </Link>
-                <Link href="/historico/paralelo" className="underline underline-offset-4">
-                  Histórico y tendencias
+                <Link href="/historico/paralelo" className="nav-link">
+                  Histórico
                 </Link>
-                <Link href="/usdt-bob" className="underline underline-offset-4">
-                  Conversor USDT/BOB
+                <Link href="/usdt-bob" className="nav-link">
+                  Conversor
                 </Link>
-                <Link href="/calculadora-dolar-bolivia" className="underline underline-offset-4">
-                  Calculadora USD↔BOB
+                <Link href="/exchanges" className="nav-link">
+                  Exchanges
                 </Link>
-                <Link href="/exchanges" className="underline underline-offset-4">
-                  Comparar exchanges
-                </Link>
-                <Link href="/binance-p2p-bolivia" className="underline underline-offset-4">
-                  Binance P2P
-                </Link>
-                <Link href="/faq" className="underline underline-offset-4">
+                <Link href="/faq" className="nav-link">
                   Metodología
                 </Link>
-                <Link href="/devs" className="underline underline-offset-4">
-                  API
-                </Link>
               </nav>
+              <Link
+                href="/compartir"
+                rel="nofollow"
+                className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-full bg-night px-4 text-sm font-semibold text-white transition hover:bg-moss"
+              >
+                Compartir tasa
+              </Link>
             </div>
+            <nav
+              aria-label="Navegación móvil"
+              className="section-shell flex gap-1 overflow-x-auto border-t border-black/5 py-2 lg:hidden"
+            >
+              <Link href="/paralelo" className="nav-link">Paralelo</Link>
+              <Link href="/oficial" className="nav-link">Oficial</Link>
+              <Link href="/brecha" className="nav-link">Brecha</Link>
+              <Link href="/historico/paralelo" className="nav-link">Histórico</Link>
+              <Link href="/usdt-bob" className="nav-link">Conversor</Link>
+              <Link href="/exchanges" className="nav-link">Exchanges</Link>
+              <Link href="/faq" className="nav-link">Metodología</Link>
+            </nav>
           </header>
           {children}
-          <footer className="section-shell py-10 text-sm text-ink/70">
-            <div className="flex flex-col gap-2">
-              <p>
-                © {new Date().getFullYear()} {siteConfig.name}. Información con fines
-                informativos.
-              </p>
-              <div className="flex flex-wrap gap-4">
+          <footer className="mt-14 bg-night text-sm text-white/65">
+            <div className="data-rule" aria-hidden="true" />
+            <div className="section-shell grid gap-10 py-12 lg:grid-cols-[minmax(0,1fr)_2fr]">
+              <div className="grid content-start gap-4">
+                <Logo className="[&_span]:text-white [&_span_span:last-child]:text-white/50" />
+                <p className="max-w-sm leading-relaxed">
+                  Tipo de cambio paralelo y oficial de Bolivia, con datos trazables,
+                  históricos abiertos y metodología visible.
+                </p>
+                <p>© {new Date().getFullYear()} {siteConfig.name}.</p>
+              </div>
+              <div className="flex flex-wrap content-start gap-x-6 gap-y-4 lg:justify-end">
                 <Link href="/faq" className="underline underline-offset-4">
                   Metodología y FAQ
                 </Link>

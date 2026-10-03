@@ -96,10 +96,10 @@ export async function PlatformCards() {
 
   return (
     <section className="grid gap-5">
-      <div className="flex flex-wrap items-end justify-between gap-3">
+      <div className="section-heading">
         <div>
           <p className="kicker">Opciones para Bolivia</p>
-          <h2 className="font-serif text-2xl">Plataformas recomendadas</h2>
+          <h2>Compara antes de operar</h2>
         </div>
         <p className="max-w-xl text-sm text-ink/60">
           Compara el precio final dentro de cada aplicación: algunas son mercados P2P y otras
@@ -114,8 +114,8 @@ export async function PlatformCards() {
           return (
             <article
               key={platform.name}
-              className={`card relative overflow-hidden p-5 grid gap-4 ${
-                platform.featured ? 'ring-1 ring-sun/70' : ''
+              className={`card relative grid gap-4 overflow-hidden p-5 transition duration-300 hover:-translate-y-1 hover:shadow-lift ${
+                platform.featured ? 'border-sun/80' : ''
               }`}
             >
             {platform.featured ? (
@@ -165,7 +165,7 @@ export async function PlatformCards() {
               href={platform.href}
               target="_blank"
               rel={platform.affiliate ? 'sponsored noreferrer' : 'noreferrer'}
-              className="rounded-full border border-ink/15 px-4 py-2 text-center text-sm font-medium hover:bg-ink hover:text-white"
+              className="rounded-full border border-ink/15 px-4 py-2 text-center text-sm font-semibold transition hover:bg-ink hover:text-white"
             >
               Consultar cotización
             </a>

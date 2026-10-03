@@ -8,18 +8,21 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: '#0f172a',
-        sand: '#f7f3ee',
-        clay: '#d7c2ad',
-        moss: '#2f5d50',
-        sun: '#f6c453'
+        ink: '#111827',
+        sand: '#f4f2ec',
+        clay: '#d8d4ca',
+        moss: '#176b5b',
+        sun: '#f3c84b',
+        signal: '#c9483e',
+        night: '#0b1220'
       },
       fontFamily: {
         serif: ['var(--font-serif)', 'serif'],
         sans: ['var(--font-sans)', 'sans-serif']
       },
       boxShadow: {
-        soft: '0 10px 30px rgba(15, 23, 42, 0.12)'
+        soft: '0 18px 50px rgba(15, 23, 42, 0.08)',
+        lift: '0 24px 80px rgba(8, 15, 28, 0.16)'
       }
     }
   },
