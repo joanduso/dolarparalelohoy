@@ -30,11 +30,11 @@ export function BrechaCard({ gapAbs, gapPct }: BrechaCardProps) {
       <div className="grid grid-cols-2 gap-3">
         <div className="border-r border-black/10">
           <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-ink/50">Diferencia</p>
-          <p className="mt-2 whitespace-nowrap text-lg font-semibold tracking-[-0.05em] tabular-nums xl:text-xl 2xl:text-2xl">{typeof gapAbs === 'number' ? formatCurrency(gapAbs) : <Skeleton className="h-7 w-24" />}</p>
+          <p className="mt-2 whitespace-nowrap text-lg font-semibold tracking-[-0.05em] tabular-nums xl:text-xl">{typeof gapAbs === 'number' ? formatCurrency(gapAbs) : <Skeleton className="h-7 w-24" />}</p>
         </div>
         <div>
           <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-ink/50">Brecha %</p>
-          <p className="mt-2 whitespace-nowrap text-lg font-semibold tracking-[-0.05em] text-signal tabular-nums xl:text-xl 2xl:text-2xl">{typeof gapPct === 'number' ? `${formatNumber(gapPct, 2)}%` : <Skeleton className="h-7 w-16" />}</p>
+          <p className="mt-2 whitespace-nowrap text-lg font-semibold tracking-[-0.05em] text-signal tabular-nums xl:text-xl">{typeof gapPct === 'number' ? `${formatNumber(gapPct, 2)}%` : <Skeleton className="h-7 w-16" />}</p>
         </div>
       </div>
       <p className="mt-auto border-t border-black/10 pt-4 text-xs leading-relaxed text-ink/60">

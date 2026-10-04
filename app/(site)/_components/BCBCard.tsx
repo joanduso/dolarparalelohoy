@@ -22,9 +22,9 @@ export function BCBCard({ dateText, compraText, ventaText, error }: BcbCardProps
     : dateText;
 
   return (
-    <article className="flex h-full flex-col gap-5 rounded-[1.25rem] border border-black/10 bg-[#faf9f6] p-5 sm:p-6">
+    <article className="flex h-full min-w-0 flex-col gap-5 overflow-hidden rounded-[1.25rem] border border-black/10 bg-[#faf9f6] p-5 xl:p-6">
       <div className="flex items-start justify-between gap-3">
-        <div className="flex items-center gap-2">
+        <div className="flex min-w-0 items-center gap-2">
           <Image
             src="/logos/usd.svg"
             alt="USD"
@@ -32,7 +32,7 @@ export function BCBCard({ dateText, compraText, ventaText, error }: BcbCardProps
             height={24}
             className="h-6 w-6 rounded-full border border-black/10 bg-white"
           />
-          <div>
+          <div className="min-w-0">
             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-ink/45">Dato oficial</p>
             <h2 className="mt-1 text-lg font-semibold tracking-tight">Referencial BCB</h2>
           </div>
@@ -41,16 +41,16 @@ export function BCBCard({ dateText, compraText, ventaText, error }: BcbCardProps
           Fuente
         </Link>
       </div>
-      <div className="grid grid-cols-2 gap-5">
-        <div className="border-r border-black/10">
+      <div className="grid min-w-0 grid-cols-2 gap-3">
+        <div className="min-w-0 border-r border-black/10">
           <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-ink/50">Compra</p>
-          <p className="mt-2 text-3xl font-semibold tracking-[-0.05em] tabular-nums">
+          <p className="mt-2 whitespace-nowrap text-lg font-semibold tracking-[-0.05em] tabular-nums xl:text-xl">
             {compraText ? compraText : <Skeleton className="h-7 w-20" />}
           </p>
         </div>
-        <div>
+        <div className="min-w-0">
           <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-ink/50">Venta</p>
-          <p className="mt-2 text-3xl font-semibold tracking-[-0.05em] tabular-nums">
+          <p className="mt-2 whitespace-nowrap text-lg font-semibold tracking-[-0.05em] tabular-nums xl:text-xl">
             {ventaText ? ventaText : <Skeleton className="h-7 w-20" />}
           </p>
         </div>

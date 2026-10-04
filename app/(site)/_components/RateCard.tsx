@@ -50,7 +50,7 @@ export function RateCard({
     <article
       className={`relative flex h-full min-w-0 flex-col gap-5 overflow-hidden rounded-[1.25rem] border p-5 xl:p-6 ${
         featured
-          ? 'border-night bg-night text-white shadow-lift lg:col-span-2'
+          ? 'border-night bg-night text-white shadow-lift sm:col-span-2'
           : 'border-black/10 bg-[#faf9f6] text-ink'
       }`}
     >
@@ -82,13 +82,13 @@ export function RateCard({
       <div className="grid min-w-0 grid-cols-2 gap-3">
         <div className={`min-w-0 border-r ${featured ? 'border-white/15' : 'border-black/10'}`}>
           <p className={`text-[11px] font-bold uppercase tracking-[0.16em] ${featured ? 'text-white/50' : 'text-ink/50'}`}>Compra</p>
-          <p className={`${featured ? 'text-4xl 2xl:text-5xl' : 'text-lg xl:text-xl 2xl:text-2xl'} mt-2 whitespace-nowrap font-semibold tracking-[-0.05em] tabular-nums`}>
+          <p className={`${featured ? 'text-4xl 2xl:text-5xl' : 'text-lg xl:text-xl'} mt-2 whitespace-nowrap font-semibold tracking-[-0.05em] tabular-nums`}>
             {hasBuy ? formatCurrency(buy) : <Skeleton className="h-7 w-24" />}
           </p>
         </div>
         <div className="min-w-0">
           <p className={`text-[11px] font-bold uppercase tracking-[0.16em] ${featured ? 'text-white/50' : 'text-ink/50'}`}>Venta</p>
-          <p className={`${featured ? 'text-4xl text-sun 2xl:text-5xl' : 'text-lg xl:text-xl 2xl:text-2xl'} mt-2 whitespace-nowrap font-semibold tracking-[-0.05em] tabular-nums`}>
+          <p className={`${featured ? 'text-4xl text-sun 2xl:text-5xl' : 'text-lg xl:text-xl'} mt-2 whitespace-nowrap font-semibold tracking-[-0.05em] tabular-nums`}>
             {hasSell ? formatCurrency(sell) : <Skeleton className="h-7 w-24" />}
           </p>
         </div>

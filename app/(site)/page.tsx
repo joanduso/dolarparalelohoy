@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { RateCard } from '@/app/(site)/_components/RateCard';
 import { BrechaCard } from '@/app/(site)/_components/BrechaCard';
 import { TcoCard } from '@/app/(site)/_components/TcoCard';
+import { BCBCard } from '@/app/(site)/_components/BCBCard';
 import { MiniTable } from '@/app/(site)/_components/MiniTable';
 import { AdSlot } from '@/app/(site)/_components/AdSlot';
 import { DeclareFormLazy } from '@/app/(site)/_components/DeclareFormLazy';
@@ -71,6 +72,16 @@ type BrechaLatestResponse = {
   } | null;
 };
 
+type BcbResponse = {
+  source: string;
+  dateText: string;
+  compraText: string;
+  ventaText: string;
+  compra: number;
+  venta: number;
+  fetchedAt: string;
+};
+
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: { absolute: pageTitles.home },
@@ -105,10 +116,11 @@ const OFICIAL_HISTORY_PATH = '/api/rates/history?kind=OFICIAL&days=365&v=daily-2
 const BRECHA_HISTORY_PATH = '/api/brecha/history?days=365';
 
 async function RatesSection() {
-  const [latestResult, brechaLatestResult, tcoSeries, p2pIndex, paraleloDeltaResult, oficialDeltaResult] =
+  const [latestResult, brechaLatestResult, bcbResult, tcoSeries, p2pIndex, paraleloDeltaResult, oficialDeltaResult] =
     await Promise.all([
       getSiteData<CurrentRatesResponse>('/api/rates/current?v=live-20260722'),
       getSiteData<BrechaLatestResponse>('/api/brecha/latest'),
+      getSiteData<BcbResponse>('/api/bcb/valor-referencial?v=live-20260722'),
       fetchRecentBcbTcoBreakdowns(10),
       fetchP2PIndex(),
       // Small window: only the last couple of days are needed to compute
@@ -137,10 +149,11 @@ async function RatesSection() {
   const oficialDelta = getDelta([...(oficialDeltaResult.data?.data ?? [])].reverse());
 
   const lastUpdated = latest?.updatedAt ? new Date(latest.updatedAt) : null;
+  const bcbData = bcbResult.ok ? bcbResult.data : null;
   const tcoData = tcoSeries.at(-1) ?? null;
 
   const sourceBadges = [
-    { name: 'BCB', active: latest?.sources?.bcb === 'OK' || Boolean(tcoData) },
+    { name: 'BCB', active: latest?.sources?.bcb === 'OK' || Boolean(bcbData) || Boolean(tcoData) },
     { name: 'Índice P2P', active: Boolean(p2pIndex) },
     { name: 'Binance P2P', active: latest?.sources?.binance_p2p === 'OK' }
   ];
@@ -154,7 +167,7 @@ async function RatesSection() {
   const parallelActive = indexSources > 0;
   const officialActive = (oficial?.sources_count ?? 0) > 0;
   const activeSources = indexSources + (officialActive ? 1 : 0);
-  const hasAnyData = Boolean(paralelo || oficial || brecha || tcoData);
+  const hasAnyData = Boolean(paralelo || oficial || brecha || bcbData || tcoData);
   const status = latest?.status ?? (hasAnyData ? 'DEGRADED' : 'ERROR');
   const statusLabel = status === 'OK' ? 'OK' : status === 'DEGRADED' ? 'Degradado' : 'Error';
   const statusClass =
@@ -212,6 +225,10 @@ async function RatesSection() {
         oficialSourcesCount={oficial?.sources_count ?? null}
         gapAbs={brecha?.gap_abs ?? null}
         gapPct={brecha?.gap_pct ?? null}
+        bcbDateText={bcbData?.dateText}
+        bcbCompraText={bcbData?.compraText}
+        bcbVentaText={bcbData?.ventaText}
+        bcbError={bcbResult.ok ? null : bcbResult.error ?? 'fuente_no_disponible'}
         tco={tcoData?.tco}
         tcoWeightedAverage={tcoData?.weightedAverage}
         tcoCutoffDate={tcoData?.cutoffDate}
@@ -244,6 +261,10 @@ type RatesGridProps = {
   oficialSourcesCount: number | null;
   gapAbs: number | null;
   gapPct: number | null;
+  bcbDateText?: string | null;
+  bcbCompraText?: string | null;
+  bcbVentaText?: string | null;
+  bcbError?: string | null;
   tco?: number | null;
   tcoWeightedAverage?: number | null;
   tcoCutoffDate?: string | null;
@@ -263,12 +284,16 @@ function RatesGrid({
   oficialSourcesCount,
   gapAbs,
   gapPct,
+  bcbDateText,
+  bcbCompraText,
+  bcbVentaText,
+  bcbError,
   tco,
   tcoWeightedAverage,
   tcoCutoffDate
 }: RatesGridProps) {
   return (
-    <div className="grid items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-5">
+    <div className="grid items-stretch gap-4 sm:grid-cols-2 xl:grid-cols-4">
       <RateCard
         title="Índice P2P Bolivia"
         buy={indexBuy}
@@ -294,12 +319,22 @@ function RatesGrid({
         logoSrc="/logos/bcb.svg"
         logoAlt="BCB"
       />
-      <BrechaCard gapAbs={gapAbs} gapPct={gapPct} />
-      <TcoCard
-        tco={tco}
-        weightedAverage={tcoWeightedAverage}
-        cutoffDate={tcoCutoffDate}
+      <BCBCard
+        dateText={bcbDateText}
+        compraText={bcbCompraText}
+        ventaText={bcbVentaText}
+        error={bcbError}
       />
+      <div className="xl:col-span-2">
+        <BrechaCard gapAbs={gapAbs} gapPct={gapPct} />
+      </div>
+      <div className="xl:col-span-2">
+        <TcoCard
+          tco={tco}
+          weightedAverage={tcoWeightedAverage}
+          cutoffDate={tcoCutoffDate}
+        />
+      </div>
     </div>
   );
 }
@@ -331,6 +366,10 @@ function RatesSectionFallback() {
         oficialSourcesCount={null}
         gapAbs={null}
         gapPct={null}
+        bcbDateText={null}
+        bcbCompraText={null}
+        bcbVentaText={null}
+        bcbError={null}
         tco={null}
         tcoWeightedAverage={null}
         tcoCutoffDate={null}

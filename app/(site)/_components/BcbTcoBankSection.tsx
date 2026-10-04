@@ -375,9 +375,9 @@ export async function BcbTcoBankSection() {
                   </p>
                 </div>
                 <div className="rounded-2xl border border-white/10 bg-white/[0.07] px-4 py-3 text-sm text-white/65">
-                  <span className="block text-xs uppercase tracking-[0.14em] text-white/40">Con la otra fórmula</span>
+                  <span className="block text-xs uppercase tracking-[0.14em] text-white/40">Promedio por monto</span>
                   <strong className="mt-1 block text-xl text-white">{formatNumber(data.weightedAverage, 2)}</strong>
-                  <span className="mt-1 block max-w-36 text-xs leading-snug text-white/45">Promedio ponderado de las mismas compras</span>
+                  <span className="mt-1 block max-w-40 text-xs leading-snug text-white/45">Comparación calculada con las mismas compras</span>
                 </div>
               </div>
             </div>
