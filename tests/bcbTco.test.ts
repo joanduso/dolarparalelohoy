@@ -27,7 +27,9 @@ describe('parseBcbTcoCsv', () => {
       shortName: 'A',
       usd: 60,
       sharePct: 60,
+      operations: 1,
       medianRate: 10,
+      averageRate: 10,
       tcoWithoutBank: 12,
       effectCents: -200
     });

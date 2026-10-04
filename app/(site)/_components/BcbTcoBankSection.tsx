@@ -29,6 +29,11 @@ function formatSignedPercent(value: number) {
   return `${value > 0 ? '+' : ''}${formatNumber(value, 1)}%`;
 }
 
+function formatSignedRate(value: number) {
+  if (Math.abs(value) < 0.005) return 'Sin cambio';
+  return `${value > 0 ? '+' : ''}${formatNumber(value, 2)} Bs`;
+}
+
 function formatValidity(value: string) {
   const match = value.match(/^(\d{4}-\d{2}-\d{2})\s+al\s+(\d{4}-\d{2}-\d{2})$/);
   if (!match) return value;
@@ -73,7 +78,7 @@ function BankRow({
   const changedResult = bank.effectCents !== null && Math.abs(bank.effectCents) >= 0.005;
 
   return (
-    <li className="grid gap-3 border-t border-black/[0.07] px-5 py-5 sm:px-6 lg:grid-cols-[minmax(220px,1.1fr)_minmax(240px,1.45fr)_150px_170px] lg:items-center lg:gap-6">
+    <li className="grid gap-3 border-t border-black/[0.07] px-5 py-5 sm:px-6 lg:grid-cols-[minmax(190px,1fr)_minmax(210px,1.2fr)_135px_125px_170px] lg:items-center lg:gap-5">
       <div className="flex min-w-0 items-center gap-3">
         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ink/[0.055] text-xs font-semibold tabular-nums text-ink/55">
           {rank}
@@ -97,9 +102,17 @@ function BankRow({
         </div>
       </div>
 
-      <div className="flex items-baseline justify-between gap-3 lg:block lg:text-right">
-        <span className="text-xs text-ink/50 lg:block">USD comprados</span>
-        <strong className="tabular-nums">{formatUsd(bank.usd)}</strong>
+      <div className="grid grid-cols-2 gap-4 lg:contents">
+        <div className="lg:text-right">
+          <span className="block text-xs text-ink/50">USD comprados</span>
+          <strong className="mt-0.5 block tabular-nums">{formatUsd(bank.usd)}</strong>
+        </div>
+        <div className="text-right">
+          <span className="block text-xs text-ink/50">TC promedio</span>
+          <strong className="mt-0.5 block whitespace-nowrap tabular-nums">
+            {bank.averageRate === null ? '—' : `Bs ${formatNumber(bank.averageRate, 2)}`}
+          </strong>
+        </div>
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-2 lg:justify-end">
@@ -115,6 +128,105 @@ function BankRow({
         ) : null}
       </div>
     </li>
+  );
+}
+
+function TcoTrendPanel({ points }: { points: BcbTcoBreakdown[] }) {
+  const width = 720;
+  const height = 150;
+  const horizontalPadding = 18;
+  const verticalPadding = 20;
+  const values = points.map((point) => point.tco);
+  const rawMinimum = Math.min(...values);
+  const rawMaximum = Math.max(...values);
+  const visibleRange = Math.max(rawMaximum - rawMinimum, 0.04);
+  const midpoint = (rawMinimum + rawMaximum) / 2;
+  const minimum = midpoint - visibleRange / 2;
+  const maximum = midpoint + visibleRange / 2;
+  const xFor = (index: number) => points.length === 1
+    ? width / 2
+    : horizontalPadding + (index / (points.length - 1)) * (width - horizontalPadding * 2);
+  const yFor = (value: number) => verticalPadding
+    + ((maximum - value) / (maximum - minimum)) * (height - verticalPadding * 2);
+  const path = points
+    .map((point, index) => `${index === 0 ? 'M' : 'L'} ${xFor(index).toFixed(2)} ${yFor(point.tco).toFixed(2)}`)
+    .join(' ');
+  const first = points[0];
+  const latest = points.at(-1) as BcbTcoBreakdown;
+  const change = latest.tco - first.tco;
+
+  return (
+    <div className="border-t border-black/[0.07] p-5 sm:p-6 lg:p-8">
+      <div className="rounded-[1.5rem] border border-black/[0.06] bg-white/70 p-4 sm:p-5">
+        <div className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-start">
+          <div>
+            <p className="text-xs font-semibold text-ink/55">Tendencia del TCO</p>
+            <p className="mt-1 text-xs leading-relaxed text-ink/40">
+              Últimos {points.length} cortes disponibles; cada punto corresponde a una publicación.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2 sm:justify-end">
+            <span className="rounded-full bg-[#f2f2f7] px-3 py-1.5 text-xs text-ink/60">
+              Actual <strong className="text-ink">Bs {formatNumber(latest.tco, 2)}</strong>
+            </span>
+            <span className="rounded-full bg-[#f2f2f7] px-3 py-1.5 text-xs text-ink/60">
+              Vs. primer corte <strong className="text-ink">{formatSignedRate(change)}</strong>
+            </span>
+          </div>
+        </div>
+
+        <div className="mt-4 overflow-hidden rounded-2xl bg-[#f2f2f7] px-2 py-3 sm:px-4">
+          <svg
+            viewBox={`0 0 ${width} ${height}`}
+            className="h-auto w-full overflow-visible"
+            role="img"
+            aria-label={`Tendencia del TCO desde Bs ${formatNumber(first.tco, 2)} hasta Bs ${formatNumber(latest.tco, 2)}`}
+          >
+            <defs>
+              <linearGradient id="tco-trend-fill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#007aff" stopOpacity="0.18" />
+                <stop offset="100%" stopColor="#007aff" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            <path
+              d={`${path} L ${xFor(points.length - 1).toFixed(2)} ${height - verticalPadding} L ${xFor(0).toFixed(2)} ${height - verticalPadding} Z`}
+              fill="url(#tco-trend-fill)"
+            />
+            <path
+              d={path}
+              fill="none"
+              stroke="#007aff"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              vectorEffect="non-scaling-stroke"
+            />
+            {points.map((point, index) => (
+              <g key={point.cutoffDate}>
+                <circle
+                  cx={xFor(index)}
+                  cy={yFor(point.tco)}
+                  r={index === points.length - 1 ? 5 : 3.5}
+                  fill={index === points.length - 1 ? '#0f172a' : '#ffffff'}
+                  stroke="#007aff"
+                  strokeWidth="2.5"
+                  vectorEffect="non-scaling-stroke"
+                >
+                  <title>{`${formatCalendarDate(point.cutoffDate)}: TCO Bs ${formatNumber(point.tco, 2)}`}</title>
+                </circle>
+              </g>
+            ))}
+          </svg>
+          <div className="mt-1 flex justify-between px-1 text-[0.65rem] text-ink/45">
+            <span>{formatShortDate(first.cutoffDate)} · Bs {formatNumber(first.tco, 2)}</span>
+            <span>{formatShortDate(latest.cutoffDate)} · Bs {formatNumber(latest.tco, 2)}</span>
+          </div>
+        </div>
+        <p className="mt-3 text-xs leading-relaxed text-ink/45">
+          No se interpolan días sin publicación: fines de semana y feriados pueden dejar huecos entre cortes.
+        </p>
+      </div>
+    </div>
   );
 }
 
@@ -172,6 +284,14 @@ function DailyPressurePanel({ series }: { series: BcbTcoBreakdown[] }) {
               USD {formatCompactUsd(current.totalUsd)}
             </p>
             <p className="mt-2 text-sm text-white/55">{formatCalendarDate(current.cutoffDate)}</p>
+            <div className="mt-4 border-t border-white/10 pt-3">
+              <span className="block text-[0.65rem] uppercase tracking-[0.14em] text-white/40">
+                Promedio por monto
+              </span>
+              <strong className="mt-1 block text-lg tabular-nums">
+                Bs {formatNumber(current.weightedAverage, 2)}
+              </strong>
+            </div>
           </div>
           <div className="rounded-[1.25rem] border border-black/[0.065] bg-white/70 p-5">
             <p className="text-[0.68rem] font-bold uppercase tracking-[0.17em] text-ink/40">
@@ -222,15 +342,18 @@ function DailyPressurePanel({ series }: { series: BcbTcoBreakdown[] }) {
                   type="button"
                   key={point.cutoffDate}
                   className="group relative grid min-w-0 cursor-default gap-2 text-center focus:outline-none"
-                  aria-label={`${formatCalendarDate(point.cutoffDate)}: USD ${formatUsd(point.totalUsd)}`}
+                  aria-label={`${formatCalendarDate(point.cutoffDate)}: USD ${formatUsd(point.totalUsd)}, ${formatUsd(point.totalOperations)} operaciones, promedio por monto Bs ${formatNumber(point.weightedAverage, 2)}`}
                 >
                   <span
                     role="tooltip"
-                    className={`pointer-events-none absolute top-1 z-20 w-40 rounded-xl bg-night px-3 py-2 text-left text-xs leading-relaxed text-white opacity-0 shadow-xl transition duration-150 group-hover:opacity-100 group-focus-visible:opacity-100 ${tooltipAlignment}`}
+                    className={`pointer-events-none absolute top-1 z-20 w-44 rounded-xl bg-night px-3 py-2 text-left text-xs leading-relaxed text-white opacity-0 shadow-xl transition duration-150 group-hover:opacity-100 group-focus-visible:opacity-100 ${tooltipAlignment}`}
                   >
                     <span className="block text-white/55">{formatCalendarDate(point.cutoffDate)}</span>
                     <strong className="mt-0.5 block text-sm">USD {formatUsd(point.totalUsd)}</strong>
                     <span className="block text-white/55">{formatUsd(point.totalOperations)} operaciones</span>
+                    <span className="mt-1 block border-t border-white/10 pt-1 text-white/70">
+                      Promedio por monto: Bs {formatNumber(point.weightedAverage, 2)}
+                    </span>
                   </span>
                   <span className="flex h-36 items-end justify-center border-b border-black/10">
                     <span
@@ -249,9 +372,12 @@ function DailyPressurePanel({ series }: { series: BcbTcoBreakdown[] }) {
         </div>
       </div>
 
+      <TcoTrendPanel points={points} />
+
       <div className="border-t border-black/[0.07] bg-ink/[0.025] px-5 py-4 text-xs leading-relaxed text-ink/50 sm:px-6">
         El promedio compara el último corte con hasta siete cortes anteriores disponibles. Fines de
-        semana y feriados pueden generar huecos entre fechas.
+        semana y feriados pueden generar huecos entre fechas. El promedio por monto pondera cada
+        tipo de cambio por los USD comprados; no representa una cotización de venta.
       </div>
     </section>
   );
@@ -393,8 +519,9 @@ export async function BcbTcoBankSection() {
             <p className="kicker">Distribución del mercado</p>
             <h3 className="mt-2 font-serif text-2xl sm:text-3xl">Quién concentró las compras</h3>
             <p className="mt-2 max-w-3xl text-sm leading-relaxed text-ink/60">
-              Ordenado por dólares comprados. La barra compara la participación de cada banco; la
-              etiqueta indica dónde quedó la mediana de sus propias operaciones respecto al TCO.
+              Ordenado por dólares comprados. Se muestran las operaciones y el tipo de cambio
+              promedio de compra de cada banco. La etiqueta ubica la mediana de sus operaciones
+              respecto al TCO.
             </p>
           </div>
           <p className="rounded-2xl bg-sun/20 px-4 py-3 text-sm leading-relaxed text-ink/70 lg:max-w-sm">
@@ -404,10 +531,11 @@ export async function BcbTcoBankSection() {
           </p>
         </div>
 
-        <div className="hidden border-b border-black/[0.07] bg-ink/[0.025] px-6 py-3 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-ink/40 lg:grid lg:grid-cols-[minmax(220px,1.1fr)_minmax(240px,1.45fr)_150px_170px] lg:gap-6">
+        <div className="hidden border-b border-black/[0.07] bg-ink/[0.025] px-6 py-3 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-ink/40 lg:grid lg:grid-cols-[minmax(190px,1fr)_minmax(210px,1.2fr)_135px_125px_170px] lg:gap-5">
           <span>Banco</span>
           <span>Cuota del volumen</span>
           <span className="text-right">Monto</span>
+          <span className="text-right">TC promedio</span>
           <span className="text-right">Posición</span>
         </div>
 
@@ -445,8 +573,9 @@ export async function BcbTcoBankSection() {
 
         <div className="flex flex-col gap-3 border-t border-black/[0.07] bg-ink/[0.025] p-5 text-xs leading-relaxed text-ink/55 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <p className="max-w-3xl">
-            Cálculos propios sobre el detalle público del BCB. La participación no equivale a
-            influencia causal y no evalúa la calidad de cada banco.
+            Cálculos propios sobre el detalle público del BCB. La fuente contiene compras agregadas
+            por banco; no publica precios de venta ni la identidad de clientes o contrapartes. La
+            participación no equivale a influencia causal.
           </p>
           <a href={data.sourceUrl} target="_blank" rel="noreferrer" className="text-link shrink-0">
             Ver datos del BCB
