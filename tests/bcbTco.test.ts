@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseBcbTcoCsv } from '../lib/bcbTco';
+import { parseBcbTcoCsv, parseBcbTcoCsvSeries } from '../lib/bcbTco';
 
 const csv = `﻿"Tipo de Cambio Oficial del Dólar Estadounidense (TCO)"
 
@@ -35,5 +35,19 @@ describe('parseBcbTcoCsv', () => {
 
   it('rejects content without the official table', () => {
     expect(parseBcbTcoCsv('sin datos')).toBeNull();
+  });
+
+  it('parses multiple cutoff dates without mixing their volume', () => {
+    const multiDateCsv = csv.replace(
+      '2026-10-02;"2026-10-03 al 2026-10-05";10,0000;1;60;-;-;1;60',
+      `2026-10-01;2026-10-02;11,0000;1;25;-;-;1;25
+2026-10-02;"2026-10-03 al 2026-10-05";10,0000;1;60;-;-;1;60`
+    );
+
+    const results = parseBcbTcoCsvSeries(multiDateCsv);
+
+    expect(results).toHaveLength(2);
+    expect(results[0]).toMatchObject({ cutoffDate: '2026-10-01', totalUsd: 25, tco: 11 });
+    expect(results[1]).toMatchObject({ cutoffDate: '2026-10-02', totalUsd: 100, tco: 10 });
   });
 });

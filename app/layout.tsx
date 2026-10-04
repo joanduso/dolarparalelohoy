@@ -5,6 +5,7 @@ import { Alegreya, Commissioner } from 'next/font/google';
 import './globals.css';
 import { siteConfig } from '@/lib/seo';
 import { Logo } from '@/components/Logo';
+import { MobileTabBar } from '@/components/MobileTabBar';
 
 const GA_MEASUREMENT_ID = 'G-H4XPR5K4NT';
 const ADSENSE_CLIENT_ID = 'ca-pub-9113726729959425';
@@ -149,8 +150,8 @@ export default function RootLayout({
         />
         <div className="gradient-panel min-h-screen">
           <div className="data-rule" aria-hidden="true" />
-          <header className="sticky top-0 z-40 border-b border-black/10 bg-sand/90 backdrop-blur-xl">
-            <div className="section-shell flex min-h-[74px] items-center justify-between gap-6 py-3">
+          <header className="sticky top-0 z-40 border-b border-black/[0.07] bg-white/75 backdrop-blur-2xl">
+            <div className="section-shell flex min-h-16 items-center justify-between gap-6 py-2 sm:min-h-[72px] sm:py-3">
               <Logo className="shrink-0" />
               <nav
                 aria-label="Navegación principal"
@@ -186,21 +187,10 @@ export default function RootLayout({
                 Compartir tasa
               </Link>
             </div>
-            <nav
-              aria-label="Navegación móvil"
-              className="section-shell flex gap-1 overflow-x-auto border-t border-black/5 py-2 lg:hidden"
-            >
-              <Link href="/paralelo" className="nav-link">Paralelo</Link>
-              <Link href="/oficial" className="nav-link">Oficial</Link>
-              <Link href="/brecha" className="nav-link">Brecha</Link>
-              <Link href="/historico/paralelo" className="nav-link">Histórico</Link>
-              <Link href="/usdt-bob" className="nav-link">Conversor</Link>
-              <Link href="/exchanges" className="nav-link">Exchanges</Link>
-              <Link href="/faq" className="nav-link">Metodología</Link>
-            </nav>
           </header>
           {children}
-          <footer className="mt-14 bg-night text-sm text-white/65">
+          <MobileTabBar />
+          <footer className="mt-14 bg-night pb-24 text-sm text-white/65 lg:pb-0">
             <div className="data-rule" aria-hidden="true" />
             <div className="section-shell grid gap-10 py-12 lg:grid-cols-[minmax(0,1fr)_2fr]">
               <div className="grid content-start gap-4">

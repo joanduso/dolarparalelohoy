@@ -119,16 +119,7 @@ function shortBankName(name: string) {
   return aliases[normalized] ?? normalized.toLowerCase().replace(/(^|\s)\S/g, (letter) => letter.toUpperCase());
 }
 
-export function parseBcbTcoCsv(csv: string): BcbTcoBreakdown | null {
-  const rows = csv
-    .replace(/^\uFEFF/, '')
-    .split(/\r?\n/)
-    .filter(Boolean)
-    .map(parseCsvLine);
-  const headerIndex = rows.findIndex((row) => row[0] === 'Fecha de corte');
-  if (headerIndex < 0) return null;
-
-  const header = rows[headerIndex];
+function buildBreakdown(header: string[], rows: string[][]): BcbTcoBreakdown | null {
   const totalIndex = header.findIndex((value) => value === 'TOTAL BANCOS');
   if (totalIndex < 5) return null;
 
@@ -142,7 +133,7 @@ export function parseBcbTcoCsv(csv: string): BcbTcoBreakdown | null {
   let cutoffDate = '';
   let validity = '';
 
-  for (const row of rows.slice(headerIndex + 2)) {
+  for (const row of rows) {
     const rate = parseRate(row[2] ?? '');
     if (rate === null) continue;
     cutoffDate ||= row[0] ?? '';
@@ -211,38 +202,88 @@ export function parseBcbTcoCsv(csv: string): BcbTcoBreakdown | null {
   };
 }
 
+export function parseBcbTcoCsvSeries(csv: string): BcbTcoBreakdown[] {
+  const rows = csv
+    .replace(/^\uFEFF/, '')
+    .split(/\r?\n/)
+    .filter(Boolean)
+    .map(parseCsvLine);
+  const headerIndex = rows.findIndex((row) => row[0] === 'Fecha de corte');
+  if (headerIndex < 0) return [];
+
+  const header = rows[headerIndex];
+  const groupedRows = new Map<string, string[][]>();
+  for (const row of rows.slice(headerIndex + 2)) {
+    const cutoffDate = row[0] ?? '';
+    if (!cutoffDate || parseRate(row[2] ?? '') === null) continue;
+    const dateRows = groupedRows.get(cutoffDate) ?? [];
+    dateRows.push(row);
+    groupedRows.set(cutoffDate, dateRows);
+  }
+
+  return [...groupedRows.entries()]
+    .map(([, dateRows]) => buildBreakdown(header, dateRows))
+    .filter((value): value is BcbTcoBreakdown => Boolean(value))
+    .sort((a, b) => a.cutoffDate.localeCompare(b.cutoffDate));
+}
+
+export function parseBcbTcoCsv(csv: string): BcbTcoBreakdown | null {
+  return parseBcbTcoCsvSeries(csv).at(-1) ?? null;
+}
+
 function decodeDatesAttribute(value: string) {
   return value.replace(/&quot;/g, '"').replace(/&#039;/g, "'").replace(/&amp;/g, '&');
 }
 
-export async function fetchLatestBcbTcoBreakdown(): Promise<BcbTcoBreakdown | null> {
+async function fetchBcbTcoCutoffDates() {
+  const detailResponse = await fetch(BCB_TCO_DETAIL_URL, {
+    next: { revalidate: 600 },
+    headers: { Accept: 'text/html' }
+  });
+  if (!detailResponse.ok) return [];
+
+  const html = await detailResponse.text();
+  const datesMatch = html.match(/data-fechas='([^']+)'/);
+  if (!datesMatch) return [];
+
+  const dates = JSON.parse(decodeDatesAttribute(datesMatch[1])) as string[];
+  return [...new Set(dates)].sort();
+}
+
+async function fetchBcbTcoBreakdownsForRange(from: string, to: string) {
+  const csvUrl = new URL('bcb_tco_publico_descargar_csv.php', BCB_TCO_DETAIL_URL);
+  csvUrl.searchParams.set('desde', from);
+  csvUrl.searchParams.set('hasta', to);
+  const csvResponse = await fetch(csvUrl, {
+    next: { revalidate: 600 },
+    headers: { Accept: 'text/csv' }
+  });
+  if (!csvResponse.ok) return [];
+
+  return parseBcbTcoCsvSeries(await csvResponse.text());
+}
+
+export async function fetchRecentBcbTcoBreakdowns(limit = 2): Promise<BcbTcoBreakdown[]> {
   try {
-    const detailResponse = await fetch(BCB_TCO_DETAIL_URL, {
-      next: { revalidate: 600 },
-      headers: { Accept: 'text/html' }
-    });
-    if (!detailResponse.ok) return null;
+    const dates = await fetchBcbTcoCutoffDates();
+    const selectedDates = dates.slice(-Math.max(1, Math.min(limit, 10)));
+    if (!selectedDates.length) return [];
 
-    const html = await detailResponse.text();
-    const datesMatch = html.match(/data-fechas='([^']+)'/);
-    if (!datesMatch) return null;
-
-    const dates = JSON.parse(decodeDatesAttribute(datesMatch[1])) as string[];
-    const cutoffDate = [...dates].sort().at(-1);
-    if (!cutoffDate) return null;
-
-    const csvUrl = new URL('bcb_tco_publico_descargar_csv.php', BCB_TCO_DETAIL_URL);
-    csvUrl.searchParams.set('desde', cutoffDate);
-    csvUrl.searchParams.set('hasta', cutoffDate);
-    const csvResponse = await fetch(csvUrl, {
-      next: { revalidate: 600 },
-      headers: { Accept: 'text/csv' }
-    });
-    if (!csvResponse.ok) return null;
-
-    return parseBcbTcoCsv(await csvResponse.text());
+    const breakdowns = await fetchBcbTcoBreakdownsForRange(
+      selectedDates[0],
+      selectedDates[selectedDates.length - 1]
+    );
+    const selectedDateSet = new Set(selectedDates);
+    return breakdowns
+      .filter((value) => selectedDateSet.has(value.cutoffDate))
+      .sort((a, b) => a.cutoffDate.localeCompare(b.cutoffDate));
   } catch (error) {
     console.warn('[bcb][tco-breakdown] fetch_failed', error);
-    return null;
+    return [];
   }
+}
+
+export async function fetchLatestBcbTcoBreakdown(): Promise<BcbTcoBreakdown | null> {
+  const breakdowns = await fetchRecentBcbTcoBreakdowns(1);
+  return breakdowns.at(-1) ?? null;
 }
