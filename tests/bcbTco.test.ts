@@ -21,6 +21,9 @@ describe('parseBcbTcoCsv', () => {
     expect(result?.weightedAverage).toBe(10.8);
     expect(result?.totalUsd).toBe(100);
     expect(result?.totalOperations).toBe(3);
+    expect(result?.banks.reduce((sum, bank) => sum + bank.operations, 0)).toBe(
+      result?.totalOperations
+    );
     expect(result?.medianBanks).toEqual(['A']);
     expect(result?.sensitivity).toMatchObject({
       displayDownAdditionalUsd: 100,

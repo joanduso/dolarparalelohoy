@@ -652,9 +652,9 @@ export async function BcbTcoBankSection() {
             <p className="kicker">Distribución del mercado</p>
             <h3 className="mt-2 font-serif text-2xl sm:text-3xl">Quién concentró las compras</h3>
             <p className="mt-2 max-w-3xl text-sm leading-relaxed text-ink/60">
-              Ordenado por dólares comprados. Se muestran las operaciones y el tipo de cambio
-              promedio de compra de cada banco. La etiqueta ubica la mediana de sus operaciones
-              respecto al TCO.
+              La primera fila suma las operaciones y montos de todos los bancos. Después se ordena
+              cada entidad por dólares comprados y se muestra su tipo de cambio promedio. La
+              etiqueta ubica la mediana de sus operaciones respecto al TCO.
             </p>
           </div>
           <p className="rounded-2xl bg-sun/20 px-4 py-3 text-sm leading-relaxed text-ink/70 lg:max-w-sm">
@@ -670,6 +670,43 @@ export async function BcbTcoBankSection() {
           <span className="text-right">Monto</span>
           <span className="text-right">TC promedio</span>
           <span className="text-right">Posición</span>
+        </div>
+
+        <div className="grid gap-3 bg-night px-5 py-5 text-white sm:px-6 lg:grid-cols-[minmax(190px,1fr)_minmax(210px,1.2fr)_135px_125px_170px] lg:items-center lg:gap-5">
+          <div>
+            <p className="font-semibold tracking-[-0.01em]">Total del corte</p>
+            <p className="mt-0.5 text-xs text-white/50">
+              {formatUsd(data.totalOperations)} operaciones · {data.banks.length} bancos
+            </p>
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between gap-4 text-xs">
+              <span className="text-white/50">Participación total</span>
+              <strong className="tabular-nums">100%</strong>
+            </div>
+            <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10" aria-hidden="true">
+              <span className="block h-full w-full rounded-full bg-sun" />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 lg:contents">
+            <div className="lg:text-right">
+              <span className="block text-xs text-white/50">USD comprados</span>
+              <strong className="mt-0.5 block tabular-nums">{formatUsd(data.totalUsd)}</strong>
+            </div>
+            <div className="text-right">
+              <span className="block text-xs text-white/50">TC promedio</span>
+              <strong className="mt-0.5 block whitespace-nowrap tabular-nums">
+                Bs {formatNumber(data.weightedAverage, 2)}
+              </strong>
+            </div>
+          </div>
+
+          <div className="flex items-baseline justify-between gap-3 lg:block lg:text-right">
+            <span className="text-xs text-white/50 lg:block">TCO publicado</span>
+            <strong className="tabular-nums">Bs {formatNumber(data.tco, 2)}</strong>
+          </div>
         </div>
 
         <ol>
