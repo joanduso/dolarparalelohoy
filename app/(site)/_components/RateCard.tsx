@@ -48,7 +48,7 @@ export function RateCard({
 
   return (
     <article
-      className={`relative flex h-full flex-col gap-5 overflow-hidden rounded-[1.25rem] border p-5 sm:p-6 ${
+      className={`relative flex h-full min-w-0 flex-col gap-5 overflow-hidden rounded-[1.25rem] border p-5 xl:p-6 ${
         featured
           ? 'border-night bg-night text-white shadow-lift lg:col-span-2'
           : 'border-black/10 bg-[#faf9f6] text-ink'
@@ -58,7 +58,7 @@ export function RateCard({
         <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-signal via-sun to-moss" />
       ) : null}
       <div className="flex items-start justify-between gap-4">
-        <div className="flex items-center gap-2">
+        <div className="flex min-w-0 items-center gap-2">
           {logoSrc ? (
             <Image
               src={logoSrc}
@@ -68,27 +68,27 @@ export function RateCard({
               className="h-6 w-6 rounded-full border border-black/10 bg-white"
             />
           ) : null}
-          <div>
+          <div className="min-w-0">
             <p className={`text-[10px] font-bold uppercase tracking-[0.2em] ${featured ? 'text-white/45' : 'text-ink/45'}`}>
               {featured ? 'Mercado P2P' : 'Referencia pública'}
             </p>
-            <h2 className="mt-1 text-lg font-semibold tracking-tight">{title}</h2>
+            <h2 className="mt-1 text-lg font-semibold leading-tight tracking-tight">{title}</h2>
           </div>
         </div>
         <span className={`shrink-0 rounded-full border px-2.5 py-1 text-xs ${featured ? 'border-white/15 text-white/60' : 'border-black/10 text-ink/60'}`}>
           {sources} {sources === 1 ? 'fuente' : 'fuentes'}
         </span>
       </div>
-      <div className="grid grid-cols-2 gap-5">
-        <div className={`border-r ${featured ? 'border-white/15' : 'border-black/10'}`}>
+      <div className="grid min-w-0 grid-cols-2 gap-3">
+        <div className={`min-w-0 border-r ${featured ? 'border-white/15' : 'border-black/10'}`}>
           <p className={`text-[11px] font-bold uppercase tracking-[0.16em] ${featured ? 'text-white/50' : 'text-ink/50'}`}>Compra</p>
-          <p className={`${featured ? 'text-4xl sm:text-5xl' : 'text-2xl'} mt-2 font-semibold tracking-[-0.05em] tabular-nums`}>
+          <p className={`${featured ? 'text-4xl 2xl:text-5xl' : 'text-lg xl:text-xl 2xl:text-2xl'} mt-2 whitespace-nowrap font-semibold tracking-[-0.05em] tabular-nums`}>
             {hasBuy ? formatCurrency(buy) : <Skeleton className="h-7 w-24" />}
           </p>
         </div>
-        <div>
+        <div className="min-w-0">
           <p className={`text-[11px] font-bold uppercase tracking-[0.16em] ${featured ? 'text-white/50' : 'text-ink/50'}`}>Venta</p>
-          <p className={`${featured ? 'text-4xl text-sun sm:text-5xl' : 'text-2xl'} mt-2 font-semibold tracking-[-0.05em] tabular-nums`}>
+          <p className={`${featured ? 'text-4xl text-sun 2xl:text-5xl' : 'text-lg xl:text-xl 2xl:text-2xl'} mt-2 whitespace-nowrap font-semibold tracking-[-0.05em] tabular-nums`}>
             {hasSell ? formatCurrency(sell) : <Skeleton className="h-7 w-24" />}
           </p>
         </div>

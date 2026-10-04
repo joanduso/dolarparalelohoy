@@ -212,24 +212,37 @@ function DailyPressurePanel({ series }: { series: BcbTcoBreakdown[] }) {
             {points.map((point, index) => {
               const isCurrent = index === points.length - 1;
               const barHeight = Math.max((point.totalUsd / maxVolume) * 100, 3);
+              const tooltipAlignment = index === 0
+                ? 'left-0'
+                : index === points.length - 1
+                  ? 'right-0'
+                  : 'left-1/2 -translate-x-1/2';
               return (
-                <div
+                <button
+                  type="button"
                   key={point.cutoffDate}
-                  className="grid min-w-0 gap-2 text-center"
-                  title={`${formatCalendarDate(point.cutoffDate)} · USD ${formatUsd(point.totalUsd)} · ${formatUsd(point.totalOperations)} operaciones`}
+                  className="group relative grid min-w-0 cursor-default gap-2 text-center focus:outline-none"
                   aria-label={`${formatCalendarDate(point.cutoffDate)}: USD ${formatUsd(point.totalUsd)}`}
                 >
-                  <div className="flex h-36 items-end justify-center border-b border-black/10">
+                  <span
+                    role="tooltip"
+                    className={`pointer-events-none absolute top-1 z-20 w-40 rounded-xl bg-night px-3 py-2 text-left text-xs leading-relaxed text-white opacity-0 shadow-xl transition duration-150 group-hover:opacity-100 group-focus-visible:opacity-100 ${tooltipAlignment}`}
+                  >
+                    <span className="block text-white/55">{formatCalendarDate(point.cutoffDate)}</span>
+                    <strong className="mt-0.5 block text-sm">USD {formatUsd(point.totalUsd)}</strong>
+                    <span className="block text-white/55">{formatUsd(point.totalOperations)} operaciones</span>
+                  </span>
+                  <span className="flex h-36 items-end justify-center border-b border-black/10">
                     <span
-                      className={`block w-full max-w-8 rounded-t-lg transition-colors ${isCurrent ? 'bg-night' : 'bg-moss/30'}`}
+                      className={`block w-full max-w-8 rounded-t-lg transition-[height,background-color] group-hover:bg-sun group-focus-visible:bg-sun ${isCurrent ? 'bg-night' : 'bg-moss/30'}`}
                       style={{ height: `${barHeight}%` }}
                       aria-hidden="true"
                     />
-                  </div>
+                  </span>
                   <span className={`truncate text-[0.6rem] sm:text-[0.68rem] ${isCurrent ? 'font-bold text-ink' : 'text-ink/45'}`}>
                     {formatShortDate(point.cutoffDate)}
                   </span>
-                </div>
+                </button>
               );
             })}
           </div>
@@ -300,15 +313,15 @@ export async function BcbTcoBankSection() {
   const medianBankVerb = data.medianBanks.length === 1 ? 'registró' : 'registraron';
 
   return (
-    <section className="grid gap-6" aria-labelledby="bancos-tco-title">
+    <section id="radiografia-tco" className="grid scroll-mt-24 gap-6" aria-labelledby="bancos-tco-title">
       <div className="section-heading">
         <div>
           <p className="kicker">Datos oficiales explicados</p>
           <h2 id="bancos-tco-title">Radiografía del TCO bancario</h2>
         </div>
         <p className="max-w-xl text-sm leading-relaxed text-ink/60">
-          Una lectura del volumen que participa en la mediana del BCB. Muestra concentración y
-          sensibilidad; no atribuye el resultado a una sola entidad.
+          Explica cómo las compras de dólares reportadas por los bancos forman el TCO oficial.
+          Muestra concentración y sensibilidad; no atribuye el resultado a una sola entidad.
         </p>
       </div>
 
@@ -324,11 +337,11 @@ export async function BcbTcoBankSection() {
               <p className="mt-5 font-serif text-6xl tracking-[-0.045em] text-ink sm:text-7xl">
                 {formatNumber(data.tco, 2)}
               </p>
-              <p className="mt-2 text-sm text-ink/50">bolivianos por dólar · TCO publicado</p>
+              <p className="mt-2 text-sm text-ink/50">bolivianos por dólar · TCO oficial publicado</p>
             </div>
             <p className="max-w-md text-sm leading-relaxed text-ink/60">
-              La mediana ponderada ubica la mitad del volumen a cada lado del nivel publicado. Este
-              corte entra en vigencia {formatValidity(data.validity)}.
+              El BCB ordena las compras por precio y publica el nivel donde se alcanza la mitad del
+              volumen. Este corte entra en vigencia {formatValidity(data.validity)}.
             </p>
           </div>
 
@@ -357,13 +370,14 @@ export async function BcbTcoBankSection() {
                   </p>
                   <p className="mt-2 max-w-2xl leading-relaxed text-white/72">
                     {isResilient
-                      ? `Al retirar uno por uno a cada banco, el TCO recalculado siguió en Bs ${formatNumber(data.tco, 2)}. El dato refleja el conjunto del mercado, no el peso aislado de una entidad.`
-                      : `La mayor variación al excluir una entidad fue de ${formatNumber(maxIndividualEffect, 2)} centavos. Esta prueba ayuda a medir cuán sensible fue el resultado a una participación individual.`}
+                      ? `Prueba de sensibilidad: al recalcular sin las operaciones de cada banco, el resultado redondeado siguió en Bs ${formatNumber(data.tco, 2)}. El nivel dependió del conjunto, no de una sola entidad.`
+                      : `Prueba de sensibilidad: al recalcular sin una entidad, la mayor diferencia fue de ${formatNumber(maxIndividualEffect, 2)} centavos. Esto describe la composición del corte; no anticipa el próximo TCO.`}
                   </p>
                 </div>
                 <div className="rounded-2xl border border-white/10 bg-white/[0.07] px-4 py-3 text-sm text-white/65">
-                  <span className="block text-xs uppercase tracking-[0.14em] text-white/40">Promedio</span>
+                  <span className="block text-xs uppercase tracking-[0.14em] text-white/40">Con la otra fórmula</span>
                   <strong className="mt-1 block text-xl text-white">{formatNumber(data.weightedAverage, 2)}</strong>
+                  <span className="mt-1 block max-w-36 text-xs leading-snug text-white/45">Promedio ponderado de las mismas compras</span>
                 </div>
               </div>
             </div>
