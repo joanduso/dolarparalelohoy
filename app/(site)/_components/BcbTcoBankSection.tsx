@@ -230,6 +230,137 @@ function TcoTrendPanel({ points }: { points: BcbTcoBreakdown[] }) {
   );
 }
 
+function TcoSensitivityPanel({ data }: { data: BcbTcoBreakdown }) {
+  const { sensitivity } = data;
+  const total = Math.max(data.totalUsd, 1);
+  const displayShares = [
+    {
+      label: 'Fuera de la banda, abajo',
+      usd: sensitivity.belowDisplayUsd,
+      color: 'bg-[#007aff]'
+    },
+    {
+      label: `Dentro de la banda de Bs ${formatNumber(data.tco, 2)}`,
+      usd: sensitivity.atDisplayUsd,
+      color: 'bg-sun'
+    },
+    {
+      label: 'Fuera de la banda, arriba',
+      usd: sensitivity.aboveDisplayUsd,
+      color: 'bg-signal'
+    }
+  ];
+
+  return (
+    <section className="card overflow-hidden" aria-labelledby="umbral-tco-title">
+      <div className="grid gap-4 border-b border-black/[0.07] p-5 sm:p-6 lg:grid-cols-[1fr_auto] lg:items-end">
+        <div>
+          <p className="kicker">Simulación del corte actual</p>
+          <h3 id="umbral-tco-title" className="mt-2 font-serif text-2xl sm:text-3xl">
+            ¿Cuánto volumen cambiaría el TCO?
+          </h3>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-ink/60">
+            Estima compras adicionales necesarias para que el TCO publicado deje Bs{' '}
+            {formatNumber(data.tco, 2)}. Mantiene sin cambios todas las operaciones ya reportadas;
+            no pronostica el próximo corte.
+          </p>
+        </div>
+        <span className="w-fit rounded-full bg-ink/[0.055] px-3 py-1.5 text-xs font-semibold text-ink/55">
+          Cambio visible de al menos Bs 0,01
+        </span>
+      </div>
+
+      <div className="grid gap-3 p-5 sm:p-6 lg:grid-cols-3 lg:p-8">
+        <div className="rounded-[1.35rem] border border-[#007aff]/15 bg-[#007aff]/[0.055] p-5">
+          <div className="flex items-center justify-between gap-3">
+            <span className="rounded-full bg-[#007aff]/10 px-2.5 py-1 text-xs font-semibold text-[#007aff]">
+              Compras más bajas
+            </span>
+            <span className="text-xl text-[#007aff]" aria-hidden="true">↓</span>
+          </div>
+          <p className="mt-4 text-xs uppercase tracking-[0.13em] text-ink/45">
+            TC menor a Bs {formatNumber(sensitivity.lowerDisplayBoundary, 4)}
+          </p>
+          <p className="mt-2 text-2xl font-semibold tracking-[-0.025em]">
+            USD {formatCompactUsd(sensitivity.displayDownAdditionalUsd)}
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-ink/55">
+            Al menos ese volumen adicional podría hacer que el TCO publicado baje un centavo o más.
+          </p>
+        </div>
+
+        <div className="rounded-[1.35rem] border border-sun/30 bg-sun/[0.12] p-5">
+          <div className="flex items-center justify-between gap-3">
+            <span className="rounded-full bg-sun/25 px-2.5 py-1 text-xs font-semibold text-ink/65">
+              Compras en la banda
+            </span>
+            <span className="text-lg text-ink/45" aria-hidden="true">—</span>
+          </div>
+          <p className="mt-4 text-xs uppercase tracking-[0.13em] text-ink/45">
+            De Bs {formatNumber(sensitivity.lowerDisplayBoundary, 4)} a menos de Bs{' '}
+            {formatNumber(sensitivity.upperDisplayBoundary, 4)}
+          </p>
+          <p className="mt-2 text-2xl font-semibold tracking-[-0.025em]">
+            Se mantiene en Bs {formatNumber(data.tco, 2)}
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-ink/55">
+            Puede cambiar la mediana interna, pero el resultado visible continúa redondeando al mismo TCO.
+          </p>
+        </div>
+
+        <div className="rounded-[1.35rem] border border-signal/15 bg-signal/[0.055] p-5">
+          <div className="flex items-center justify-between gap-3">
+            <span className="rounded-full bg-signal/10 px-2.5 py-1 text-xs font-semibold text-signal">
+              Compras más altas
+            </span>
+            <span className="text-xl text-signal" aria-hidden="true">↑</span>
+          </div>
+          <p className="mt-4 text-xs uppercase tracking-[0.13em] text-ink/45">
+            TC desde Bs {formatNumber(sensitivity.upperDisplayBoundary, 4)}
+          </p>
+          <p className="mt-2 text-2xl font-semibold tracking-[-0.025em]">
+            Más de USD {formatCompactUsd(sensitivity.displayUpAdditionalUsdExclusive)}
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-ink/55">
+            Superar ese volumen adicional podría hacer que el TCO publicado suba un centavo o más.
+          </p>
+        </div>
+      </div>
+
+      <div className="border-t border-black/[0.07] bg-ink/[0.025] px-5 py-5 sm:px-6 lg:px-8">
+        <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
+          <div>
+            <p className="text-xs font-semibold text-ink/60">Cómo está repartido el volumen que define el redondeo</p>
+            <div className="mt-2 flex h-2.5 overflow-hidden rounded-full bg-ink/[0.06]" aria-hidden="true">
+              {displayShares.map((part) => (
+                <span
+                  key={part.label}
+                  className={part.color}
+                  style={{ width: `${(part.usd / total) * 100}%` }}
+                />
+              ))}
+            </div>
+            <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-ink/50">
+              {displayShares.map((part) => (
+                <span key={part.label}>
+                  {part.label}: <strong className="text-ink/65">{formatNumber((part.usd / total) * 100, 1)}%</strong>
+                </span>
+              ))}
+            </div>
+          </div>
+          <p className="max-w-md text-xs leading-relaxed text-ink/50 lg:text-right">
+            Para mover solo la mediana interna fuera de {formatNumber(data.tco, 4)} bastarían{' '}
+            <strong className="text-ink/65">USD {formatCompactUsd(sensitivity.rawMedianDownAdditionalUsd)}</strong>{' '}
+            hacia abajo o más de{' '}
+            <strong className="text-ink/65">USD {formatCompactUsd(sensitivity.rawMedianUpAdditionalUsdExclusive)}</strong>{' '}
+            hacia arriba. El TCO visible aún podría seguir en {formatNumber(data.tco, 2)}.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function DailyPressurePanel({ series }: { series: BcbTcoBreakdown[] }) {
   const points = series.slice(-10);
   if (!points.length) return null;
@@ -512,6 +643,8 @@ export async function BcbTcoBankSection() {
       </div>
 
       <DailyPressurePanel series={series} />
+
+      <TcoSensitivityPanel data={data} />
 
       <div className="card overflow-hidden">
         <div className="grid gap-4 border-b border-black/[0.07] p-5 sm:p-6 lg:grid-cols-[1fr_auto] lg:items-end">

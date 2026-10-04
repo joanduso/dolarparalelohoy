@@ -24,6 +24,17 @@ export type BcbTcoBreakdown = {
   totalOperations: number;
   banks: BcbBankBreakdown[];
   medianBanks: string[];
+  sensitivity: {
+    displayDownAdditionalUsd: number;
+    displayUpAdditionalUsdExclusive: number;
+    rawMedianDownAdditionalUsd: number;
+    rawMedianUpAdditionalUsdExclusive: number;
+    lowerDisplayBoundary: number;
+    upperDisplayBoundary: number;
+    belowDisplayUsd: number;
+    atDisplayUsd: number;
+    aboveDisplayUsd: number;
+  };
   sourceUrl: string;
 };
 
@@ -154,6 +165,20 @@ function buildBreakdown(header: string[], rows: string[][]): BcbTcoBreakdown | n
   if (!cutoffDate || !validity || !tco || totalUsd <= 0) return null;
 
   const weightedAverage = cells.reduce((sum, cell) => sum + cell.rate * cell.usd, 0) / totalUsd;
+  const publishedTco = roundPublishedRate(tco) as number;
+  const rawBelowUsd = cells
+    .filter((cell) => cell.rate < tco)
+    .reduce((sum, cell) => sum + cell.usd, 0);
+  const rawAtUsd = cells
+    .filter((cell) => cell.rate === tco)
+    .reduce((sum, cell) => sum + cell.usd, 0);
+  const belowDisplayUsd = cells
+    .filter((cell) => (roundPublishedRate(cell.rate) as number) < publishedTco)
+    .reduce((sum, cell) => sum + cell.usd, 0);
+  const atDisplayUsd = cells
+    .filter((cell) => roundPublishedRate(cell.rate) === publishedTco)
+    .reduce((sum, cell) => sum + cell.usd, 0);
+  const aboveDisplayUsd = totalUsd - belowDisplayUsd - atDisplayUsd;
   const breakdown = banks
     .map((bank): BcbBankBreakdown => {
       const bankCells = cells.filter((cell) => cell.bank === bank.name);
@@ -198,6 +223,17 @@ function buildBreakdown(header: string[], rows: string[][]): BcbTcoBreakdown | n
     medianBanks: breakdown
       .filter((bank) => bank.medianRate === tco)
       .map((bank) => bank.shortName),
+    sensitivity: {
+      displayDownAdditionalUsd: Math.max(totalUsd - 2 * belowDisplayUsd, 0),
+      displayUpAdditionalUsdExclusive: Math.max(2 * (belowDisplayUsd + atDisplayUsd) - totalUsd, 0),
+      rawMedianDownAdditionalUsd: Math.max(totalUsd - 2 * rawBelowUsd, 0),
+      rawMedianUpAdditionalUsdExclusive: Math.max(2 * (rawBelowUsd + rawAtUsd) - totalUsd, 0),
+      lowerDisplayBoundary: publishedTco - 0.005,
+      upperDisplayBoundary: publishedTco + 0.005,
+      belowDisplayUsd,
+      atDisplayUsd,
+      aboveDisplayUsd
+    },
     sourceUrl: `${BCB_TCO_DETAIL_URL}?fecha=${cutoffDate}`
   };
 }

@@ -22,6 +22,17 @@ describe('parseBcbTcoCsv', () => {
     expect(result?.totalUsd).toBe(100);
     expect(result?.totalOperations).toBe(3);
     expect(result?.medianBanks).toEqual(['A']);
+    expect(result?.sensitivity).toMatchObject({
+      displayDownAdditionalUsd: 100,
+      displayUpAdditionalUsdExclusive: 20,
+      rawMedianDownAdditionalUsd: 100,
+      rawMedianUpAdditionalUsdExclusive: 20,
+      lowerDisplayBoundary: 9.995,
+      upperDisplayBoundary: 10.005,
+      belowDisplayUsd: 0,
+      atDisplayUsd: 60,
+      aboveDisplayUsd: 40
+    });
 
     expect(result?.banks[0]).toMatchObject({
       shortName: 'A',
@@ -37,6 +48,24 @@ describe('parseBcbTcoCsv', () => {
 
   it('rejects content without the official table', () => {
     expect(parseBcbTcoCsv('sin datos')).toBeNull();
+  });
+
+  it('distinguishes moving the raw median from changing the published centavo', () => {
+    const roundingCsv = `"Fecha de corte";Vigencia;"TC (En Bs/USD)";"BANCO A";;"TOTAL BANCOS";
+;;;N°;Monto;N°;Monto
+2026-10-03;2026-10-04;11,9980;1;40;1;40
+2026-10-03;2026-10-04;12,0000;1;20;1;20
+2026-10-03;2026-10-04;12,0060;1;40;1;40`;
+
+    const result = parseBcbTcoCsv(roundingCsv);
+
+    expect(result?.tco).toBe(12);
+    expect(result?.sensitivity).toMatchObject({
+      displayDownAdditionalUsd: 100,
+      displayUpAdditionalUsdExclusive: 20,
+      rawMedianDownAdditionalUsd: 20,
+      rawMedianUpAdditionalUsdExclusive: 20
+    });
   });
 
   it('parses multiple cutoff dates without mixing their volume', () => {
