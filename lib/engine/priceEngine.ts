@@ -6,6 +6,7 @@ import type { LatestRateResult, Sample, PriceSource } from './types';
 import { getCache, setCache } from './cache';
 import { logError, logInfo, logWarn } from './logger';
 import { prisma } from '@/lib/db';
+import { shouldUseRateDatabase } from '@/lib/runtimePhase';
 import { getLatestRun, getRun24hAgo, saveRun } from './store';
 
 const SOURCE_TTL_MS = 90_000;
@@ -95,7 +96,10 @@ export async function computeLatest() {
   if (officialBcb) sourcesUsed.push('BCB');
   if (sampleSizeBuy || sampleSizeSell) sourcesUsed.push('BINANCE');
 
-  const useDatabase = process.env.ENABLE_RATE_DB === 'true';
+  // Static generation runs many pages in parallel workers. Letting every
+  // worker read and persist the same quote can exhaust a small Postgres pool.
+  // Runtime and cron executions keep the normal persistent-data behavior.
+  const useDatabase = shouldUseRateDatabase();
   let latestRun = null;
   let run24h = null;
   let dbUnavailable = false;

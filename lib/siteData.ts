@@ -7,6 +7,7 @@ import {
   getPublicParallelHistory,
   type HistoryDataRow
 } from '@/lib/sources/publicHistory';
+import { isProductionBuild } from '@/lib/runtimePhase';
 
 export const CURRENT_DATA_REVALIDATE_SECONDS = 10 * 60;
 export const HISTORY_DATA_REVALIDATE_SECONDS = 6 * 60 * 60;
@@ -89,7 +90,10 @@ async function computeCurrentRatesData(): Promise<CurrentRatesData> {
   // A last-known-good database snapshot protects the rendered HTML when a
   // public source is temporarily unavailable. Its original timestamp remains
   // visible, so stale fallback data is never presented as newly fetched.
-  if (officialValue === null || parallelBuy === null || parallelSell === null) {
+  if (
+    !isProductionBuild() &&
+    (officialValue === null || parallelBuy === null || parallelSell === null)
+  ) {
     try {
       const stored = await getLatestRun(prisma);
       if (stored) {
@@ -183,10 +187,12 @@ async function computeHistoryData(
   const from = new Date(to.getTime() - safeDays * 24 * 60 * 60 * 1000);
 
   let rows: RateHistoryRow[] = [];
-  try {
-    rows = await getHistory(prisma, from, to, '1d');
-  } catch (error) {
-    console.warn('[site-data] persistent history unavailable', String(error));
+  if (!isProductionBuild()) {
+    try {
+      rows = await getHistory(prisma, from, to, '1d');
+    } catch (error) {
+      console.warn('[site-data] persistent history unavailable', String(error));
+    }
   }
 
   const storedData: HistoryDataRow[] = rows.map((row) => ({
@@ -201,22 +207,24 @@ async function computeHistoryData(
     : await getPublicOficialHistory(from, to);
 
   let liveRows: HistoryDataRow[] = [];
-  try {
-    const current = await getCurrentRatesData();
-    const liveBuy = kind === 'OFICIAL' ? current.oficial?.buy : current.paralelo?.buy;
-    const liveSell = kind === 'OFICIAL' ? current.oficial?.sell : current.paralelo?.sell;
-    if (current.updatedAt && liveBuy !== null && liveBuy !== undefined && liveSell !== null && liveSell !== undefined) {
-      liveRows = [{
-        date: current.updatedAt,
-        buy_avg: liveBuy,
-        sell_avg: liveSell,
-        sources_count: kind === 'OFICIAL'
-          ? current.oficial?.sources_count ?? 0
-          : current.paralelo?.sampleSize ?? 0
-      }];
+  if (!isProductionBuild()) {
+    try {
+      const current = await getCurrentRatesData();
+      const liveBuy = kind === 'OFICIAL' ? current.oficial?.buy : current.paralelo?.buy;
+      const liveSell = kind === 'OFICIAL' ? current.oficial?.sell : current.paralelo?.sell;
+      if (current.updatedAt && liveBuy !== null && liveBuy !== undefined && liveSell !== null && liveSell !== undefined) {
+        liveRows = [{
+          date: current.updatedAt,
+          buy_avg: liveBuy,
+          sell_avg: liveSell,
+          sources_count: kind === 'OFICIAL'
+            ? current.oficial?.sources_count ?? 0
+            : current.paralelo?.sampleSize ?? 0
+        }];
+      }
+    } catch (error) {
+      console.warn('[site-data] live history row unavailable', String(error));
     }
-  } catch (error) {
-    console.warn('[site-data] live history row unavailable', String(error));
   }
 
   return { data: dailyRows([...publicHistory, ...storedData, ...liveRows]) };

@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { clearCache } from '../lib/engine/cache';
 import type { Sample } from '../lib/engine/types';
 
@@ -35,6 +35,7 @@ function makeSamples(side: Sample['side'], count: number, priceBase: number): Sa
 
 beforeEach(() => {
   process.env.ENABLE_RATE_DB = 'true';
+  delete process.env.NEXT_PHASE;
   clearCache('latest');
   clearCache('bcb');
   clearCache('binance');
@@ -43,6 +44,10 @@ beforeEach(() => {
   getLatestRunMock.mockReset();
   getRun24hAgoMock.mockReset();
   saveRunMock.mockReset();
+});
+
+afterEach(() => {
+  delete process.env.NEXT_PHASE;
 });
 
 describe('computeLatest (DB down)', () => {
@@ -67,5 +72,27 @@ describe('computeLatest (DB down)', () => {
     expect(result.delta.vs_24h).toBeNull();
     expect(result.quality.status).toBe('DEGRADED');
     expect(result.quality.notes ?? '').toContain('DB unavailable');
+  });
+
+  it('does not open or persist database records during the production build', async () => {
+    process.env.NEXT_PHASE = 'phase-production-build';
+    fetchBCBMock.mockResolvedValue({
+      official_rate: 6.96,
+      timestamp: new Date('2024-01-01T00:00:00Z'),
+      source: 'BCB',
+      meta: { dateText: null, compraText: null, ventaText: null }
+    });
+    fetchBinanceP2PMock.mockResolvedValue([
+      ...makeSamples('buy', 20, 7),
+      ...makeSamples('sell', 20, 7.1)
+    ]);
+
+    const { computeLatest } = await import('../lib/engine/priceEngine');
+    const { result } = await computeLatest();
+
+    expect(result.quality.status).toBe('OK');
+    expect(getLatestRunMock).not.toHaveBeenCalled();
+    expect(getRun24hAgoMock).not.toHaveBeenCalled();
+    expect(saveRunMock).not.toHaveBeenCalled();
   });
 });
