@@ -35,6 +35,8 @@ export async function POST(request: Request) {
     frequency: body.frequency,
     thresholdPct: body.thresholdPct
   });
+  const tcoAlerts = body.tcoAlerts === true;
+  const tcoProInterest = body.tcoProInterest === true;
   if (!email || !preferences || body.consent !== true) {
     return NextResponse.json({ ok: false, error: 'invalid_subscription' }, { status: 400 });
   }
@@ -45,12 +47,17 @@ export async function POST(request: Request) {
   const source = typeof body.source === 'string' ? body.source.slice(0, 80) : 'unknown';
   const existing = await prisma.alertSubscription.findUnique({ where: { email } });
 
-  if (existing?.status === 'ACTIVE') {
+  const needsTcoConfirmation = Boolean(
+    existing?.status === 'ACTIVE' && tcoAlerts && !existing.tco_alerts
+  );
+  if (existing?.status === 'ACTIVE' && !needsTcoConfirmation) {
     await prisma.alertSubscription.update({
       where: { id: existing.id },
       data: {
         frequency: preferences.frequency,
         threshold_pct: preferences.thresholdPct,
+        tco_alerts: tcoAlerts,
+        tco_pro_interest: tcoProInterest,
         consent_at: new Date(),
         source
       }
@@ -66,6 +73,8 @@ export async function POST(request: Request) {
       status: 'PENDING',
       frequency: preferences.frequency,
       threshold_pct: preferences.thresholdPct,
+      tco_alerts: tcoAlerts,
+      tco_pro_interest: tcoProInterest,
       consent_at: new Date(),
       confirmation_token_hash: hashAlertValue(confirmationToken),
       unsubscribe_token: unsubscribeToken,
@@ -76,6 +85,8 @@ export async function POST(request: Request) {
       status: 'PENDING',
       frequency: preferences.frequency,
       threshold_pct: preferences.thresholdPct,
+      tco_alerts: tcoAlerts,
+      tco_pro_interest: tcoProInterest,
       consent_at: new Date(),
       confirmed_at: null,
       confirmation_token_hash: hashAlertValue(confirmationToken),
@@ -92,7 +103,9 @@ export async function POST(request: Request) {
   const delivery = await sendAlertEmail(confirmationEmail({
     email,
     confirmUrl: confirmUrl.toString(),
-    frequencyLabel
+    frequencyLabel: tcoAlerts
+      ? `${frequencyLabel} y movimientos relevantes del TCO bancario`
+      : frequencyLabel
   }));
 
   return NextResponse.json(

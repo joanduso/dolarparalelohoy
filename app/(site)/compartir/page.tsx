@@ -156,12 +156,13 @@ export default async function SharePage({
             </p>
           </div>
 
-          <div className="card grid gap-5 p-5 sm:p-6">
+          <div id="alertas" className="card grid scroll-mt-28 gap-5 p-5 sm:p-6">
             <div className="grid gap-2">
               <p className="kicker">Alertas gratuitas</p>
-              <h2 className="font-serif text-2xl">Recibe la cotización sin tener que buscarla</h2>
+              <h2 className="font-serif text-2xl">Recibe la cotización y los movimientos del TCO</h2>
               <p className="max-w-2xl text-ink/70">
-                Elige un resumen diario o recibe un aviso únicamente cuando el precio cambie de forma relevante.
+                Elige un resumen diario o recibe un aviso únicamente cuando el precio cambie de
+                forma relevante. También puedes activar el radar de operaciones bancarias del BCB.
               </p>
             </div>
             {searchParams?.alert === 'confirmed' ? (

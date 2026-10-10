@@ -78,6 +78,35 @@ export function dailyAlertEmail(input: {
   };
 }
 
+export function tcoAlertEmail(input: {
+  email: string;
+  cutoffDate: string;
+  tco: string;
+  change: string;
+  totalUsd: string;
+  leadingBank: string;
+  leadingShare: string;
+  explanation: string;
+  detailUrl: string;
+  sourceUrl: string;
+  unsubscribeUrl: string;
+}) {
+  const safeDetailUrl = escapeHtml(input.detailUrl);
+  const safeSourceUrl = escapeHtml(input.sourceUrl);
+  const safeUnsubscribeUrl = escapeHtml(input.unsubscribeUrl);
+  const summary = `Nuevo corte ${input.cutoffDate}: TCO ${input.tco}, cambio ${input.change}. ${input.explanation}`;
+
+  return {
+    to: input.email,
+    subject: `Alerta TCO: ${input.change} · nuevo nivel ${input.tco}`,
+    text: `${summary}\n\nVolumen: ${input.totalUsd}. Mayor participación: ${input.leadingBank} (${input.leadingShare}).\n\nVer análisis: ${input.detailUrl}\nFuente oficial: ${input.sourceUrl}\nDarme de baja: ${input.unsubscribeUrl}\n\nInformación referencial; no constituye una recomendación financiera.`,
+    html: `<p style="font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#6b7280">Alerta TCO · Banco Central de Bolivia</p><h1>El nuevo TCO es ${escapeHtml(input.tco)}</h1><p><strong>Cambio:</strong> ${escapeHtml(input.change)}<br><strong>Fecha de corte:</strong> ${escapeHtml(input.cutoffDate)}<br><strong>Volumen:</strong> ${escapeHtml(input.totalUsd)}</p><p><strong>Mayor participación:</strong> ${escapeHtml(input.leadingBank)} (${escapeHtml(input.leadingShare)}).</p><p>${escapeHtml(input.explanation)}</p><p><a href="${safeDetailUrl}">Ver la radiografía del TCO bancario</a></p><p style="font-size:12px;color:#6b7280">Datos: <a href="${safeSourceUrl}">Banco Central de Bolivia</a>. Información referencial; no constituye una recomendación financiera.</p><hr><p><a href="${safeUnsubscribeUrl}">Darme de baja</a></p>`,
+    idempotencyKey: `tco-${input.email}-${input.cutoffDate}`
+      .replace(/[^a-zA-Z0-9_-]/g, '-')
+      .slice(0, 250)
+  };
+}
+
 export async function sendAlertEmail(message: EmailMessage): Promise<EmailDeliveryResult> {
   const config = emailConfig();
   if (!config) return { sent: false, reason: 'not_configured' };

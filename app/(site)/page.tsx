@@ -609,7 +609,8 @@ export default function HomePage() {
             <Link href="/brecha" className="text-link">Brecha cambiaria</Link>
             <Link href="/usdt-bob" className="text-link">Conversor USDT a BOB</Link>
             <Link href="/calculadora-dolar-bolivia" className="text-link">Calculadora dólar a bolivianos</Link>
-            <Link href="/dolar-blue-bolivia" className="text-link">Dólar blue Bolivia</Link>
+            <Link href="/dolar-blue-bolivia" className="text-link">Dólar blue hoy en Bolivia</Link>
+            <Link href="/tco-bancos-bolivia" className="text-link">TCO por banco</Link>
             <Link href="/exchanges" className="text-link">Comparar exchanges</Link>
             <Link href="/binance-p2p-bolivia" className="text-link">Binance P2P Bolivia</Link>
             <Link href="/historico/paralelo" className="text-link">Histórico paralelo</Link>

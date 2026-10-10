@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Script from 'next/script';
 import { Alegreya, Commissioner } from 'next/font/google';
 import './globals.css';
-import { siteConfig } from '@/lib/seo';
+import { publicRepositoryUrl, siteConfig } from '@/lib/seo';
 import { Logo } from '@/components/Logo';
 import { MobileTabBar } from '@/components/MobileTabBar';
 
@@ -113,7 +113,15 @@ export default function RootLayout({
         name: siteConfig.name,
         alternateName: siteConfig.shortName,
         url: siteConfig.url,
-        logo: { '@type': 'ImageObject', url: `${siteConfig.url}/icon.png` }
+        logo: { '@type': 'ImageObject', url: `${siteConfig.url}/icon.png` },
+        sameAs: [publicRepositoryUrl],
+        knowsAbout: [
+          'Tipo de cambio en Bolivia',
+          'Dólar paralelo en Bolivia',
+          'Mercados P2P USDT/BOB',
+          'Series históricas cambiarias'
+        ],
+        publishingPrinciples: `${siteConfig.url}/acerca-de#politica-editorial`
       }
     ]
   };
@@ -122,6 +130,18 @@ export default function RootLayout({
     <html lang="es" className={`${serif.variable} ${sans.variable}`}>
       <head>
         <meta charSet="utf-8" />
+        <link
+          rel="alternate"
+          type="application/json"
+          href={`${siteConfig.url}/api/v1/rates/current`}
+          title="Cotización actual del dólar en Bolivia"
+        />
+        <link
+          rel="alternate"
+          type="text/plain"
+          href={`${siteConfig.url}/llms.txt`}
+          title="Guía para asistentes y agentes"
+        />
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
           strategy="afterInteractive"
@@ -215,7 +235,10 @@ export default function RootLayout({
                   Conversor USDT/BOB
                 </Link>
                 <Link href="/dolar-blue-bolivia" className="underline underline-offset-4">
-                  Dólar blue Bolivia
+                  Dólar blue hoy en Bolivia
+                </Link>
+                <Link href="/tco-bancos-bolivia" className="underline underline-offset-4">
+                  TCO por banco
                 </Link>
                 <Link href="/exchanges" className="underline underline-offset-4">
                   Comparar exchanges
@@ -244,6 +267,9 @@ export default function RootLayout({
                 </Link>
                 <Link href="/fuentes" className="underline underline-offset-4">
                   Fuentes
+                </Link>
+                <Link href="/acerca-de" className="underline underline-offset-4">
+                  Quiénes somos
                 </Link>
                 <Link href="/calculadora-dolar-bolivia" className="underline underline-offset-4">
                   Calculadora dólar a bolivianos

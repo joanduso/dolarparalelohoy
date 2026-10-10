@@ -54,6 +54,15 @@ export default function DevsPage() {
             en <Link href="/fuentes" className="underline underline-offset-4">fuentes</Link>. Los datos se
             actualizan cada 10 minutos; el histórico consolida promedios diarios.
           </p>
+          <p className="text-sm text-ink/60 max-w-3xl">
+            Los endpoints públicos versionados bajo <span className="text-ink">/api/v1/</span>{' '}
+            están disponibles para buscadores y agentes. Comprueba siempre{' '}
+            <span className="text-ink">updatedAt</span>, <span className="text-ink">status</span> y{' '}
+            <span className="text-ink">freshness.freshUntil</span> antes de citar un valor actual.
+          </p>
+          <Link href="/llms.txt" className="text-sm underline underline-offset-4">
+            Ver instrucciones para asistentes y agentes
+          </Link>
         </div>
 
         <div className="card p-6 grid gap-4">
@@ -141,6 +150,10 @@ export default function DevsPage() {
   "paralelo": { "buy": 12.4, "sell": 12.6, "sources_count": 1, "sampleSize": 72 },
   "oficial": { "buy": 6.96, "sell": 6.96, "sources_count": 1 },
   "brecha": { "gap_abs": 5.64, "gap_pct": 81.03 },
+  "freshness": {
+    "maxAgeSeconds": 600,
+    "freshUntil": "2026-01-29T13:50:00.000Z"
+  },
   "notes": null
 }`}
             </pre>
@@ -186,6 +199,20 @@ export default function DevsPage() {
   ]
 }`}
             </pre>
+          </div>
+
+          <div className="card p-6 grid gap-4">
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="px-2 py-1 rounded-full border text-xs border-emerald-200 text-emerald-700 bg-emerald-50">
+                GET
+              </span>
+              <span className="text-sm text-ink/70">/brecha/latest y /brecha/history</span>
+            </div>
+            <p className="text-ink/70">
+              Brecha actual e histórica entre la venta paralela y el tipo oficial. El histórico
+              acepta el parámetro <span className="text-ink">days</span>, hasta 900 días.
+            </p>
+            <ApiTryLink href={`${baseUrl}/brecha/latest`} label="Probar la brecha actual en JSON" />
           </div>
 
           <div className="card p-6 grid gap-4">

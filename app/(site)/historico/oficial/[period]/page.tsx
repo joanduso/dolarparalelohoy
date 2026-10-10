@@ -3,7 +3,7 @@ import { JsonLd } from '@/app/(site)/_components/JsonLd';
 import { Breadcrumbs } from '@/app/(site)/_components/Breadcrumbs';
 import { SeoFaq, type SeoFaqItem } from '@/app/(site)/_components/SeoFaq';
 import { TrendSummary } from '@/app/(site)/_components/TrendSummary';
-import { siteConfig } from '@/lib/seo';
+import { dataLicensePage, dataLicenseUrl, siteConfig } from '@/lib/seo';
 import { getSiteData } from '@/lib/siteData';
 import { formatCalendarDate, formatCurrency } from '@/lib/format';
 import { computeTrend } from '@/lib/trend';
@@ -72,7 +72,14 @@ export default async function HistoricoOficialPeriodPage({
     url: `${siteConfig.url}/historico/oficial/${period.slug}`,
     inLanguage: siteConfig.language,
     creator: { '@id': `${siteConfig.url}/#organization` },
-    license: `${siteConfig.url}/terminos`
+    license: dataLicenseUrl,
+    acquireLicensePage: dataLicensePage,
+    isAccessibleForFree: true,
+    distribution: {
+      '@type': 'DataDownload',
+      encodingFormat: 'application/json',
+      contentUrl: `${siteConfig.url}/api/v1/rates/history?kind=OFICIAL&days=${period.days}`
+    }
   };
 
   const faqItems: SeoFaqItem[] = [

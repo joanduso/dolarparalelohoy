@@ -163,9 +163,13 @@ model AlertSubscription {
   unsubscribe_token       String                  @unique
   source                  String?
   last_sent_at            DateTime?
+  tco_alerts              Boolean                 @default(false)
+  tco_pro_interest        Boolean                 @default(false)
+  last_tco_alert_cutoff   String?
   created_at              DateTime                @default(now())
   updated_at              DateTime                @updatedAt
 
   @@index([status, frequency])
+  @@index([status, tco_alerts])
   @@index([confirmation_token_hash])
 }

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { sendAlertEmail, sendAlertEmailBatch } from '../lib/alertEmail';
+import { sendAlertEmail, sendAlertEmailBatch, tcoAlertEmail } from '../lib/alertEmail';
 
 const message = {
   to: 'persona@example.com',
@@ -15,6 +15,26 @@ afterEach(() => {
 });
 
 describe('alert email providers', () => {
+  it('builds an attributable TCO alert with unsubscribe support', () => {
+    const alert = tcoAlertEmail({
+      email: 'persona@example.com',
+      cutoffDate: '2 de octubre de 2026',
+      tco: 'Bs 12,00',
+      change: '+Bs 0,10',
+      totalUsd: 'USD 30,2 M',
+      leadingBank: 'Mercantil Santa Cruz',
+      leadingShare: '19,8%',
+      explanation: 'El movimiento fue conjunto.',
+      detailUrl: 'https://dolarparalelohoy.com/#bancos-tco-title',
+      sourceUrl: 'https://www.bcb.gob.bo/',
+      unsubscribeUrl: 'https://dolarparalelohoy.com/api/alerts/unsubscribe?token=test'
+    });
+
+    expect(alert.subject).toContain('+Bs 0,10');
+    expect(alert.html).toContain('Banco Central de Bolivia');
+    expect(alert.text).toContain('Darme de baja');
+  });
+
   it('uses Brevo first and maps sender and content to its API', async () => {
     vi.stubEnv('BREVO_API_KEY', 'brevo-key');
     vi.stubEnv('RESEND_API_KEY', 'resend-key');

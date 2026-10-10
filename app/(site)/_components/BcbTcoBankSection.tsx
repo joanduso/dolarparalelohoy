@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import {
   fetchRecentBcbTcoBreakdowns,
   type BcbBankBreakdown,
@@ -58,9 +59,10 @@ function formatValidity(value: string) {
 
 function ratePosition(bank: BcbBankBreakdown, tco: number) {
   if (bank.medianRate === null) return { label: 'Sin mediana', tone: 'bg-ink/35' };
-  if (bank.medianRate < tco) return { label: 'Mediana bajo el TCO', tone: 'bg-signal/70' };
-  if (bank.medianRate > tco) return { label: 'Mediana sobre el TCO', tone: 'bg-moss/75' };
-  return { label: 'Mediana en el TCO', tone: 'bg-sun' };
+  const rate = `Mediana Bs ${formatNumber(bank.medianRate, 2)}`;
+  if (bank.medianRate < tco) return { label: `${rate} · bajo el TCO`, tone: 'bg-signal/70' };
+  if (bank.medianRate > tco) return { label: `${rate} · sobre el TCO`, tone: 'bg-moss/75' };
+  return { label: `${rate} · en el TCO`, tone: 'bg-sun' };
 }
 
 function BankRow({
@@ -121,8 +123,11 @@ function BankRow({
           {position.label}
         </span>
         {changedResult ? (
-          <span className="rounded-full bg-signal/10 px-2.5 py-1 text-xs font-semibold text-signal">
-            Efecto {bank.effectCents && bank.effectCents > 0 ? '+' : ''}
+          <span
+            className="rounded-full bg-signal/10 px-2.5 py-1 text-xs font-semibold text-signal"
+            title={bank.tcoWithoutBank === null ? undefined : `TCO recalculado sin este banco: Bs ${formatNumber(bank.tcoWithoutBank, 2)}`}
+          >
+            Variación si se excluye: {bank.effectCents && bank.effectCents > 0 ? '+' : ''}
             {formatNumber(bank.effectCents ?? 0, 2)} ctvs.
           </span>
         ) : null}
@@ -230,8 +235,15 @@ function TcoTrendPanel({ points }: { points: BcbTcoBreakdown[] }) {
   );
 }
 
-function TcoSensitivityPanel({ data }: { data: BcbTcoBreakdown }) {
+function TcoSensitivityPanel({
+  data,
+  headingLevel = 3
+}: {
+  data: BcbTcoBreakdown;
+  headingLevel?: 2 | 3;
+}) {
   const { sensitivity } = data;
+  const Heading = headingLevel === 2 ? 'h2' : 'h3';
   const total = Math.max(data.totalUsd, 1);
   const displayShares = [
     {
@@ -256,9 +268,9 @@ function TcoSensitivityPanel({ data }: { data: BcbTcoBreakdown }) {
       <div className="grid gap-4 border-b border-black/[0.07] p-5 sm:p-6 lg:grid-cols-[1fr_auto] lg:items-end">
         <div>
           <p className="kicker">Simulación del corte actual</p>
-          <h3 id="umbral-tco-title" className="mt-2 font-serif text-2xl sm:text-3xl">
+          <Heading id="umbral-tco-title" className="mt-2 font-serif text-2xl sm:text-3xl">
             ¿Cuánto volumen cambiaría el TCO?
-          </h3>
+          </Heading>
           <p className="mt-2 max-w-3xl text-sm leading-relaxed text-ink/60">
             Estima compras adicionales necesarias para que el TCO publicado deje Bs{' '}
             {formatNumber(data.tco, 2)}. Mantiene sin cambios todas las operaciones ya reportadas;
@@ -361,7 +373,13 @@ function TcoSensitivityPanel({ data }: { data: BcbTcoBreakdown }) {
   );
 }
 
-function DailyPressurePanel({ series }: { series: BcbTcoBreakdown[] }) {
+function DailyPressurePanel({
+  series,
+  headingLevel = 3
+}: {
+  series: BcbTcoBreakdown[];
+  headingLevel?: 2 | 3;
+}) {
   const points = series.slice(-10);
   if (!points.length) return null;
 
@@ -386,15 +404,16 @@ function DailyPressurePanel({ series }: { series: BcbTcoBreakdown[] }) {
     : versusAverage <= -15
       ? 'por debajo del ritmo reciente'
       : 'en línea con el ritmo reciente';
+  const Heading = headingLevel === 2 ? 'h2' : 'h3';
 
   return (
     <section className="card overflow-hidden" aria-labelledby="presion-diaria-title">
       <div className="grid gap-4 border-b border-black/[0.07] p-5 sm:p-6 lg:grid-cols-[1fr_auto] lg:items-end">
         <div>
           <p className="kicker">Ritmo del mercado</p>
-          <h3 id="presion-diaria-title" className="mt-2 font-serif text-2xl sm:text-3xl">
+          <Heading id="presion-diaria-title" className="mt-2 font-serif text-2xl sm:text-3xl">
             Presión diaria de compra
-          </h3>
+          </Heading>
           <p className="mt-2 max-w-3xl text-sm leading-relaxed text-ink/60">
             Volumen de dólares comprado por los bancos en cada corte. Sirve como indicador de
             actividad: no mide por sí solo escasez, demanda insatisfecha ni dirección futura del TCO.
@@ -525,18 +544,24 @@ export function BcbTcoBankFallback() {
   );
 }
 
-export async function BcbTcoBankSection() {
+export async function BcbTcoBankSection({
+  standalone = false
+}: {
+  standalone?: boolean;
+} = {}) {
   const series = await fetchRecentBcbTcoBreakdowns(10);
   const data = series.at(-1);
+  const Heading = standalone ? 'h1' : 'h2';
+  const Subheading = standalone ? 'h2' : 'h3';
 
   if (!data) {
     return (
       <section className="card grid gap-4 p-6 sm:p-8" aria-labelledby="bancos-tco-title">
         <div>
           <p className="kicker">Datos oficiales explicados</p>
-          <h2 id="bancos-tco-title" className="mt-2 font-serif text-3xl sm:text-4xl">
-            Radiografía del TCO bancario
-          </h2>
+          <Heading id="bancos-tco-title" className="mt-2 font-serif text-3xl sm:text-4xl">
+            {standalone ? 'Qué bancos compraron más dólares en Bolivia' : 'Radiografía del TCO bancario'}
+          </Heading>
         </div>
         <p className="max-w-3xl leading-relaxed text-ink/65">
           El detalle de operaciones bancarias del BCB no está disponible en este momento. El
@@ -573,13 +598,26 @@ export async function BcbTcoBankSection() {
     <section id="radiografia-tco" className="grid scroll-mt-24 gap-6" aria-labelledby="bancos-tco-title">
       <div className="section-heading">
         <div>
-          <p className="kicker">Datos oficiales explicados</p>
-          <h2 id="bancos-tco-title">Radiografía del TCO bancario</h2>
+          <p className="kicker">{standalone ? 'TCO por banco' : 'Datos oficiales explicados'}</p>
+          <Heading
+            id="bancos-tco-title"
+            className="font-serif text-3xl leading-tight sm:text-4xl"
+          >
+            {standalone ? 'Qué bancos compraron más dólares en Bolivia' : 'Radiografía del TCO bancario'}
+          </Heading>
         </div>
-        <p className="max-w-xl text-sm leading-relaxed text-ink/60">
-          Explica cómo las compras de dólares reportadas por los bancos forman el TCO oficial.
-          Muestra concentración y sensibilidad; no atribuye el resultado a una sola entidad.
-        </p>
+        <div className="max-w-xl text-sm leading-relaxed text-ink/60">
+          <p>
+            {standalone
+              ? `${leadingBank.shortName} concentró ${formatNumber(leadingBank.sharePct, 1)}% del volumen del corte del ${formatCalendarDate(data.cutoffDate)}, con USD ${formatUsd(leadingBank.usd)} comprados. El TCO publicado fue Bs ${formatNumber(data.tco, 2)}.`
+              : 'Explica cómo las compras de dólares reportadas por los bancos forman el TCO oficial. Muestra concentración y sensibilidad; no atribuye el resultado a una sola entidad.'}
+          </p>
+          {!standalone ? (
+            <Link href="/tco-bancos-bolivia" className="text-link mt-2 inline-block font-semibold">
+              Ver análisis completo por banco
+            </Link>
+          ) : null}
+        </div>
       </div>
 
       <div className="overflow-hidden rounded-[1.75rem] border border-white/70 bg-white/75 shadow-lift backdrop-blur-xl">
@@ -642,15 +680,17 @@ export async function BcbTcoBankSection() {
         </div>
       </div>
 
-      <DailyPressurePanel series={series} />
+      <DailyPressurePanel series={series} headingLevel={standalone ? 2 : 3} />
 
-      <TcoSensitivityPanel data={data} />
+      <TcoSensitivityPanel data={data} headingLevel={standalone ? 2 : 3} />
 
       <div className="card overflow-hidden">
         <div className="grid gap-4 border-b border-black/[0.07] p-5 sm:p-6 lg:grid-cols-[1fr_auto] lg:items-end">
           <div>
             <p className="kicker">Distribución del mercado</p>
-            <h3 className="mt-2 font-serif text-2xl sm:text-3xl">Quién concentró las compras</h3>
+            <Subheading className="mt-2 font-serif text-2xl sm:text-3xl">
+              Qué bancos compraron más dólares
+            </Subheading>
             <p className="mt-2 max-w-3xl text-sm leading-relaxed text-ink/60">
               La primera fila suma las operaciones y montos de todos los bancos. Después se ordena
               cada entidad por dólares comprados y se muestra su tipo de cambio promedio. La

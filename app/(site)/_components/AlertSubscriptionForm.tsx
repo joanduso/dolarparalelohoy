@@ -22,6 +22,8 @@ export function AlertSubscriptionForm() {
           email: form.get('email'),
           frequency,
           thresholdPct: form.get('threshold_pct'),
+          tcoAlerts: form.get('tco_alerts') === 'on',
+          tcoProInterest: form.get('tco_pro_interest') === 'on',
           consent: form.get('consent') === 'on',
           website: form.get('website'),
           source: 'share_page'
@@ -38,12 +40,16 @@ export function AlertSubscriptionForm() {
         method: 'email',
         content_type: 'rate_alert',
         alert_frequency: frequency.toLowerCase(),
+        tco_alerts: form.get('tco_alerts') === 'on',
+        tco_pro_interest: form.get('tco_pro_interest') === 'on',
         delivery: data.delivery ?? 'unknown'
       });
       analyticsWindow.gtag?.('event', 'generate_lead', {
         method: 'email',
         content_type: 'rate_alert',
         alert_frequency: frequency.toLowerCase(),
+        tco_alerts: form.get('tco_alerts') === 'on',
+        tco_pro_interest: form.get('tco_pro_interest') === 'on',
         delivery: data.delivery ?? 'unknown'
       });
     } catch {
@@ -117,6 +123,28 @@ export function AlertSubscriptionForm() {
         </label>
       ) : null}
 
+      <label className="flex cursor-pointer gap-3 rounded-xl border border-sun/40 bg-sun/10 p-4">
+        <input name="tco_alerts" type="checkbox" defaultChecked className="mt-1" />
+        <span>
+          <strong className="block">Alertarme si un banco mueve el TCO</strong>
+          <span className="text-sm text-ink/60">
+            Recibirás un aviso cuando el TCO cambie al menos Bs 0,05, un banco altere la mediana
+            en 5 centavos o concentre 35% del volumen.
+          </span>
+        </span>
+      </label>
+
+      <label className="flex gap-3 rounded-xl border border-ink/10 bg-white p-4">
+        <input name="tco_pro_interest" type="checkbox" className="mt-1" />
+        <span>
+          <strong className="block">Me interesa Radar TCO Pro</strong>
+          <span className="text-sm text-ink/60">
+            Quiero conocer una futura versión con históricos por banco, umbrales personalizados,
+            exportaciones y API. Marcarlo no implica ningún cobro.
+          </span>
+        </span>
+      </label>
+
       <input
         name="website"
         tabIndex={-1}
@@ -128,7 +156,7 @@ export function AlertSubscriptionForm() {
       <label className="flex gap-3 text-sm text-ink/70">
         <input name="consent" type="checkbox" required className="mt-1" />
         <span>
-          Acepto recibir la cotización seleccionada. Puedo darme de baja desde cualquier correo.
+          Acepto recibir las alertas seleccionadas. Puedo darme de baja desde cualquier correo.
           Consulta la{' '}
           <Link href="/privacidad" className="underline underline-offset-4">
             política de privacidad

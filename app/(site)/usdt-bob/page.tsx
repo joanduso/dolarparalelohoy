@@ -8,7 +8,7 @@ import { SeoFaq, type SeoFaqItem } from '@/app/(site)/_components/SeoFaq';
 import { formatCurrency, formatDateTime } from '@/lib/format';
 import { getParallelQuote } from '@/lib/p2pIndex';
 import { getSiteData } from '@/lib/siteData';
-import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
+import { dataLicensePage, dataLicenseUrl, pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
 
 type CurrentRates = { oficial: { sell: number | null } | null };
 
@@ -65,8 +65,15 @@ export default async function UsdtBobPage() {
         url: `${siteConfig.url}/usdt-bob`,
         dateModified: updatedAt?.toISOString(),
         creator: { '@id': `${siteConfig.url}/#organization` },
-        license: `${siteConfig.url}/terminos`,
+        license: dataLicenseUrl,
+        acquireLicensePage: dataLicensePage,
+        isAccessibleForFree: true,
         isBasedOn: `${siteConfig.url}/fuentes`,
+        distribution: {
+          '@type': 'DataDownload',
+          encodingFormat: 'application/json',
+          contentUrl: `${siteConfig.url}/api/v1/rates/current`
+        },
         variableMeasured: quote
           ? [
               { '@type': 'PropertyValue', name: 'Compra USDT/BOB', value: quote.buy, unitText: 'BOB por USDT' },

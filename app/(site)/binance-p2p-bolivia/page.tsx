@@ -6,7 +6,7 @@ import { P2PCalculator } from '@/app/(site)/_components/P2PCalculator';
 import { SeoFaq, type SeoFaqItem } from '@/app/(site)/_components/SeoFaq';
 import { formatCurrency, formatDateTime, formatNumber } from '@/lib/format';
 import { fetchPlatformRates } from '@/lib/platformRates';
-import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
+import { dataLicensePage, dataLicenseUrl, pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
 
 export const revalidate = 600;
 
@@ -29,7 +29,7 @@ export default async function BinanceP2PBoliviaPage() {
     '@context': 'https://schema.org',
     '@graph': [
       { '@type': 'WebPage', name: pageTitles.binanceP2p, description: pageDescriptions.binanceP2p, url: `${siteConfig.url}/binance-p2p-bolivia`, inLanguage: siteConfig.locale, dateModified: binance?.updatedAt },
-      { '@type': 'Dataset', name: 'Referencia Binance P2P USDT/BOB', description: 'Mediana informativa de anuncios públicos de compra y venta USDT/BOB.', url: `${siteConfig.url}/binance-p2p-bolivia`, dateModified: binance?.updatedAt, creator: { '@id': `${siteConfig.url}/#organization` }, license: `${siteConfig.url}/terminos`, isBasedOn: `${siteConfig.url}/fuentes` }
+      { '@type': 'Dataset', name: 'Referencia Binance P2P USDT/BOB', description: 'Mediana informativa de anuncios públicos de compra y venta USDT/BOB.', url: `${siteConfig.url}/binance-p2p-bolivia`, dateModified: binance?.updatedAt, creator: { '@id': `${siteConfig.url}/#organization` }, license: dataLicenseUrl, acquireLicensePage: dataLicensePage, isAccessibleForFree: true, isBasedOn: `${siteConfig.url}/fuentes` }
     ]
   };
 

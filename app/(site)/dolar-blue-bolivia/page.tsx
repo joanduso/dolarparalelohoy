@@ -12,6 +12,8 @@ import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
 
 type CurrentRates = { oficial: { sell: number | null } | null };
 
+export const revalidate = 600;
+
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: { absolute: pageTitles.dolarBlue },
@@ -65,10 +67,12 @@ export default async function DolarBlueBoliviaPage() {
         <div className="grid gap-3 max-w-3xl">
           <p className="kicker">Referencia de mercado</p>
           <h1 className="font-serif text-3xl sm:text-4xl">
-            Dólar blue Bolivia hoy: precio de compra y venta
+            Dólar blue hoy en Bolivia: precio de compra y venta
           </h1>
           <p className="text-ink/70">
-            En Bolivia, “dólar blue” suele referirse al precio paralelo o de mercado. Aquí lo explicamos con una referencia P2P visible, separada de la cotización oficial.
+            Consulta la compra y venta del dólar blue hoy, la hora de actualización y su
+            diferencia frente al tipo de cambio oficial del BCB. La referencia P2P se muestra por
+            separado porque no es una cotización oficial ni bancaria.
           </p>
         </div>
 

@@ -47,6 +47,11 @@ describe('/api/rates/current live source behavior', () => {
     expect(payload.oficial.sell).toBe(11);
     expect(payload.paralelo.buy).toBe(11.44);
     expect(payload.sources).toEqual({ bcb: 'OK', binance_p2p: 'OK' });
+    expect(payload.freshness).toEqual({
+      maxAgeSeconds: 600,
+      freshUntil: '2026-07-22T16:38:17.000Z'
+    });
     expect(response.headers.get('vercel-cdn-cache-control')).toContain('s-maxage=600');
+    expect(response.headers.get('vercel-cdn-cache-control')).toContain('stale-while-revalidate=60');
   });
 });

@@ -14,6 +14,10 @@ export const siteConfig = {
   language: 'es'
 };
 
+export const dataLicenseUrl = 'https://creativecommons.org/licenses/by/4.0/';
+export const dataLicensePage = `${siteConfig.url}/fuentes#licencia-de-uso-de-datos`;
+export const publicRepositoryUrl = 'https://github.com/joanduso/dolarparalelohoy';
+
 export const siteRoutes = [
   '',
   '/paralelo',
@@ -23,6 +27,7 @@ export const siteRoutes = [
   '/eur-bob',
   '/btc-bob',
   '/dolar-blue-bolivia',
+  '/tco-bancos-bolivia',
   '/calculadora-dolar-bolivia',
   '/binance-p2p-bolivia',
   '/exchanges',
@@ -33,6 +38,7 @@ export const siteRoutes = [
   '/comprar-usdt-bolivia',
   '/bancos-usdt-bolivia',
   '/que-es-dolar-blue-bolivia',
+  '/acerca-de',
   '/faq',
   '/fuentes',
   '/widget',
@@ -51,7 +57,8 @@ export const pageTitles = {
   usdtBob: 'USDT a BOB hoy: conversor y cotización P2P Bolivia',
   eurBob: 'Euro a bolivianos hoy: tipo de cambio oficial BCB',
   btcBob: 'Bitcoin a bolivianos hoy: precio BTC en Bs',
-  dolarBlue: 'Dólar Blue Bolivia Hoy: Precio, Compra y Venta',
+  dolarBlue: 'Dólar Blue Hoy en Bolivia: Compra y Venta Actualizadas',
+  tcoBancos: 'Qué Bancos Compraron Más Dólares en Bolivia | TCO BCB',
   calculadora: 'Calculadora dólar a bolivianos hoy: oficial y paralelo',
   binanceP2p: 'Binance P2P Bolivia hoy: precio USDT/BOB y guía',
   exchanges: 'Comparador de exchanges P2P Bolivia',
@@ -59,6 +66,7 @@ export const pageTitles = {
   comprarUsdt: 'Cómo comprar USDT en Bolivia 2026: guía completa paso a paso',
   bancosUsdt: 'Qué bancos venden USDT en Bolivia: BCP, BISA, Ganadero, Unión y FIE',
   queEsDolarBlue: 'Qué es el dólar blue y cómo funciona en Bolivia',
+  acercaDe: 'Quiénes somos y política editorial',
   faq: 'Metodología y preguntas frecuentes',
   devs: 'API pública para desarrolladores',
   fuentes: 'Fuentes del dólar en Bolivia',
@@ -86,7 +94,9 @@ export const pageDescriptions = {
   btcBob:
     'Precio de referencia de Bitcoin en bolivianos hoy, calculado a partir del precio de BTC en dólares y nuestro índice del dólar paralelo en Bolivia.',
   dolarBlue:
-    'Consulta el precio del dólar blue en Bolivia hoy: compra, venta y diferencia frente al dólar oficial y la referencia USDT/BOB.',
+    'Consulta el dólar blue en Bolivia hoy: precio de compra y venta P2P, hora de actualización, comparación con el TCO del BCB y calculadora USD a BOB.',
+  tcoBancos:
+    'Consulta qué bancos compraron más dólares en Bolivia, su participación, operaciones y sensibilidad del TCO con datos oficiales del BCB.',
   calculadora:
     'Convierte dólares a bolivianos y bolivianos a dólares con las cotizaciones oficial y paralela de Bolivia, actualizadas hoy.',
   binanceP2p:
@@ -101,6 +111,8 @@ export const pageDescriptions = {
     'Qué bancos bolivianos venden USDT o USDC: BCP, Banco BISA, Banco Ganadero, Banco Unión/Yasta y Banco FIE, con límites, comisiones y requisitos verificados.',
   queEsDolarBlue:
     'Qué es el dólar blue, de dónde viene el término y por qué se usa en Bolivia para describir el mercado paralelo de divisas y el precio de USDT en plataformas P2P.',
+  acercaDe:
+    'Conoce quién publica Dólar Paralelo Hoy Bolivia, cómo se separan datos y publicidad, y los criterios editoriales y de corrección del sitio.',
   faq:
     'Preguntas frecuentes sobre el dólar en Bolivia: metodología de cálculo, validación de fuentes, actualización de datos y avisos legales del sitio.',
   devs:

@@ -130,7 +130,13 @@ El endpoint interno est? en `/api/cron/refresh` y requiere `CRON_SECRET`.
 En Vercel Hobby la cadencia automática es diaria a las 12:00 UTC (08:00 en Bolivia), que es el máximo permitido por ese plan. En Pro puede configurarse una frecuencia mayor.
 
 El mismo cron envía el resumen diario a suscripciones confirmadas después de actualizar las
-cotizaciones. Antes de activarlo, autentica `dolarparalelohoy.com` en Brevo y configura
+cotizaciones y revisa el nuevo corte del TCO del BCB. Las alertas TCO se envían únicamente a
+usuarios que las eligieron y solo cuando el TCO cambia al menos Bs 0,05, un banco altera la
+mediana en 5 centavos o concentra 35% del volumen. El endpoint protegido `/api/cron/tco` permite
+ejecutar solo este monitor con mayor frecuencia si el proyecto pasa a Vercel Pro o incorpora un
+programador externo.
+
+Antes de activarlo, autentica `dolarparalelohoy.com` en Brevo y configura
 `BREVO_API_KEY`, `ALERTS_FROM_EMAIL` y `ALERT_TOKEN_SALT` en Vercel. Durante la migración,
 `RESEND_API_KEY` puede mantenerse como respaldo. Sin un proveedor y remitente configurados, las
 solicitudes se guardan como pendientes y no se envían correos.

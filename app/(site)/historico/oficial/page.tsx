@@ -4,7 +4,7 @@ import { Breadcrumbs } from '@/app/(site)/_components/Breadcrumbs';
 import { ChartCardLazy } from '@/app/(site)/_components/ChartCardLazy';
 import { HistoryHighlights } from '@/app/(site)/_components/HistoryHighlights';
 import { SeoFaq, type SeoFaqItem } from '@/app/(site)/_components/SeoFaq';
-import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
+import { dataLicensePage, dataLicenseUrl, pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
 import { getSiteData } from '@/lib/siteData';
 import { formatCalendarDate, formatCurrency, toCalendarDateString } from '@/lib/format';
 import { computeHistoryStats } from '@/lib/historyStats';
@@ -80,8 +80,15 @@ export default async function HistoricoOficialPage() {
     url: `${siteConfig.url}/historico/oficial`,
     inLanguage: siteConfig.language,
     creator: { '@id': `${siteConfig.url}/#organization` },
-    license: `${siteConfig.url}/terminos`,
+    license: dataLicenseUrl,
+    acquireLicensePage: dataLicensePage,
+    isAccessibleForFree: true,
     isBasedOn: `${siteConfig.url}/fuentes`,
+    distribution: {
+      '@type': 'DataDownload',
+      encodingFormat: 'application/json',
+      contentUrl: `${siteConfig.url}/api/v1/rates/history?kind=OFICIAL&days=365`
+    },
     ...(oldestRow && latestRow
       ? {
           temporalCoverage: `${toCalendarDateString(oldestRow.date)}/${toCalendarDateString(latestRow.date)}`,

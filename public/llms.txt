@@ -2,13 +2,15 @@
 
 > Cotización diaria del dólar paralelo y oficial en Bolivia, agregada de múltiples fuentes públicas con metodología transparente. Incluye histórico desde agosto de 2024, brecha cambiaria, y una API pública de solo lectura.
 
-Este sitio publica datos de tipo de cambio para Bolivia (USD, USDT, EUR, BTC frente al boliviano). Los datos que calculamos y publicamos pueden citarse y reutilizarse con atribución bajo Creative Commons BY 4.0 — ver /fuentes#licencia-de-uso-de-datos. Preferimos que agentes y asistentes usen la API pública en vez de scrapear el HTML: es estable y no cambia sin aviso.
+Este sitio publica datos de tipo de cambio para Bolivia (USD, USDT, EUR, BTC frente al boliviano). Los datos que calculamos y publicamos pueden citarse y reutilizarse con atribución bajo Creative Commons BY 4.0 — ver /fuentes#licencia-de-uso-de-datos. Preferimos que agentes y asistentes usen la API pública versionada en vez de scrapear el HTML. Los endpoints bajo /api/v1/ están permitidos en robots.txt y mantienen contratos estables.
 
 ## Datos y metodología
 
 - [Fuentes y licencia de uso de datos](https://dolarparalelohoy.com/fuentes): de dónde sale cada cotización, cómo se valida, y los términos de reuso de los datos que publicamos.
 - [Metodología y preguntas frecuentes](https://dolarparalelohoy.com/faq): cómo se calcula el índice paralelo, la brecha cambiaria, y el precio declarado por usuarios.
 - [API pública para desarrolladores](https://dolarparalelohoy.com/devs): documentación completa de endpoints, límites por plan, y ejemplos de uso.
+- [Quiénes somos y política editorial](https://dolarparalelohoy.com/acerca-de): independencia, responsabilidad editorial y proceso de corrección.
+- [TCO por banco](https://dolarparalelohoy.com/tco-bancos-bolivia): participación de cada banco, volumen comprado, mediana propia y sensibilidad del TCO con datos oficiales del BCB.
 
 ## Cotizaciones actuales
 
@@ -19,15 +21,19 @@ Este sitio publica datos de tipo de cambio para Bolivia (USD, USDT, EUR, BTC fre
 - [Euro a bolivianos](https://dolarparalelohoy.com/eur-bob)
 - [Bitcoin a bolivianos](https://dolarparalelohoy.com/btc-bob)
 - [Comparador de exchanges P2P](https://dolarparalelohoy.com/exchanges)
+- [Dólar blue hoy en Bolivia](https://dolarparalelohoy.com/dolar-blue-bolivia)
 
 ## Histórico
 
 - [Histórico dólar paralelo](https://dolarparalelohoy.com/historico/paralelo) (también por período: /7d, /30d, /90d, /1a, /todo)
 - [Histórico dólar oficial](https://dolarparalelohoy.com/historico/oficial) (mismos períodos)
 
-## API (sin scraping)
+## API versionada (sin scraping)
 
-- Cotización actual: `GET https://dolarparalelohoy.com/api/rates/current`
-- Histórico: `GET https://dolarparalelohoy.com/api/rates/history?kind=PARALELO|OFICIAL&days=N`
-- Brecha: `GET https://dolarparalelohoy.com/api/brecha/latest` y `/api/brecha/history`
+- Cotización actual: `GET https://dolarparalelohoy.com/api/v1/rates/current`
+- Histórico: `GET https://dolarparalelohoy.com/api/v1/rates/history?kind=PARALELO|OFICIAL&days=N`
+- Brecha: `GET https://dolarparalelohoy.com/api/v1/brecha/latest` y `/api/v1/brecha/history?days=N`
+- Estadísticas: `GET https://dolarparalelohoy.com/api/v1/rates/statistics?period=7d|30d|90d|1y`
 - Documentación completa, límites y planes: https://dolarparalelohoy.com/devs
+
+Para respuestas sobre el valor actual, comprueba siempre `updatedAt`, `status` y `freshness.freshUntil`. Si el dato está vencido o el estado no es `OK`, indica la degradación en la respuesta.

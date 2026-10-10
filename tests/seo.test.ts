@@ -9,6 +9,9 @@ describe('SEO configuration', () => {
     expect(pageTitles.paralelo).toContain('Precio del Dólar Paralelo');
     expect(pageTitles.paralelo).toContain('Índice P2P');
     expect(pageTitles.paralelo).not.toBe(pageTitles.home);
+    expect(pageTitles.dolarBlue).toContain('Dólar Blue Hoy en Bolivia');
+    expect(pageTitles.tcoBancos).toContain('Bancos Compraron Más Dólares');
+    expect(pageTitles.tcoBancos).not.toBe(pageTitles.dolarBlue);
   });
 
   it('lists each canonical, indexable route once in the sitemap', () => {
@@ -22,6 +25,7 @@ describe('SEO configuration', () => {
     expect(urls).toContain(`${siteConfig.url}/calculadora-dolar-bolivia`);
     expect(urls).toContain(`${siteConfig.url}/binance-p2p-bolivia`);
     expect(urls).toContain(`${siteConfig.url}/widget`);
+    expect(urls).toContain(`${siteConfig.url}/tco-bancos-bolivia`);
     expect(urls).not.toContain(`${siteConfig.url}/widget/embed`);
 
     for (const url of urls) {
@@ -31,13 +35,16 @@ describe('SEO configuration', () => {
     }
   });
 
-  it('allows public pages, blocks APIs and advertises the canonical sitemap', () => {
+  it('allows public pages and the versioned read-only API while blocking internal APIs', () => {
     const config = robots();
     const rules = Array.isArray(config.rules) ? config.rules : [config.rules];
 
     expect(config.host).toBe(siteConfig.url);
     expect(config.sitemap).toBe(`${siteConfig.url}/sitemap.xml`);
-    expect(rules.every((rule) => rule.allow === '/')).toBe(true);
+    expect(rules.every((rule) => {
+      const allowed = Array.isArray(rule.allow) ? rule.allow : [rule.allow];
+      return allowed.includes('/') && allowed.includes('/api/v1/');
+    })).toBe(true);
     expect(rules.every((rule) => rule.disallow?.includes('/api/'))).toBe(true);
   });
 });
