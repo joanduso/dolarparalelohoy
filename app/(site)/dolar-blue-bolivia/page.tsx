@@ -44,6 +44,10 @@ export default async function DolarBlueBoliviaPage() {
       answer: 'No. Es una referencia informativa de mercado. Para el tipo de cambio publicado por la autoridad, consulta siempre las referencias oficiales del BCB.'
     },
     {
+      question: '¿Es el precio de billetes de dólar en efectivo?',
+      answer: 'No. La cifra mostrada aquí es una referencia digital USDT/BOB de mercados P2P. Una operación con billetes puede tener otro precio y otras condiciones.'
+    },
+    {
       question: '¿Qué debo comparar antes de cambiar?',
       answer: 'El precio de compra o venta, comisión, monto, método de pago, límites, reputación de la contraparte y condiciones de la plataforma.'
     }
@@ -70,20 +74,24 @@ export default async function DolarBlueBoliviaPage() {
             Dólar blue hoy en Bolivia: precio de compra y venta
           </h1>
           <p className="text-ink/70">
-            Consulta la compra y venta del dólar blue hoy, la hora de actualización y su
-            diferencia frente al tipo de cambio oficial del BCB. La referencia P2P se muestra por
-            separado porque no es una cotización oficial ni bancaria.
+            Aquí «dólar blue» se muestra como referencia digital USDT/BOB de mercados P2P,
+            no como precio de billetes en efectivo. Consulta compra, venta, hora de actualización
+            y diferencia frente al tipo de cambio oficial del BCB.
           </p>
         </div>
 
         <div className="card p-6 grid gap-3">
-          <p className="text-xs uppercase tracking-wide text-ink/50">Referencia P2P actual</p>
+          <p className="text-xs uppercase tracking-wide text-ink/50">Referencia digital USDT/BOB P2P</p>
           <div className="flex flex-wrap gap-x-10 gap-y-3">
             <div><span className="text-sm text-ink/60">Compra</span><p className="text-3xl font-semibold">{quote ? formatCurrency(quote.buy) : '—'}</p></div>
             <div><span className="text-sm text-ink/60">Venta</span><p className="text-3xl font-semibold">{quote ? formatCurrency(quote.sell) : '—'}</p></div>
           </div>
           <p className="text-sm text-ink/60">
             {updatedAt ? `Actualizado ${formatDateTime(updatedAt)} con ${quote?.sourceCount ?? 0} fuentes P2P.` : 'Cotización temporalmente no disponible.'}
+          </p>
+          <p className="text-sm text-ink/60">
+            Es una referencia informativa, no una oferta para comprar o vender dólares.{' '}
+            <Link href="/fuentes" className="underline underline-offset-4">Consulta las fuentes y la metodología</Link>.
           </p>
         </div>
 

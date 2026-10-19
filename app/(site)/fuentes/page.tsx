@@ -55,14 +55,16 @@ export default function FuentesPage() {
         <section className="card p-6 grid gap-3">
           <h2 className="font-serif text-2xl">Índice P2P Bolivia</h2>
           <p className="text-ink/70">
-            El índice paralelo combina cotizaciones públicas disponibles para operaciones con
-            activos digitales y bolivianos. Usamos medianas y filtros de valores atípicos para
-            reducir el efecto de anuncios extremos o con poca liquidez.
+            Para la cotización actual mostramos, cuando hay datos recientes, la mediana
+            multi-exchange publicada por <a className="underline underline-offset-4" href="https://paralelo.bo/" target="_blank" rel="noreferrer">paralelo.bo</a>,
+            junto con su hora y número de fuentes activas. Si ese índice no está disponible,
+            usamos como respaldo temporal una mediana de anuncios de Binance P2P.
           </p>
           <p className="text-ink/70">
-            Cuando una fuente no responde, la página lo indica y evita presentarla como activa.
-            Las cotizaciones son referenciales: el precio final depende del medio de pago, límites,
-            comisiones y condiciones de cada contraparte.
+            La cifra representa operaciones digitales USDT/BOB y no el precio de billetes en
+            efectivo. Cuando falta un dato reciente, la página muestra el respaldo o indica que
+            no hay cotización. El precio final depende del medio de pago, límites, comisiones y
+            condiciones de cada contraparte.
           </p>
           <p className="text-ink/70">
             Para que una caída externa no borre la tendencia, conservamos un respaldo verificable
@@ -73,7 +75,12 @@ export default function FuentesPage() {
         </section>
 
         <section className="card p-6 grid gap-4">
-          <h2 className="font-serif text-2xl">Cómo calculamos y validamos cada dato</h2>
+          <h2 className="font-serif text-2xl">Cómo tratamos los datos que calculamos</h2>
+          <p className="text-ink/70">
+            Estos controles se aplican a nuestras referencias e históricos calculados. El índice
+            externo de paralelo.bo conserva su propia metodología y se identifica como fuente
+            cuando lo mostramos.
+          </p>
           <ol className="grid gap-3 text-ink/70">
             <li><strong>1. Recolección:</strong> obtenemos cotizaciones públicas con su hora de consulta y conservamos separadas compra y venta.</li>
             <li><strong>2. Normalización:</strong> expresamos cada muestra en bolivianos por unidad de USD o activo equivalente y descartamos formatos inválidos.</li>
@@ -93,7 +100,7 @@ export default function FuentesPage() {
               <tr className="border-t border-black/5"><td className="py-2 font-medium">Histórico</td><td className="py-2">Promedio diario de compra y venta con número de fuentes.</td><td className="py-2">Diaria</td></tr>
             </tbody></table>
           </div>
-          <p className="text-sm text-ink/60">Versión metodológica: 3 de septiembre de 2026. Los cambios materiales se documentarán en esta página.</p>
+          <p className="text-sm text-ink/60">Versión metodológica: 19 de octubre de 2026. Los cambios materiales se documentarán en esta página.</p>
         </section>
 
         <section id="licencia-de-uso-de-datos" className="card p-6 grid gap-3">
