@@ -49,6 +49,21 @@ describe('parseBcbTcoCsv', () => {
     });
   });
 
+  it('keeps the decimal cents in official USD amounts and whole operation counts', () => {
+    const officialFormatCsv = `"Fecha de corte";Vigencia;"TC (En Bs/USD)";"BANCO A";;"BANCO B";;"TOTAL BANCOS";
+;;;N°;Monto;N°;Monto;N°;Monto
+2026-10-16;"2026-10-17 al 2026-10-19";11,6000;"=""1.234""";"=""10.994.456,22""";-;-;"=""1.234""";"=""10.994.456,22"""
+2026-10-16;"2026-10-17 al 2026-10-19";11,7000;-;-;615;"=""31.931.053,11""";615;"=""31.931.053,11"""
+2026-10-16;"2026-10-17 al 2026-10-19";TOTAL;"=""1.234""";"=""10.994.456,22""";615;"=""31.931.053,11""";"=""1.849""";"=""42.925.509,33"""`;
+
+    const result = parseBcbTcoCsv(officialFormatCsv);
+
+    expect(result?.totalUsd).toBeCloseTo(42_925_509.33, 2);
+    expect(result?.totalOperations).toBe(1_849);
+    expect(result?.banks.find((bank) => bank.shortName === 'A')?.usd).toBeCloseTo(10_994_456.22, 2);
+    expect(result?.tco).toBe(11.7);
+  });
+
   it('rejects content without the official table', () => {
     expect(parseBcbTcoCsv('sin datos')).toBeNull();
   });
