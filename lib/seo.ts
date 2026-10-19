@@ -94,7 +94,7 @@ export const pageDescriptions = {
   btcBob:
     'Precio de referencia de Bitcoin en bolivianos hoy, calculado a partir del precio de BTC en dólares y nuestro índice del dólar paralelo en Bolivia.',
   dolarBlue:
-    'Consulta el dólar blue en Bolivia hoy: precio de compra y venta P2P, hora de actualización, comparación con el TCO del BCB y calculadora USD a BOB.',
+    'Consulta la referencia digital USDT/BOB P2P del dólar blue en Bolivia: compra, venta, hora de actualización y fuentes. No es un precio de billetes en efectivo.',
   tcoBancos:
     'Consulta qué bancos compraron más dólares en Bolivia, su participación, operaciones y sensibilidad del TCO con datos oficiales del BCB.',
   calculadora:

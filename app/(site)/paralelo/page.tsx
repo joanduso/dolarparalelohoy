@@ -123,10 +123,9 @@ export default async function ParaleloPage() {
   const faqItems: SeoFaqItem[] = [
     {
       question: '¿Cómo se calcula el índice P2P del dólar en Bolivia?',
-      answer:
-        typeof buy === 'number' && typeof sell === 'number'
-          ? `La referencia actual de ${formatCurrency(buy)} para compra y ${formatCurrency(sell)} para venta se obtiene de muestras P2P disponibles que pasan filtros de validación.`
-          : 'El índice se publica cuando las muestras P2P disponibles completan los filtros de validación.'
+      answer: p2pIndex
+        ? 'Mostramos la mediana multi-exchange publicada por paralelo.bo junto con su hora y número de fuentes activas. Si ese índice no está disponible, mostramos un respaldo temporal de Binance P2P cuando hay datos recientes.'
+        : 'Cuando el índice multi-exchange no está disponible, mostramos un respaldo temporal de anuncios de Binance P2P si hay datos recientes; de lo contrario, indicamos que falta la cotización.'
     },
     {
       question: '¿Qué representan la compra y la venta del índice?',
@@ -134,7 +133,11 @@ export default async function ParaleloPage() {
     },
     {
       question: '¿Cada cuánto se actualiza?',
-      answer: 'Los datos se actualizan automáticamente cada 10 minutos cuando las fuentes están disponibles.'
+      answer: 'Mostramos la fecha y hora de la referencia consultada. Si una fuente no ofrece datos recientes, usamos un respaldo temporal o indicamos que la cotización no está disponible.'
+    },
+    {
+      question: '¿El índice indica el precio de dólares en billetes?',
+      answer: 'No. Es una referencia digital de mercados P2P USDT/BOB; los billetes pueden negociarse a otro precio y bajo otras condiciones.'
     }
   ];
 
@@ -149,9 +152,9 @@ export default async function ParaleloPage() {
             Precio del dólar paralelo en Bolivia hoy
           </h1>
           <p className="text-ink/70 max-w-2xl">
-            Consulta la compra, venta, variación y hora de actualización del índice P2P. También
-            puedes revisar cómo se construye la referencia: fuentes activas, muestras y filtros que
-            alimentan la cotización principal.
+            Consulta la compra, venta, variación y hora de actualización de la referencia digital
+            USDT/BOB. Aquí explicamos su fuente, el respaldo temporal y la diferencia frente al
+            precio de dólares en efectivo.
           </p>
           {typeof buy === 'number' && typeof sell === 'number' ? (
             <p className="text-lg text-ink max-w-2xl">
@@ -217,6 +220,10 @@ export default async function ParaleloPage() {
             </p>
           </div>
           <p className="text-sm text-ink/60">{sourceNote}</p>
+          <p className="text-sm text-ink/60">
+            Esta cotización es una referencia digital P2P, no una oferta de cambio ni un precio de
+            billetes en efectivo. <Link href="/fuentes" className="underline underline-offset-4">Revisa las fuentes y el método</Link>.
+          </p>
           {statusLabelValue !== 'OK' && notes ? (
             <p className="text-xs text-ink/60">Nota técnica: {notes}</p>
           ) : null}
@@ -268,10 +275,11 @@ export default async function ParaleloPage() {
           <div className="card p-5 flex flex-col gap-3">
             <h3 className="font-serif text-xl">Qué es el dólar paralelo</h3>
             <p className="text-ink/70">
-              Es el tipo de cambio que surge de operaciones fuera del mercado oficial. Se calcula
-              con promedios de fuentes públicas y no representa una oferta vinculante.
+              Es una referencia de mercados digitales P2P fuera del tipo de cambio oficial. La
+              cifra actual usa el índice de paralelo.bo cuando está disponible y un respaldo
+              temporal de Binance P2P si falta; no representa una oferta vinculante.
             </p>
-            <Link href="/faq" className="underline underline-offset-4 text-sm">
+            <Link href="/fuentes" className="underline underline-offset-4 text-sm">
               Metodología completa
             </Link>
           </div>

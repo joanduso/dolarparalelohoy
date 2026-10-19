@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "source_sha256": "7bb2ccd60c8845365385bc37f67dbd95ad85c2d7fbbc0ec9b73c4ad18a260d11",
+  "filters": {
+    "Tipo de búsqueda": "Web (basada en texto)",
+    "Fecha": "Últimos 3 meses"
+  },
+  "full_period": {
+    "from": "2026-07-26",
+    "to": "2026-10-16",
+    "days": 83,
+    "clicks": 24,
+    "impressions": 15119,
+    "ctr_pct": 0.1587,
+    "average_position_estimate": 14.5
+  },
+  "last_28_days": {
+    "from": "2026-09-19",
+    "to": "2026-10-16",
+    "days": 28,
+    "clicks": 13,
+    "impressions": 13554,
+    "ctr_pct": 0.0959,
+    "average_position_estimate": 10.0
+  },
+  "full_period_context": {
+    "bolivia": {
+      "clicks": 23,
+      "impressions": 1349
+    },
+    "blue_hoy_bolivia_visible": {
+      "clicks": 2,
+      "impressions": 12976
+    },
+    "visible_queries": {
+      "clicks": 12,
+      "impressions": 14639
+    }
+  }
+}

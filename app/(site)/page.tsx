@@ -583,6 +583,10 @@ export default function HomePage() {
               <Link href="/brecha" className="font-semibold text-white underline decoration-white/30 underline-offset-4">
                 brecha cambiaria
               </Link>
+              . Si buscas «dólar blue», consulta{' '}
+              <Link href="/dolar-blue-bolivia" className="font-semibold text-white underline decoration-white/30 underline-offset-4">
+                qué representa la referencia P2P en Bolivia
+              </Link>
               .
             </p>
             <div className="flex flex-wrap gap-3 pt-1">
