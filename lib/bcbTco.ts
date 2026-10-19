@@ -83,6 +83,13 @@ function parseInteger(value: string) {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
+function parseUsdAmount(value: string) {
+  const cleaned = cleanNumeric(value);
+  if (!cleaned || cleaned === '-') return 0;
+  const parsed = Number(cleaned.replace(/\./g, '').replace(',', '.'));
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
 function parseRate(value: string) {
   const cleaned = cleanNumeric(value);
   if (!cleaned || cleaned === '-') return null;
@@ -152,7 +159,7 @@ function buildBreakdown(header: string[], rows: string[][]): BcbTcoBreakdown | n
 
     for (const bank of banks) {
       const operations = parseInteger(row[bank.column] ?? '');
-      const usd = parseInteger(row[bank.column + 1] ?? '');
+      const usd = parseUsdAmount(row[bank.column + 1] ?? '');
       if (operations > 0 || usd > 0) {
         cells.push({ bank: bank.name, rate, operations, usd });
       }
