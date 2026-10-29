@@ -1,9 +1,20 @@
 import { describe, expect, it } from 'vitest';
 import robots from '@/app/robots';
 import sitemap from '@/app/sitemap';
-import { pageTitles, siteConfig, siteRoutes } from '@/lib/seo';
+import { pageTitles, resolveSiteUrl, siteConfig, siteRoutes } from '@/lib/seo';
 
 describe('SEO configuration', () => {
+  it('uses the same origin even when the configured URL includes a path or query', () => {
+    expect(resolveSiteUrl()).toBe('https://dolarparalelohoy.com');
+    expect(resolveSiteUrl('example.com/')).toBe('https://example.com');
+    expect(resolveSiteUrl(' https://example.com/path?ref=test#section ')).toBe('https://example.com');
+    expect(() => resolveSiteUrl('https://user:secret@example.com')).toThrow();
+  });
+
+  it('does not advertise invented content modification dates', () => {
+    expect(sitemap().every((entry) => entry.lastModified === undefined)).toBe(true);
+  });
+
   it('assigns distinct search intents to home and the P2P detail page', () => {
     expect(pageTitles.home).toContain('Dólar Paralelo Bolivia Hoy');
     expect(pageTitles.paralelo).toContain('Precio del Dólar Paralelo');

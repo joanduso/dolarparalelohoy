@@ -22,10 +22,7 @@ const sans = Commissioner({
   display: 'swap'
 });
 
-const metadataBaseUrl = process.env.NEXT_PUBLIC_SITE_URL || siteConfig.url;
-const metadataBase = new URL(
-  metadataBaseUrl.startsWith('http') ? metadataBaseUrl : `https://${metadataBaseUrl}`
-);
+const metadataBase = new URL(siteConfig.url);
 
 const absoluteUrl = (path: string) => new URL(path, metadataBase);
 
@@ -56,8 +53,8 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
     googleBot: {
-      index: true,
-      follow: true,
+      // Indexing directives belong on the page-level robots tag. Keeping an
+      // explicit Googlebot index here would override a child's noindex.
       'max-image-preview': 'large',
       'max-snippet': -1,
       'max-video-preview': -1
