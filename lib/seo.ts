@@ -1,15 +1,20 @@
+/** Use one origin for metadata, structured data and sitemap URLs. */
+export function resolveSiteUrl(value?: string): string {
+  const raw = value?.trim() || 'https://dolarparalelohoy.com';
+  const url = new URL(/^https?:\/\//i.test(raw) ? raw : `https://${raw}`);
+  if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password) {
+    throw new Error('SITE_URL must be an HTTP(S) origin without credentials');
+  }
+  return url.origin;
+}
+
 export const siteConfig = {
   name: 'Dólar Paralelo Hoy Bolivia',
   shortName: 'Dólar Paralelo Hoy',
   alternateName: 'Dólar Paralelo Bolivia',
   description:
     'Cotización del dólar paralelo y oficial en Bolivia hoy. Brecha cambiaria, histórico y metodología transparente.',
-  url: (() => {
-    const rawUrl =
-      process.env.NEXT_PUBLIC_SITE_URL ?? process.env.SITE_URL ?? 'https://dolarparalelohoy.com';
-    const absoluteUrl = rawUrl.startsWith('http') ? rawUrl : `https://${rawUrl}`;
-    return absoluteUrl.replace(/\/+$/, '');
-  })(),
+  url: resolveSiteUrl(process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL),
   locale: 'es-BO',
   language: 'es'
 };
