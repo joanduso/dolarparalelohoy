@@ -29,7 +29,7 @@ export default function AcercaDePage() {
     description: pageDescriptions.acercaDe,
     url: `${siteConfig.url}/acerca-de`,
     inLanguage: siteConfig.language,
-    dateModified: '2026-10-03',
+    dateModified: '2026-11-06',
     mainEntity: { '@id': `${siteConfig.url}/#organization` },
     isPartOf: { '@id': `${siteConfig.url}/#website` }
   };
@@ -84,8 +84,14 @@ export default function AcercaDePage() {
           >
             Revisar el repositorio público
           </a>
+          <h3 className="font-semibold">Solicitudes de corrección</h3>
+          <p className="text-ink/70">
+            Para comunicar un error, utiliza el repositorio público del proyecto e indica la
+            página, la fecha del dato y la fuente con la que lo contrastaste. Evita incluir
+            información personal o datos de operaciones privadas.
+          </p>
           <p className="text-sm text-ink/60">
-            Política editorial revisada el 3 de octubre de 2026.
+            Política editorial revisada el 6 de noviembre de 2026.
           </p>
         </section>
       </article>

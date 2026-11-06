@@ -6,7 +6,7 @@ import { MarketRateComparison } from '@/app/(site)/_components/MarketRateCompari
 import { P2PCalculator } from '@/app/(site)/_components/P2PCalculator';
 import { SeoFaq, type SeoFaqItem } from '@/app/(site)/_components/SeoFaq';
 import { formatCurrency, formatDateTime } from '@/lib/format';
-import { getParallelQuote } from '@/lib/p2pIndex';
+import { getParallelQuote, describeParallelQuote } from '@/lib/p2pIndex';
 import { getSiteData } from '@/lib/siteData';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
 
@@ -71,7 +71,7 @@ export default async function DolarBlueBoliviaPage() {
         <div className="grid gap-3 max-w-3xl">
           <p className="kicker">Referencia de mercado</p>
           <h1 className="font-serif text-3xl sm:text-4xl">
-            Dólar blue hoy en Bolivia: precio de compra y venta
+            Dólar blue en Bolivia: significado y referencia P2P
           </h1>
           <p className="text-ink/70">
             Aquí «dólar blue» se muestra como referencia digital USDT/BOB de mercados P2P,
@@ -89,6 +89,7 @@ export default async function DolarBlueBoliviaPage() {
           <p className="text-sm text-ink/60">
             {updatedAt ? `Actualizado ${formatDateTime(updatedAt)} con ${quote?.sourceCount ?? 0} fuentes P2P.` : 'Cotización temporalmente no disponible.'}
           </p>
+          <p className="text-sm text-ink/60">{describeParallelQuote(quote)}</p>
           <p className="text-sm text-ink/60">
             Es una referencia informativa, no una oferta para comprar o vender dólares.{' '}
             <Link href="/fuentes" className="underline underline-offset-4">Consulta las fuentes y la metodología</Link>.

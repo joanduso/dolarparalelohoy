@@ -17,10 +17,10 @@ describe('SEO configuration', () => {
 
   it('assigns distinct search intents to home and the P2P detail page', () => {
     expect(pageTitles.home).toContain('Dólar Paralelo Bolivia Hoy');
-    expect(pageTitles.paralelo).toContain('Precio del Dólar Paralelo');
+    expect(pageTitles.paralelo).toContain('Metodología');
     expect(pageTitles.paralelo).toContain('Índice P2P');
     expect(pageTitles.paralelo).not.toBe(pageTitles.home);
-    expect(pageTitles.dolarBlue).toContain('Dólar Blue Hoy en Bolivia');
+    expect(pageTitles.dolarBlue).toContain('Qué Significa');
     expect(pageTitles.tcoBancos).toContain('Bancos Compraron Más Dólares');
     expect(pageTitles.tcoBancos).not.toBe(pageTitles.dolarBlue);
   });

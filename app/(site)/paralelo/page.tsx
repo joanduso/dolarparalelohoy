@@ -6,13 +6,12 @@ import { AdSlot } from '@/app/(site)/_components/AdSlot';
 import { MiniTable } from '@/app/(site)/_components/MiniTable';
 import { DeclaredBlock } from '@/app/(site)/_components/DeclaredBlock';
 import { DeclareForm } from '@/app/(site)/_components/DeclareForm';
-import { Skeleton } from '@/app/(site)/_components/Skeleton';
 import { Breadcrumbs } from '@/app/(site)/_components/Breadcrumbs';
 import { SeoFaq, type SeoFaqItem } from '@/app/(site)/_components/SeoFaq';
 import { TrendSummary } from '@/app/(site)/_components/TrendSummary';
 import { pageDescriptions, pageTitles, siteConfig } from '@/lib/seo';
 import { getSiteData } from '@/lib/siteData';
-import { fetchP2PIndex } from '@/lib/p2pIndex';
+import { getParallelQuote, describeParallelQuote } from '@/lib/p2pIndex';
 import { formatCurrency, formatDateTime } from '@/lib/format';
 import { computeTrend } from '@/lib/trend';
 import type { Metadata } from 'next';
@@ -21,18 +20,6 @@ type DailyHistoryRow = {
   date: string;
   buy_avg: number;
   sell_avg: number;
-};
-
-type CurrentRatesResponse = {
-  updatedAt: string | null;
-  status: 'OK' | 'DEGRADED' | 'ERROR';
-  notes?: string | null;
-  paralelo: {
-    buy: number | null;
-    sell: number | null;
-    sources_count: number;
-    sampleSize: number;
-  } | null;
 };
 
 type HistoryResponse<T> = {
@@ -55,22 +42,17 @@ export async function generateMetadata(): Promise<Metadata> {
 export const revalidate = 600;
 
 export default async function ParaleloPage() {
-  const [latestResult, historyResult, officialHistoryResult, p2pIndex] = await Promise.all([
-    getSiteData<CurrentRatesResponse>('/api/rates/current?v=live-20260722'),
+  const [historyResult, officialHistoryResult, quote] = await Promise.all([
     getSiteData<HistoryResponse<DailyHistoryRow>>('/api/rates/history?kind=PARALELO&days=365'),
     getSiteData<HistoryResponse<DailyHistoryRow>>('/api/rates/history?kind=OFICIAL&days=365'),
-    fetchP2PIndex()
+    getParallelQuote()
   ]);
 
-  const fallbackQuote = latestResult.data?.paralelo ?? null;
-  const buy = p2pIndex?.buy ?? fallbackQuote?.buy ?? null;
-  const sell = p2pIndex?.sell ?? fallbackQuote?.sell ?? null;
-  const evidenceCount = p2pIndex?.sourceCount ?? fallbackQuote?.sampleSize ?? 0;
-  const evidenceLabel = p2pIndex ? 'fuentes activas' : 'muestras';
-  const status = p2pIndex ? 'OK' : latestResult.data?.status ?? null;
-  const notes = latestResult.data?.notes ?? null;
-  const updatedAtValue = p2pIndex?.timestamp ?? latestResult.data?.updatedAt;
-  const updatedAt = updatedAtValue ? new Date(updatedAtValue) : null;
+  const buy = quote?.buy ?? null;
+  const sell = quote?.sell ?? null;
+  const evidenceCount = quote?.sourceCount ?? 0;
+  const status = quote ? (quote.provider === 'binance' ? 'DEGRADED' : 'OK') : 'ERROR';
+  const updatedAt = quote ? new Date(quote.updatedAt) : null;
   const history = historyResult.data?.data ?? [];
   const officialHistory = officialHistoryResult.data?.data ?? [];
   const trendPoints = history.map((row) => ({ date: row.date, value: row.sell_avg }));
@@ -83,11 +65,7 @@ export default async function ParaleloPage() {
 
   const hasAnyData = Boolean((buy !== null && sell !== null) || history.length);
 
-  const sourceNote = p2pIndex
-    ? `Mediana multi-exchange con ${p2pIndex.sourceCount} fuentes activas. Datos agregados por paralelo.bo.`
-    : (fallbackQuote?.sampleSize ?? 0) > 0
-      ? 'Respaldo temporal: Binance P2P (mediana de anuncios).'
-      : 'Índice sin fuentes activas. Intentaremos actualizar pronto.';
+  const sourceNote = describeParallelQuote(quote);
 
   const chartData = {
     paralelo: history.map((row) => ({
@@ -111,7 +89,7 @@ export default async function ParaleloPage() {
     dateModified: updatedAt?.toISOString()
   };
 
-  const statusLabelValue = status ?? (hasAnyData ? 'DEGRADED' : 'ERROR');
+  const statusLabelValue = status;
   const statusLabel = statusLabelValue === 'OK' ? 'OK' : statusLabelValue === 'DEGRADED' ? 'Degradado' : 'Error';
   const statusClass =
     statusLabelValue === 'OK'
@@ -123,7 +101,7 @@ export default async function ParaleloPage() {
   const faqItems: SeoFaqItem[] = [
     {
       question: '¿Cómo se calcula el índice P2P del dólar en Bolivia?',
-      answer: p2pIndex
+      answer: quote?.provider === 'paralelo.bo'
         ? 'Mostramos la mediana multi-exchange publicada por paralelo.bo junto con su hora y número de fuentes activas. Si ese índice no está disponible, mostramos un respaldo temporal de Binance P2P cuando hay datos recientes.'
         : 'Cuando el índice multi-exchange no está disponible, mostramos un respaldo temporal de anuncios de Binance P2P si hay datos recientes; de lo contrario, indicamos que falta la cotización.'
     },
@@ -149,16 +127,16 @@ export default async function ParaleloPage() {
         <div className="grid gap-3">
           <p className="kicker">Metodología y detalle de mercado</p>
           <h1 className="font-serif text-3xl sm:text-4xl">
-            Precio del dólar paralelo en Bolivia hoy
+            Índice P2P de Bolivia: fuentes y metodología
           </h1>
           <p className="text-ink/70 max-w-2xl">
-            Consulta la compra, venta, variación y hora de actualización de la referencia digital
-            USDT/BOB. Aquí explicamos su fuente, el respaldo temporal y la diferencia frente al
-            precio de dólares en efectivo.
+            Conoce cómo se obtiene la referencia digital USDT/BOB, qué proveedor la publica y
+            cuándo se utiliza un respaldo. Los anuncios P2P no equivalen a fuentes independientes
+            ni al precio de dólares en efectivo.
           </p>
           {typeof buy === 'number' && typeof sell === 'number' ? (
             <p className="text-lg text-ink max-w-2xl">
-              Hoy la referencia es <strong>{formatCurrency(buy)}</strong> para compra y{' '}
+              La referencia consultada es <strong>{formatCurrency(buy)}</strong> para compra y{' '}
               <strong>{formatCurrency(sell)}</strong> para venta.
             </p>
           ) : null}
@@ -189,7 +167,7 @@ export default async function ParaleloPage() {
             <h2 className="font-serif text-2xl">Cotización actual</h2>
             <div className="flex items-center gap-3 text-sm text-ink/60">
               <span>
-                {updatedAt ? formatDateTime(updatedAt) : <Skeleton className="h-4 w-28" />}
+                {updatedAt ? formatDateTime(updatedAt) : 'Sin actualización reciente'}
               </span>
               <span className={`px-2 py-1 rounded-full border text-xs ${statusClass}`}>
                 Estado: {statusLabel}
@@ -200,23 +178,23 @@ export default async function ParaleloPage() {
             <div>
               <p className="text-xs uppercase text-ink/50">Compra</p>
               <p className="text-3xl font-semibold">
-                {typeof buy === 'number' ? formatCurrency(buy) : <Skeleton className="h-8 w-24" />}
+                {typeof buy === 'number' ? formatCurrency(buy) : '—'}
               </p>
             </div>
             <div>
               <p className="text-xs uppercase text-ink/50">Venta</p>
               <p className="text-3xl font-semibold">
-                {typeof sell === 'number' ? formatCurrency(sell) : <Skeleton className="h-8 w-24" />}
+                {typeof sell === 'number' ? formatCurrency(sell) : '—'}
               </p>
             </div>
             <div>
-              <p className="text-xs uppercase text-ink/50">{evidenceLabel}</p>
+              <p className="text-xs uppercase text-ink/50">Fuentes activas</p>
               <p className="text-3xl font-semibold">{evidenceCount}</p>
             </div>
             <p className="text-sm text-ink/60">
               {evidenceCount >= 2
-                ? `Confirmado por ${evidenceCount} ${evidenceLabel}`
-                : 'Estimación pendiente'}
+                ? `Publicado con ${evidenceCount} fuentes activas`
+                : evidenceCount === 1 ? 'Una fuente activa' : 'Sin cotización reciente'}
             </p>
           </div>
           <p className="text-sm text-ink/60">{sourceNote}</p>
@@ -224,9 +202,7 @@ export default async function ParaleloPage() {
             Esta cotización es una referencia digital P2P, no una oferta de cambio ni un precio de
             billetes en efectivo. <Link href="/fuentes" className="underline underline-offset-4">Revisa las fuentes y el método</Link>.
           </p>
-          {statusLabelValue !== 'OK' && notes ? (
-            <p className="text-xs text-ink/60">Nota técnica: {notes}</p>
-          ) : null}
+
         </div>
 
         {(trend7d || trend30d) ? (

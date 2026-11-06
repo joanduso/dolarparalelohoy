@@ -175,7 +175,7 @@ export default function RootLayout({
                 className="hidden items-center gap-1 lg:flex"
               >
                 <Link href="/paralelo" className="nav-link">
-                  Paralelo
+                  Índice P2P
                 </Link>
                 <Link href="/oficial" className="nav-link">
                   Oficial

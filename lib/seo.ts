@@ -54,7 +54,7 @@ export const siteRoutes = [
 
 export const pageTitles = {
   home: 'Dólar Paralelo Bolivia Hoy: Compra, Venta y Precio',
-  paralelo: 'Precio del Dólar Paralelo en Bolivia Hoy | Índice P2P',
+  paralelo: 'Índice P2P Bolivia: Fuentes y Metodología del Dólar Paralelo',
   oficial: 'Precio Oficial del Dólar en Bolivia Hoy | BCB',
   brecha: 'Brecha dólar oficial vs paralelo Bolivia',
   historicoParalelo: 'Dólar Paralelo Histórico Bolivia: Precios y Variación',
@@ -62,7 +62,7 @@ export const pageTitles = {
   usdtBob: 'USDT a BOB hoy: conversor y cotización P2P Bolivia',
   eurBob: 'Euro a bolivianos hoy: tipo de cambio oficial BCB',
   btcBob: 'Bitcoin a bolivianos hoy: precio BTC en Bs',
-  dolarBlue: 'Dólar Blue Hoy en Bolivia: Compra y Venta Actualizadas',
+  dolarBlue: 'Dólar Blue en Bolivia: Qué Significa y Referencia P2P',
   tcoBancos: 'Qué Bancos Compraron Más Dólares en Bolivia | TCO BCB',
   calculadora: 'Calculadora dólar a bolivianos hoy: oficial y paralelo',
   binanceP2p: 'Binance P2P Bolivia hoy: precio USDT/BOB y guía',
@@ -83,7 +83,7 @@ export const pageDescriptions = {
   home:
     'Consulta el dólar paralelo en Bolivia hoy: precio de compra y venta, hora de actualización, variación, fuente, dólar oficial e histórico.',
   paralelo:
-    'Consulta el precio del dólar paralelo en Bolivia hoy: compra, venta, hora de actualización, variación y fuentes del índice P2P.',
+    'Conoce las fuentes y la metodología del índice P2P USDT/BOB de Bolivia: proveedor, actualización, respaldo temporal y diferencias frente al dólar en efectivo.',
   oficial:
     'Precio del dólar oficial en Bolivia hoy: compra, venta, evolución reciente y referencia publicada por el Banco Central de Bolivia (BCB), actualizada regularmente.',
   brecha:

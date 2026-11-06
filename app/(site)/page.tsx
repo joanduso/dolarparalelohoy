@@ -21,7 +21,7 @@ import { getSiteData } from '@/lib/siteData';
 import { formatDateTime } from '@/lib/format';
 import { computeTrend } from '@/lib/trend';
 import type { Metadata } from 'next';
-import { fetchP2PIndex } from '@/lib/p2pIndex';
+import { getParallelQuote, describeParallelQuote } from '@/lib/p2pIndex';
 import { fetchRecentBcbTcoBreakdowns } from '@/lib/bcbTco';
 
 type DailyHistoryRow = {
@@ -116,13 +116,13 @@ const OFICIAL_HISTORY_PATH = '/api/rates/history?kind=OFICIAL&days=365&v=daily-2
 const BRECHA_HISTORY_PATH = '/api/brecha/history?days=365';
 
 async function RatesSection() {
-  const [latestResult, brechaLatestResult, bcbResult, tcoSeries, p2pIndex, paraleloDeltaResult, oficialDeltaResult] =
+  const [latestResult, brechaLatestResult, bcbResult, tcoSeries, quote, paraleloDeltaResult, oficialDeltaResult] =
     await Promise.all([
       getSiteData<CurrentRatesResponse>('/api/rates/current?v=live-20260722'),
       getSiteData<BrechaLatestResponse>('/api/brecha/latest'),
       getSiteData<BcbResponse>('/api/bcb/valor-referencial?v=live-20260722'),
       fetchRecentBcbTcoBreakdowns(10),
-      fetchP2PIndex(),
+      getParallelQuote(),
       // Small window: only the last couple of days are needed to compute
       // "variación hoy" — no reason to wait on the full historical series.
       getSiteData<HistoryResponse<DailyHistoryRow>>('/api/rates/history?kind=PARALELO&days=3'),
@@ -130,12 +130,11 @@ async function RatesSection() {
     ]);
 
   const latest = latestResult.data;
-  const paralelo = latest?.paralelo ?? null;
   const oficial = latest?.oficial ?? null;
-  const indexBuy = p2pIndex?.buy ?? paralelo?.buy ?? null;
-  const indexSell = p2pIndex?.sell ?? paralelo?.sell ?? null;
-  const indexSources = p2pIndex?.sourceCount ?? (paralelo?.sampleSize ? 1 : 0);
-  const indexUpdatedAt = p2pIndex?.timestamp ? new Date(p2pIndex.timestamp) : null;
+  const indexBuy = quote?.buy ?? null;
+  const indexSell = quote?.sell ?? null;
+  const indexSources = quote?.sourceCount ?? 0;
+  const indexUpdatedAt = quote ? new Date(quote.updatedAt) : null;
   const officialSell = oficial?.sell ?? null;
   const indexBrecha = indexSell !== null && officialSell !== null
     ? {
@@ -154,21 +153,18 @@ async function RatesSection() {
 
   const sourceBadges = [
     { name: 'BCB', active: latest?.sources?.bcb === 'OK' || Boolean(bcbData) || Boolean(tcoData) },
-    { name: 'Índice P2P', active: Boolean(p2pIndex) },
-    { name: 'Binance P2P', active: latest?.sources?.binance_p2p === 'OK' }
+    { name: 'Índice P2P', active: quote?.provider === 'paralelo.bo' },
+    { name: 'Binance P2P', active: quote?.provider === 'binance' }
   ];
 
-  const parallelSourceNote = indexSources > 1
-    ? `Mediana multi-exchange con ${indexSources} fuentes activas. Datos agregados por paralelo.bo.`
-    : (paralelo?.sampleSize ?? 0) > 0
-      ? 'Respaldo temporal: Binance P2P (mediana de anuncios).'
-    : 'Paralelo sin fuentes activas. Intentaremos actualizar pronto.';
+  const parallelSourceNote = describeParallelQuote(quote);
 
-  const parallelActive = indexSources > 0;
   const officialActive = (oficial?.sources_count ?? 0) > 0;
   const activeSources = indexSources + (officialActive ? 1 : 0);
-  const hasAnyData = Boolean(paralelo || oficial || brecha || bcbData || tcoData);
-  const status = latest?.status ?? (hasAnyData ? 'DEGRADED' : 'ERROR');
+  const hasAnyData = Boolean(quote || oficial || brecha || bcbData || tcoData);
+  const status = quote && quote.provider === 'paralelo.bo' && officialActive && latest?.status === 'OK'
+    ? 'OK'
+    : hasAnyData ? 'DEGRADED' : 'ERROR';
   const statusLabel = status === 'OK' ? 'OK' : status === 'DEGRADED' ? 'Degradado' : 'Error';
   const statusClass =
     status === 'OK'
@@ -215,7 +211,7 @@ async function RatesSection() {
         indexBuy={indexBuy}
         indexSell={indexSell}
         paraleloDelta={paraleloDelta}
-        indexUpdatedAt={indexUpdatedAt ?? lastUpdated}
+        indexUpdatedAt={indexUpdatedAt}
         indexSources={indexSources}
         parallelSourceNote={parallelSourceNote}
         oficialBuy={oficial?.buy ?? null}
@@ -499,7 +495,7 @@ export default function HomePage() {
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-end">
             <div className="grid max-w-4xl gap-5">
               <p className="text-xs font-bold uppercase tracking-[0.24em] text-sun">
-                Datos de Bolivia · Actualización cada 10 minutos
+                Datos de Bolivia · Fuente y hora visibles
               </p>
               <h1 className="font-serif text-5xl leading-[0.96] tracking-[-0.035em] sm:text-6xl lg:text-7xl">
                 Dólar paralelo en Bolivia hoy
@@ -573,7 +569,7 @@ export default function HomePage() {
               cuánto cuesta adquirirla. El precio final puede variar por monto, medio de pago,
               comisión y plataforma. Contrasta el{' '}
               <Link href="/paralelo" className="font-semibold text-white underline decoration-white/30 underline-offset-4">
-                dólar paralelo de hoy
+                detalle del índice P2P
               </Link>{' '}
               con el{' '}
               <Link href="/oficial" className="font-semibold text-white underline decoration-white/30 underline-offset-4">
@@ -608,7 +604,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="flex flex-wrap gap-x-5 gap-y-3 text-sm">
-            <Link href="/paralelo" className="text-link">Dólar paralelo hoy</Link>
+            <Link href="/paralelo" className="text-link">Metodología del índice P2P</Link>
             <Link href="/oficial" className="text-link">Dólar oficial hoy</Link>
             <Link href="/brecha" className="text-link">Brecha cambiaria</Link>
             <Link href="/usdt-bob" className="text-link">Conversor USDT a BOB</Link>
@@ -639,9 +635,9 @@ export default function HomePage() {
           </div>
           <div className="grid gap-4">
             <p className="leading-relaxed text-ink/70">
-              Publicamos promedios diarios basados en múltiples fuentes disponibles públicamente.
-              Los valores se actualizan durante el día y pasan por filtros de validación para
-              detectar valores extremos.
+              La cotización actual identifica el proveedor, su hora y sus fuentes activas. Si el índice
+              externo no está disponible, usamos un respaldo reciente de Binance P2P. El histórico
+              conserva promedios diarios con su procedencia; no equivale a una cotización de efectivo.
             </p>
             <div className="flex flex-wrap gap-4 text-sm">
               <Link href="/faq" className="text-link">Ver metodología completa</Link>

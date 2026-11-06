@@ -11,6 +11,7 @@ export type ParallelQuote = {
   sell: number;
   updatedAt: string;
   sourceCount: number;
+  provider: 'paralelo.bo' | 'binance';
 };
 
 export const P2P_INDEX_MAX_AGE_MS = 30 * 60 * 1000;
@@ -43,11 +44,12 @@ export async function fetchP2PIndex(): Promise<P2PIndex | null> {
 
     const data = (await response.json()) as Partial<P2PIndex>;
     if (
-      typeof data.buy !== 'number' ||
-      typeof data.sell !== 'number' ||
-      typeof data.median !== 'number' ||
-      typeof data.sourceCount !== 'number' ||
-      !data.timestamp
+      !isValidRate(data.buy) ||
+      !isValidRate(data.sell) ||
+      !isValidRate(data.median) ||
+      !Number.isInteger(data.sourceCount) ||
+      (data.sourceCount ?? 0) <= 0 ||
+      typeof data.timestamp !== 'string'
     ) {
       return null;
     }
@@ -71,7 +73,9 @@ async function getOwnParallelQuote(): Promise<ParallelQuote | null> {
     const { result } = await computeLatest();
     const updatedAt = result.timestampUtc.toISOString();
 
+    const hasBinance = result.quality.sources_used.includes('BINANCE');
     if (
+      !hasBinance ||
       !isValidRate(result.parallel.buy) ||
       !isValidRate(result.parallel.sell) ||
       !isP2PIndexFresh({ timestamp: updatedAt })
@@ -83,7 +87,8 @@ async function getOwnParallelQuote(): Promise<ParallelQuote | null> {
       buy: result.parallel.buy,
       sell: result.parallel.sell,
       updatedAt,
-      sourceCount: result.quality.sources_used.includes('BINANCE') ? 1 : 0
+      sourceCount: 1,
+      provider: 'binance'
     };
   } catch (error) {
     console.warn('[p2p-index] own quote unavailable', String(error));
@@ -99,6 +104,14 @@ export async function getParallelQuote(): Promise<ParallelQuote | null> {
     buy: index.buy,
     sell: index.sell,
     updatedAt: index.timestamp,
-    sourceCount: index.sourceCount
+    sourceCount: index.sourceCount,
+    provider: 'paralelo.bo'
   };
+}
+
+/** Keep the source attribution tied to the quote, never to its sample count. */
+export function describeParallelQuote(quote: ParallelQuote | null): string {
+  if (!quote) return 'Cotización reciente no disponible. Intentaremos actualizar pronto.';
+  if (quote.provider === 'binance') return 'Respaldo temporal: Binance P2P (mediana de anuncios recientes).';
+  return `Referencia publicada por paralelo.bo con ${quote.sourceCount} ${quote.sourceCount === 1 ? 'fuente activa' : 'fuentes activas'}.`;
 }
