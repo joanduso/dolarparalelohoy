@@ -1,6 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   getParallelQuote,
+  fetchP2PIndex,
+  describeParallelQuote,
   isP2PIndexFresh,
   P2P_INDEX_MAX_AGE_MS,
   P2P_INDEX_REVALIDATE_SECONDS
@@ -16,6 +18,7 @@ const NOW = Date.parse('2026-07-29T04:00:00.000Z');
 
 afterEach(() => {
   vi.restoreAllMocks();
+  vi.unstubAllGlobals();
   vi.useRealTimers();
   computeLatestMock.mockReset();
 });
@@ -76,7 +79,8 @@ describe('getParallelQuote', () => {
       buy: 11.98,
       sell: 11.82,
       updatedAt: new Date(NOW - 5 * 60 * 1000).toISOString(),
-      sourceCount: 1
+      sourceCount: 1,
+      provider: 'binance'
     });
     expect(fetch).toHaveBeenCalledWith(
       'https://paralelo.bo/api/v1/rate',
@@ -98,6 +102,41 @@ describe('getParallelQuote', () => {
       }
     });
 
+    await expect(getParallelQuote()).resolves.toBeNull();
+  });
+});
+
+describe('external quote validation and attribution', () => {
+  it.each([
+    { buy: 0 }, { sell: -1 }, { median: NaN }, { buy: Infinity },
+    { sourceCount: 0 }, { sourceCount: -1 }, { sourceCount: 1.5 }, { timestamp: 123 }
+  ])('rejects invalid payload %j', async (invalid) => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ buy: 10, sell: 11, median: 10.5, sourceCount: 2,
+        timestamp: new Date().toISOString(), ...invalid })
+    }));
+    await expect(fetchP2PIndex()).resolves.toBeNull();
+  });
+
+  it('keeps attribution to the external provider when it has one source', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ buy: 10, sell: 11, median: 10.5, sourceCount: 1,
+        timestamp: new Date().toISOString() })
+    }));
+    const quote = await getParallelQuote();
+    expect(quote?.provider).toBe('paralelo.bo');
+    expect(describeParallelQuote(quote)).toContain('paralelo.bo con 1 fuente activa');
+    expect(computeLatestMock).not.toHaveBeenCalled();
+  });
+
+  it('does not publish a fallback without an identified P2P source', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false }));
+    computeLatestMock.mockResolvedValue({ result: {
+      timestampUtc: new Date(), parallel: { buy: 10, sell: 11 },
+      quality: { sources_used: ['BCB'] }
+    }});
     await expect(getParallelQuote()).resolves.toBeNull();
   });
 });

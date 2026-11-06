@@ -22,7 +22,7 @@ export function TrendSummary({
   return (
     <p className="text-sm text-ink/70">
       <strong className="text-ink">Tendencia ({trend.days} días):</strong> {label} {verb}
-      {pctText ? ` ${pctText}` : ''} en los últimos {trend.days} días, de{' '}
+      {pctText ? ` ${pctText}` : ''} en la ventana de {trend.days} días con cierre al {formatCalendarDate(trend.lastDate)}, de{' '}
       {formatCurrency(trend.firstValue)} ({formatCalendarDate(trend.firstDate)}) a{' '}
       {formatCurrency(trend.lastValue)} ({formatCalendarDate(trend.lastDate)}).
     </p>
